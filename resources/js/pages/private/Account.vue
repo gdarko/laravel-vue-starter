@@ -1,0 +1,32 @@
+<template>
+    <div class="p-5 xl:px-0">
+        <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
+            <AccountInfo class="p-5 bg-white border rounded shadow"/>
+            <AccountDetails class="p-5 bg-white border rounded shadow"/>
+            <AccountPassword class="p-5 bg-white border rounded shadow"/>
+            <FileUpload label="Upload Avatar" :fileTypes="['image/*']" endpoint="/users/auth/avatar" @fileUploaded="setAvatar" class="p-5 bg-white border rounded shadow"/>
+        </div>
+    </div>
+</template>
+
+<script>
+import AccountInfo from "@/components/account/AccountInfo";
+import AccountDetails from "@/components/account/AccountDetails";
+import AccountPassword from "@/components/account/AccountPassword";
+import FileUpload from "@/components/utils/FileUpload";
+
+export default {
+    name: "UserView",
+    components: {
+        AccountInfo,
+        AccountDetails,
+        AccountPassword,
+        FileUpload,
+    },
+    methods: {
+        setAvatar() {
+            this.$store.dispatch("auth/getCurrentUser");
+        },
+    }
+};
+</script>

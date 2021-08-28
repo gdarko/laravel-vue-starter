@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-gray-50;
+    }
+    .base-link {
+        @apply text-blue-400;
+        @apply hover:text-blue-500;
+        @apply hover:underline;
+        @apply transition;
+    }
+}
