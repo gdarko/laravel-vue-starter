@@ -1,6 +1,6 @@
 <template>
     <div>
-        <FlashMessage :message="message" :error="error" @closed="message = null; error = null;" class="mb-4"/>
+        <Alert :message="message" :error="error" @closed="message = null; error = null;" class="mb-4"/>
         <form @submit.prevent="resetPassword">
             <div class="mb-2">
                 <label for="email" class="text-sm text-gray-500">Email</label>
@@ -16,7 +16,7 @@
                        class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
             </div>
             <div class="flex justify-between">
-                <BaseButton type="submit" text="Submit"/>
+                <Button type="submit" text="Submit"/>
                 <router-link to="/login" class="text-sm base-link">
                     Already done? Login now
                 </router-link>
@@ -27,15 +27,15 @@
 
 <script>
 import {getError} from "@/utils/helpers";
-import FlashMessage from "@/components/utils/FlashMessage";
+import Alert from "@/components/utils/Alert";
 import AuthService from "@/services/AuthService";
-import BaseButton from "@/components/utils/BaseButton";
+import Button from "@/components/utils/Button";
 
 export default {
     name: "ResetPasswordForm",
     components: {
-        BaseButton,
-        FlashMessage,
+        Button,
+        Alert,
     },
     data() {
         return {

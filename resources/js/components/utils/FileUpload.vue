@@ -6,16 +6,16 @@
             </label>
             <input type="file" :accept="fileTypes" @change="fileChange" id="file"/>
         </div>
-        <BaseButton text="Upload"/>
-        <FlashMessage :message="message" :error="error" @closed="error = null; message = null"/>
+        <Button text="Upload"/>
+        <Alert :message="message" :error="error" @closed="error = null; message = null"/>
     </form>
 </template>
 
 <script>
 import {getError} from "@/utils/helpers";
 import FileService from "@/services/FileService";
-import BaseButton from "@/components/utils/BaseButton";
-import FlashMessage from "@/components/utils/FlashMessage";
+import Button from "@/components/utils/Button";
+import Alert from "@/components/utils/Alert";
 
 export default {
     name: "FileUpload",
@@ -34,8 +34,8 @@ export default {
         },
     },
     components: {
-        BaseButton,
-        FlashMessage,
+        Button,
+        Alert,
     },
     data() {
         return {

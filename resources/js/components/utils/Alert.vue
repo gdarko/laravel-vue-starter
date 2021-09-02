@@ -36,7 +36,7 @@
 <script>
 import CloseIcon from "@/components/icons/CloseIcon";
 export default {
-    name: "FlashMessage",
+    name: "Alert",
     components: {CloseIcon},
     inheritAttrs: true,
     props: {

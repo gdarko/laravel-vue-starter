@@ -6,14 +6,17 @@
                     <HomeIcon class="w-6 h-6 text-white"/>
                     <span class="sr-only">Dashboard</span>
                 </router-link>
-                <router-link to="/users" v-if="isAdmin">Users</router-link>
+                <router-link to="/users" v-if="authUser && authUser.isAdmin">Users</router-link>
             </div>
             <router-link to="/" v-else>
                 <HomeIcon class="w-6 h-6 text-white"/>
             </router-link>
             <div class="inline-flex items-center space-x-5" v-if="authUser">
                 <router-link to="/account">{{ authUser.name }}</router-link>
-                <LogoutButton/>
+                <button type="button" @click="logout" class="inline-flex items-center space-x-2">
+                    <span class="hidden sm:inline">Logout</span>
+                    <LogoutIcon class="w-6 h-6 text-white"/>
+                </button>
             </div>
             <router-link v-else to="/login" class="inline-flex items-center space-x-2">
                 <span>Login</span>
@@ -24,20 +27,26 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+
 import HomeIcon from "@/components/icons/HomeIcon";
 import LoginIcon from "@/components/icons/LoginIcon";
-import LogoutButton from "@/components/utils/LogoutButton";
+import LogoutIcon from "@/components/icons/LogoutIcon";
+import {mapGetters} from "vuex";
 
 export default {
     name: "Header",
     components: {
-        LogoutButton,
         HomeIcon,
         LoginIcon,
+        LogoutIcon,
     },
     computed: {
-        ...mapGetters("auth", ["authUser", "isAdmin"]),
+        ...mapGetters("auth", ["authUser"]),
     },
+    methods: {
+        logout() {
+            this.$store.dispatch("auth/logout");
+        },
+    }
 };
 </script>

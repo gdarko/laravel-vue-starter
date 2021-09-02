@@ -22,14 +22,6 @@
 <script>
 export default {
     props: {
-        action: {
-            type: String,
-            required: true,
-        },
-        path: {
-            type: String,
-            default: null,
-        },
         meta: {
             type: Object,
             required: true,
@@ -41,44 +33,16 @@ export default {
     },
     methods: {
         firstPage() {
-            this.$store.dispatch(this.action, this.links.first).then(() => {
-                if (this.path) {
-                    this.$router.push({
-                        path: this.path,
-                        query: {page: 1},
-                    });
-                }
-            });
+            this.$emit('page-change', 1);
         },
         prevPage() {
-            this.$store.dispatch(this.action, this.links.prev).then(() => {
-                if (this.path) {
-                    this.$router.push({
-                        path: this.path,
-                        query: {page: this.meta.current_page - 1},
-                    });
-                }
-            });
+            this.$emit('page-change', this.meta.current_page - 1);
         },
         nextPage() {
-            this.$store.dispatch(this.action, this.links.next).then(() => {
-                if (this.path) {
-                    this.$router.push({
-                        path: this.path,
-                        query: {page: this.meta.current_page + 1},
-                    });
-                }
-            });
+            this.$emit('page-change', this.meta.current_page + 1);
         },
         lastPage() {
-            this.$store.dispatch(this.action, this.links.last).then(() => {
-                if (this.path) {
-                    this.$router.push({
-                        path: this.path,
-                        query: {page: this.meta.last_page},
-                    });
-                }
-            });
+            this.$emit('page-change', this.meta.last_page);
         },
     },
 };

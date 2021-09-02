@@ -10,7 +10,7 @@
 
 <script>
 export default {
-    name: "BaseInput",
+    name: "TextInput",
     inheritAttrs: false,
     props: {
         class: String,

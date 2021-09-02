@@ -1,26 +1,26 @@
 <template>
     <div>
-        <FlashMessage :error="error" :message="message" @closed="error = null; message = null;" class="mb-4"/>
+        <Alert :error="error" :message="message" @closed="error = null; message = null;" class="mb-4"/>
         <form @submit.prevent="forgotPassword">
-            <BaseInput type="email" label="Email" name="email" v-model="email" autocomplete="email" placeholder="luke@jedi.com" class="mb-4"/>
-            <BaseButton type="submit" text="Send"/>
+            <TextInput type="email" label="Email" name="email" v-model="email" autocomplete="email" placeholder="luke@jedi.com" class="mb-4"/>
+            <Button type="submit" text="Send"/>
         </form>
     </div>
 </template>
 
 <script>
 import {getError} from "@/utils/helpers";
-import BaseButton from "@/components/utils/BaseButton";
-import BaseInput from "@/components/utils/BaseInput";
+import Button from "@/components/utils/Button";
+import TextInput from "@/components/utils/TextInput";
 import AuthService from "@/services/AuthService";
-import FlashMessage from "@/components/utils/FlashMessage";
+import Alert from "@/components/utils/Alert";
 
 export default {
     name: "ForgotPasswordForm",
     components: {
-        BaseButton,
-        BaseInput,
-        FlashMessage,
+        Button,
+        TextInput,
+        Alert,
     },
     data() {
         return {

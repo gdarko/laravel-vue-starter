@@ -11,9 +11,9 @@
             </li>
         </ul>
         <div v-if="!authUser.emailVerified" class="mt-4">
-            <FlashMessage :message="message" :error="error" @closed="error = null; message = null" class="mb-4"/>
+            <Alert :message="message" :error="error" @closed="error = null; message = null" class="mb-4"/>
             <form @submit.prevent="sendVerification">
-                <BaseButton type="submit" text="Verify Email"/>
+                <Button type="submit" text="Verify Email"/>
             </form>
         </div>
     </div>
@@ -23,14 +23,14 @@
 import {mapGetters} from "vuex";
 import {getError} from "@/utils/helpers";
 import AuthService from "@/services/AuthService";
-import FlashMessage from "@/components/utils/FlashMessage";
-import BaseButton from "@/components/utils/BaseButton";
+import Alert from "@/components/utils/Alert";
+import Button from "@/components/utils/Button";
 
 export default {
     name: "AccountInfo",
     components: {
-        FlashMessage,
-        BaseButton
+        Alert,
+        Button
     },
     data() {
         return {

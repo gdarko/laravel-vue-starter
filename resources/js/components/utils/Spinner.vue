@@ -11,7 +11,7 @@ import SpinnerIcon from "@/components/icons/SpinnerIcon";
 
 export default {
     components: {SpinnerIcon},
-    name: "SpinnerBar",
+    name: "Spinner",
     props: {
         text: {
             type: String,

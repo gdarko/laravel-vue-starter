@@ -1,11 +1,11 @@
 <template>
     <div>
-        <FlashMessage :error="error" @closed="error = null;" class="mb-4"/>
+        <Alert :error="error" @closed="error = null;" class="mb-4"/>
         <form @submit.prevent="login">
-            <BaseInput type="email" label="Email" name="email" v-model="email" autocomplete="email" placeholder="luke@jedi.com" class="mb-2"/>
-            <BaseInput type="password" label="Password" name="password" v-model="password" class="mb-4"/>
+            <TextInput type="email" label="Email" name="email" v-model="email" autocomplete="email" placeholder="luke@jedi.com" class="mb-2"/>
+            <TextInput type="password" label="Password" name="password" v-model="password" class="mb-4"/>
             <div class="flex justify-between">
-                <BaseButton type="submit" text="Login"/>
+                <Button type="submit" text="Login"/>
                 <router-link to="/forgot-password" class="text-sm base-link">
                     Forgot your password?
                 </router-link>
@@ -17,16 +17,16 @@
 <script>
 import {getError} from "@/utils/helpers";
 import AuthService from "@/services/AuthService";
-import BaseButton from "@/components/utils/BaseButton";
-import BaseInput from "@/components/utils/BaseInput";
-import FlashMessage from "@/components/utils/FlashMessage";
+import Button from "@/components/utils/Button";
+import TextInput from "@/components/utils/TextInput";
+import Alert from "@/components/utils/Alert";
 
 export default {
     name: "LoginView",
     components: {
-        BaseButton,
-        BaseInput,
-        FlashMessage,
+        Button,
+        TextInput,
+        Alert,
     },
     data() {
         return {
