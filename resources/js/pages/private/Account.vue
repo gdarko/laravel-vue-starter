@@ -4,7 +4,7 @@
             <AccountInfo class="p-5 bg-white border rounded shadow"/>
             <AccountDetails class="p-5 bg-white border rounded shadow"/>
             <AccountPassword class="p-5 bg-white border rounded shadow"/>
-            <FileUpload label="Upload Avatar" :fileTypes="['image/*']" endpoint="/users/auth/avatar" @fileUploaded="setAvatar" class="p-5 bg-white border rounded shadow"/>
+            <FileUpload label="Upload Avatar" :fileTypes="['image/*']" endpoint="/users/auth/avatar" @fileUploaded="reloadAvatar" class="p-5 bg-white border rounded shadow"/>
         </div>
     </div>
 </template>
@@ -15,7 +15,10 @@ import AccountDetails from "@/components/account/AccountDetails";
 import AccountPassword from "@/components/account/AccountPassword";
 import FileUpload from "@/components/utils/FileUpload";
 
-export default {
+import {defineComponent} from "vue";
+import {useStore} from 'vuex';
+
+export default defineComponent({
     name: "UserView",
     components: {
         AccountInfo,
@@ -23,10 +26,14 @@ export default {
         AccountPassword,
         FileUpload,
     },
-    methods: {
-        setAvatar() {
-            this.$store.dispatch("auth/getCurrentUser");
-        },
+    setup() {
+        const store = useStore;
+        function reloadAvatar() {
+            store.dispatch("auth/getCurrentUser");
+        }
+        return {
+            reloadAvatar
+        }
     }
-};
+});
 </script>
