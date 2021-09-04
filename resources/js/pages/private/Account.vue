@@ -4,7 +4,11 @@
             <AccountInfo class="p-5 bg-white border rounded shadow"/>
             <AccountDetails class="p-5 bg-white border rounded shadow"/>
             <AccountPassword class="p-5 bg-white border rounded shadow"/>
-            <FileUpload label="Upload Avatar" :fileTypes="['image/*']" endpoint="/users/auth/avatar" @fileUploaded="reloadAvatar" class="p-5 bg-white border rounded shadow"/>
+            <FileUpload class="p-5 bg-white border rounded shadow"
+                label="Upload Avatar"
+                :fileTypes="['image/*']"
+                endpoint="/users/auth/avatar"
+                @done="reloadAvatar()"/>
         </div>
     </div>
 </template>
@@ -27,7 +31,7 @@ export default defineComponent({
         FileUpload,
     },
     setup() {
-        const store = useStore;
+        const store = useStore();
         function reloadAvatar() {
             store.dispatch("auth/getCurrentUser");
         }

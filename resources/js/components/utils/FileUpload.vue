@@ -1,13 +1,11 @@
 <template>
-    <form @submit.prevent="uploadFile">
+    <form @submit.prevent="onSubmit">
+        <Alert v-if="state.message || state.error" class="mb-3" :message="state.message" :error="state.error" @closed="clearAlert"/>
         <div class="mb-4">
-            <label for="file" class="sr-only">
-                {{ label }}
-            </label>
-            <input type="file" :accept="fileTypes" @change="fileChange" id="file"/>
+            <label for="file" class="text-sm text-gray-500 mb-5">{{ label }}</label>
+            <input type="file" :accept="fileTypes" @change="onChange" id="file"/>
         </div>
-        <Button text="Upload"/>
-        <Alert :message="message" :error="error" @closed="error = null; message = null"/>
+        <Button :text="button"/>
     </form>
 </template>
 
@@ -17,7 +15,9 @@ import FileService from "@/services/FileService";
 import Button from "@/components/utils/Button";
 import Alert from "@/components/utils/Alert";
 
-export default {
+import {reactive, defineComponent} from "vue";
+
+export default defineComponent({
     name: "FileUpload",
     props: {
         fileTypes: {
@@ -32,41 +32,56 @@ export default {
             type: String,
             default: "",
         },
+        button: {
+            type: String,
+            default: "Upload"
+        }
     },
+    emits: ['done'],
     components: {
         Button,
         Alert,
     },
-    data() {
-        return {
+    setup(props, {emit}) {
+        const form = reactive({
             file: null,
+        })
+        const state = reactive({
             message: null,
             error: null,
-        };
-    },
-    methods: {
-        clearMessage() {
-            this.error = null;
-            this.message = null;
-        },
-        fileChange(event) {
-            this.clearMessage();
-            this.file = event.target.files[0];
-        },
-        uploadFile() {
+        })
+
+        function clearAlert() {
+            state.message = null;
+            state.error = null;
+        }
+        function onChange(event) {
+            clearAlert();
+            form.file = event.target.files[0];
+        }
+        function onSubmit() {
             const payload = {};
             const formData = new FormData();
-            formData.append("file", this.file);
+            formData.append("file", form.file);
             payload.file = formData;
             payload.endpoint = this.endpoint;
-            this.clearMessage();
-            FileService.uploadFile(payload)
-                .then(() => {
-                    this.message = "File uploaded.";
-                    this.$emit("fileUploaded");
-                })
-                .catch((error) => (this.error = getError(error)));
-        },
-    },
-};
+            clearAlert();
+            FileService.uploadFile(payload).then(() => {
+                state.message = "File uploaded.";
+                emit("done");
+            }).catch((error) => {
+                state.message = null;
+                state.error = getError(error)
+            });
+        }
+
+        return {
+            onSubmit,
+            onChange,
+            clearAlert,
+            state,
+            form,
+        }
+    }
+});
 </script>

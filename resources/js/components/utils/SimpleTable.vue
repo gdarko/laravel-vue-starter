@@ -21,7 +21,7 @@
                 </td>
                 <td v-for="(action, j) in actions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <slot :name="'actions-'+i+'-'+j">
-                        <a class="actionClasses(j)" @click="$emit('on-action', {action: j, item: record})">
+                        <a :class="actionClass(j)" @click="onActionClick({action: j, item: record})">
                             {{ action }}
                         </a>
                     </slot>
@@ -37,17 +37,20 @@
         </table>
     </div>
 
-    <Pager v-if="currentPage" :page-count="lastPage" :value="currentPage" @input="paginationInput"/>
+    <Pager v-if="currentPage > 1" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
 
 </template>
 
 <script>
 import Pager from "@/components/utils/Pager";
 
-export default {
+
+import {computed, defineComponent} from "vue";
+
+export default defineComponent({
     name: "SimpleTable",
     components: {Pager},
-    emits: ['onPageChange'],
+    emits: ['onPageChange', 'onAction'],
     props: {
         headers: {
             type: [Array, Object],
@@ -72,37 +75,45 @@ export default {
             },
         }
     },
-    computed: {
-        currentPage() {
-            var page = null;
-            if (this.pagination) {
-                if (this.pagination.hasOwnProperty('meta') && this.pagination.meta) {
-                    if (this.pagination.meta.hasOwnProperty('current_page')) {
-                        page = this.pagination.meta.current_page;
+    setup(props, {emit}) {
+
+        function getPaginationMeta(key) {
+            var value = null;
+            if (props.pagination) {
+                if (props.pagination.hasOwnProperty('meta') && props.pagination.meta) {
+                    if (props.pagination.meta.hasOwnProperty(key)) {
+                        value = props.pagination.meta[key];
                     }
                 }
             }
-            return page;
-        },
-        lastPage() {
-            var page = null;
-            if (this.pagination) {
-                if (this.pagination.hasOwnProperty('meta') && this.pagination.meta) {
-                    if (this.pagination.meta.hasOwnProperty('last_page')) {
-                        page = this.pagination.meta.last_page;
-                    }
-                }
-            }
-            return page;
+            return value;
         }
-    },
-    methods: {
-        actionClass(action) {
+
+        function actionClass(action) {
             return 'uppercase';
-        },
-        paginationInput(page) {
-            this.$emit('onPageChange', page);
-        },
+        }
+        function onPagerInput(page) {
+            emit('onPageChange', page);
+        }
+        function onActionClick(params) {
+            emit('onAction', params)
+        }
+
+        const currentPage = computed(() => {
+            return getPaginationMeta('current_page');
+        })
+
+        const lastPage = computed(() => {
+            return getPaginationMeta('last_page')
+        })
+
+        return {
+            currentPage,
+            lastPage,
+            actionClass,
+            onActionClick,
+            onPagerInput
+        }
     }
-};
+});
 </script>

@@ -5,7 +5,10 @@
 </template>
 
 <script>
-export default {
+
+import {defineComponent} from "vue";
+
+export default defineComponent({
     name: "Button",
     props: {
         type: {
@@ -17,10 +20,13 @@ export default {
             default: "Submit",
         },
     },
-    methods: {
-        click(event) {
-            this.emit('click', event.target.value);
+    setup(props, {emit}) {
+        function onClick(event) {
+            emit('click', event.target.value);
+        }
+        return {
+            onClick
         }
     }
-};
+});
 </script>

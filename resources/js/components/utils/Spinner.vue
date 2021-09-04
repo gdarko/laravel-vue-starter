@@ -9,8 +9,12 @@
 <script>
 import SpinnerIcon from "@/components/icons/SpinnerIcon";
 
-export default {
-    components: {SpinnerIcon},
+import {defineComponent} from "vue";
+
+export default defineComponent({
+    components: {
+        SpinnerIcon
+    },
     name: "Spinner",
     props: {
         text: {
@@ -19,5 +23,5 @@ export default {
             default: 'Loading',
         },
     }
-};
+});
 </script>

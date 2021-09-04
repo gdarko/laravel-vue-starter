@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 xl:px-0">
-        <SimpleTable v-if="table" :headers="table.headers" :records="table.records" :pagination="table.pagination" @on-page-change="fetchPage">
+        <SimpleTable v-if="table" :headers="table.headers" :records="table.records" :pagination="table.pagination" @page-changed="fetchPage">
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">

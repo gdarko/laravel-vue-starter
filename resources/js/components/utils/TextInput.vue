@@ -1,10 +1,21 @@
 <template>
     <div :style="style" :class="$props.class">
-        <label :for="name" class="text-sm text-gray-500" :class="{ 'sr-only': !showLabel }" v-if="label">
+        <label
+            :for="name"
+            class="text-sm text-gray-500"
+            :class="{ 'sr-only': !showLabel }"
+            v-if="label">
             {{ label }}
         </label>
-        <input :id="name" :type="type" :value="modelValue" :required="required" @input="updateValue" :placeholder="placeholder" :autocomplete="autocomplete"
-               class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
+        <input
+            :id="name"
+            :type="type"
+            :value="modelValue"
+            :required="required"
+            @input="onInput"
+            :placeholder="placeholder"
+            :autocomplete="autocomplete"
+            class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
     </div>
 </template>
 
@@ -48,10 +59,13 @@ export default {
         },
     },
     emits: ['update:modelValue'],
-    methods: {
-        updateValue(event) {
-            return this.$emit("update:modelValue", event.target.value);
-        },
-    },
+    setup(props, {emit}) {
+        function onInput(event) {
+            emit("update:modelValue", event.target.value);
+        }
+        return {
+            onInput
+        }
+    }
 };
 </script>
