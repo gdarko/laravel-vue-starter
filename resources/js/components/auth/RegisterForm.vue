@@ -1,10 +1,10 @@
 <template>
-    <form @submit.prevent="registerUser">
-        <Alert :error="error" @closed="error = null;" class="mb-4"/>
-        <TextInput type="text" label="Name" name="name" v-model="name" placeholder="Luke Skywalker" class="mb-2"/>
-        <TextInput type="email" label="Email" name="email" v-model="email" placeholder="luke@jedi.com" class="mb-2"/>
-        <TextInput type="password" label="Password" name="password" v-model="password" class="mb-2"/>
-        <TextInput type="password" label="Confirm Password" name="password-confirm" v-model="passwordConfirm" class="mb-4"/>
+    <form @submit.prevent="onFormSubmit">
+        <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
+        <TextInput type="text" label="Name" name="name" v-model="form.name" placeholder="Luke Skywalker" class="mb-2"/>
+        <TextInput type="email" label="Email" name="email" v-model="form.email" placeholder="luke@jedi.com" class="mb-2"/>
+        <TextInput type="password" label="Password" name="password" v-model="form.password" class="mb-2"/>
+        <TextInput type="password" label="Confirm Password" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
         <Button type="submit" text="Register"/>
     </form>
 </template>
@@ -15,36 +15,46 @@ import AuthService from "@/services/AuthService";
 import TextInput from "@/components/utils/TextInput";
 import Alert from "@/components/utils/Alert";
 import Button from "@/components/utils/Button";
+import {reactive, defineComponent} from "vue";
+import {useRouter} from 'vue-router';
 
-export default {
+export default defineComponent({
     name: "RegisterForm",
     components: {
         Button,
         TextInput,
         Alert,
     },
-    data() {
-        return {
+    setup() {
+        const router = useRouter();
+        const form = reactive({
             name: null,
             email: null,
             password: null,
             passwordConfirm: null,
+        })
+        const state = reactive({
             error: null,
-        };
-    },
-    methods: {
-        registerUser() {
-            this.error = null;
+        })
+
+        function onFormSubmit() {
+            state.error = null;
             const payload = {
-                name: this.name,
-                email: this.email,
-                password: this.password,
-                password_confirmation: this.passwordConfirm,
+                name: form.name,
+                email: form.email,
+                password: form.password,
+                password_confirmation: form.passwordConfirm,
             };
             AuthService.registerUser(payload)
-                .then(() => this.$router.push("/dashboard"))
-                .catch((error) => (this.error = getError(error)));
-        },
-    },
-};
+                .then(() => router.push("/dashboard"))
+                .catch((error) => (state.error = getError(error)));
+        }
+
+        return {
+            onFormSubmit,
+            form,
+            state
+        }
+    }
+});
 </script>

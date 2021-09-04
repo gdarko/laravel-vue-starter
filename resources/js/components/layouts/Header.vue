@@ -1,19 +1,19 @@
 <template>
     <header class="p-5 text-white bg-green-400">
         <nav class="container flex items-center justify-between mx-auto">
-            <div v-if="authUser" class="flex items-center space-x-5">
+            <div v-if="user" class="flex items-center space-x-5">
                 <router-link to="/dashboard">
                     <HomeIcon class="w-6 h-6 text-white"/>
                     <span class="sr-only">Dashboard</span>
                 </router-link>
-                <router-link to="/users" v-if="authUser && authUser.isAdmin">Users</router-link>
+                <router-link to="/users" v-if="user && user.isAdmin">Users</router-link>
             </div>
             <router-link to="/" v-else>
                 <HomeIcon class="w-6 h-6 text-white"/>
             </router-link>
-            <div class="inline-flex items-center space-x-5" v-if="authUser">
-                <router-link to="/account">{{ authUser.name }}</router-link>
-                <button type="button" @click="logout" class="inline-flex items-center space-x-2">
+            <div class="inline-flex items-center space-x-5" v-if="user">
+                <router-link to="/account">{{ user.name }}</router-link>
+                <button type="button" @click="onLogout" class="inline-flex items-center space-x-2">
                     <span class="hidden sm:inline">Logout</span>
                     <LogoutIcon class="w-6 h-6 text-white"/>
                 </button>
@@ -33,20 +33,30 @@ import LoginIcon from "@/components/icons/LoginIcon";
 import LogoutIcon from "@/components/icons/LogoutIcon";
 import {mapGetters} from "vuex";
 
-export default {
+import {useAuth} from "@/modules/auth";
+import {defineComponent} from 'vue'
+import {useStore} from 'vuex';
+
+export default defineComponent({
     name: "Header",
     components: {
         HomeIcon,
         LoginIcon,
         LogoutIcon,
     },
-    computed: {
-        ...mapGetters("auth", ["authUser"]),
-    },
-    methods: {
-        logout() {
-            this.$store.dispatch("auth/logout");
-        },
+    setup() {
+        const store = useStore();
+        const {user} = useAuth();
+
+        function onLogout() {
+            store.dispatch("auth/logout");
+        }
+
+        return {
+            onLogout,
+            store,
+            user
+        }
     }
-};
+});
 </script>

@@ -1,9 +1,9 @@
 <template>
     <div>
-        <Alert :error="error" @closed="error = null;" class="mb-4"/>
-        <form @submit.prevent="login">
-            <TextInput type="email" label="Email" name="email" v-model="email" autocomplete="email" placeholder="luke@jedi.com" class="mb-2"/>
-            <TextInput type="password" label="Password" name="password" v-model="password" class="mb-4"/>
+        <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
+        <form @submit.prevent="onFormSubmit">
+            <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" placeholder="luke@jedi.com" class="mb-2"/>
+            <TextInput type="password" label="Password" name="password" v-model="form.password" class="mb-4"/>
             <div class="flex justify-between">
                 <Button type="submit" text="Login"/>
                 <router-link to="/forgot-password" class="text-sm base-link">
@@ -21,45 +21,55 @@ import Button from "@/components/utils/Button";
 import TextInput from "@/components/utils/TextInput";
 import Alert from "@/components/utils/Alert";
 
-export default {
+import {reactive, defineComponent} from "vue";
+import {useStore} from 'vuex';
+import {useRouter} from 'vue-router';
+
+export default defineComponent({
     name: "LoginView",
     components: {
         Button,
         TextInput,
         Alert,
     },
-    data() {
-        return {
+    emits: ['error'],
+    setup(props, {emit}) {
+        const router = useRouter();
+        const store = useStore();
+        const form = reactive({
             email: null,
             password: null,
+        })
+        const state = reactive({
             error: null,
-        };
-    },
-    methods: {
-        async login() {
+        })
+        async function onFormSubmit() {
             const payload = {
-                email: this.email,
-                password: this.password,
+                email: form.email,
+                password: form.password,
             };
-            this.error = null;
+            state.error = null;
             try {
                 await AuthService.login(payload);
-                const authUser = await this.$store.dispatch("auth/getCurrentUser");
+                const authUser = await store.dispatch("auth/getCurrentUser");
                 if (authUser) {
-                    this.$store.dispatch("auth/setGuest", {value: "isNotGuest"});
-                    this.$router.push("/dashboard");
+                    await store.dispatch("auth/setGuest", {value: "isNotGuest"});
+                    await router.push("/dashboard");
                 } else {
-                    const error = Error(
+                    throw Error(
                         "Unable to fetch user after login, check your API settings."
                     );
-                    error.name = "Fetch User";
-                    throw error;
                 }
             } catch (error) {
-                this.error = getError(error);
-                this.$emit('error', this.error);
+                state.error = getError(error);
+                emit('error', state.error);
             }
-        },
-    },
-};
+        }
+        return {
+            onFormSubmit,
+            form,
+            state
+        }
+    }
+});
 </script>

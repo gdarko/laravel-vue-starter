@@ -1,8 +1,8 @@
 <template>
     <div>
-        <Alert :error="error" :message="message" @closed="error = null; message = null;" class="mb-4"/>
-        <form @submit.prevent="forgotPassword">
-            <TextInput type="email" label="Email" name="email" v-model="email" autocomplete="email" placeholder="luke@jedi.com" class="mb-4"/>
+        <Alert :error="state.error" :message="state.message" @closed="state.message = null; state.error = null;" class="mb-4"/>
+        <form @submit.prevent="onFormSubmit">
+            <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" placeholder="luke@jedi.com" class="mb-4"/>
             <Button type="submit" text="Send"/>
         </form>
     </div>
@@ -14,32 +14,37 @@ import Button from "@/components/utils/Button";
 import TextInput from "@/components/utils/TextInput";
 import AuthService from "@/services/AuthService";
 import Alert from "@/components/utils/Alert";
+import {reactive, defineComponent} from "vue";
 
-export default {
+export default defineComponent({
     name: "ForgotPasswordForm",
     components: {
         Button,
         TextInput,
         Alert,
     },
-    data() {
-        return {
-            email: null,
-            error: null,
+    setup() {
+        const state = reactive({
             message: null,
-        };
+            error: null,
+        })
+        const form = reactive({
+            email: null,
+        })
+
+        function onFormSubmit() {
+            state.message = null;
+            state.error = null;
+            AuthService.forgotPassword({email: form.email})
+                .then((response) => (state.message = response.data.message))
+                .catch((error) => (state.error = getError(error)));
+        }
+
+        return {
+            onFormSubmit,
+            form,
+            state
+        }
     },
-    methods: {
-        forgotPassword() {
-            this.error = null;
-            this.message = null;
-            const payload = {
-                email: this.email,
-            };
-            AuthService.forgotPassword(payload)
-                .then((response) => (this.message = response.data.message))
-                .catch((error) => (this.error = getError(error)));
-        },
-    },
-};
+});
 </script>
