@@ -1,7 +1,6 @@
 <template>
     <div class="p-5 xl:px-0">
-
-        <SimpleTable :headers="headers" :records="records" :pagination="pagination" @on-page-change="fetchPage">
+        <SimpleTable v-if="table" :headers="table.headers" :records="table.records" :pagination="table.pagination" @on-page-change="fetchPage">
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
@@ -26,70 +25,77 @@
                 {{ props.item.isAdmin ? 'Admin' : 'Regular ' }}
             </template>
         </SimpleTable>
-
     </div>
 </template>
 
 <script>
 
 import MailIcon from "@/components/icons/MailIcon";
-import Alert from "@/components/utils/Alert";
 import AvatarIcon from "@/components/icons/AvatarIcon";
-import Pagination from "@/components/utils/Pagination";
-import Spinner from '@/components/utils/Spinner';
 import UserService from "@/services/UserService";
 import {getError} from "@/utils/helpers";
 import SimpleTable from "@/components/utils/SimpleTable";
 
-export default {
-    name: "UsersView",
-    components: {SimpleTable, Alert, Pagination, MailIcon, AvatarIcon, Spinner},
-    data() {
-        return {
-            error: null,
-            loading: true,
+import {useRoute, useRouter} from 'vue-router'
+import {ref, watch, computed, onMounted, defineComponent} from 'vue';
 
+export default defineComponent({
+    name: "UsersView",
+    components: {
+        SimpleTable,
+        MailIcon,
+        AvatarIcon
+    },
+    setup() {
+        const route = useRoute();
+        const router = useRouter();
+        const currentPage = computed(() => route.params.hasOwnProperty('page') ? parseInt(route.params.page) : 1);
+        let state = ref({
+            isError: false,
+            isLoading: true,
+        })
+        let table = ref({
             headers: {
                 id: 'Name',
                 status: 'Status',
                 role: 'Role',
             },
-            records: null,
             pagination: {
                 meta: null,
                 links: null,
-            }
+            },
+            records: null,
+        })
+        function goToPage(page) {
+            state.value.isLoading = false;
+            const query = {...route.query, page: page};
+            router.replace({query});
         }
-    },
-    mounted() {
-        this.fetchPage();
-    },
-    watch: {
-        '$route.query.page'() {
-            this.fetchPage();
-        }
-    },
-    methods: {
-        fetchPage(page) {
-            this.loading = true;
-            page = page || (parseInt(this.$route.query.page) || 1);
+        function fetchPage(page) {
+            state.value.isLoading = true;
+            page = page || currentPage.value;
             UserService.getUsers(page)
                 .then((response) => {
-                    this.records = response.data.data;
-                    this.pagination = {
+                    table.value.records = response.data.data;
+                    table.value.pagination = {
                         meta: response.data.meta,
                         links: response.data.links,
                     }
-                    if (page > 1) {
-                        const query = {...this.$route.query, page: page};
-                        this.$router.replace({query});
-                    }
-                    this.loading = false;
+                    goToPage(page);
                 })
                 .catch((error) => {
-                    this.error = getError(error);
+                    state.value.isError = getError(error);
                 });
         }
-    }
-};
+        onMounted(fetchPage);
+        watch(currentPage, (newVal, oldVal) => {
+            fetchPage(newVal);
+        })
+        return {
+            table,
+            fetchPage
+        }
+
+    },
+});
 </script>
