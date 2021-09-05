@@ -37,20 +37,19 @@
         </table>
     </div>
 
-    <Pager v-if="currentPage > 1" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
+    <Pager :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
 
 </template>
 
 <script>
 import Pager from "@/components/utils/Pager";
 
-
 import {computed, defineComponent} from "vue";
 
 export default defineComponent({
     name: "SimpleTable",
     components: {Pager},
-    emits: ['onPageChange', 'onAction'],
+    emits: ['pageChanged', 'action'],
     props: {
         headers: {
             type: [Array, Object],
@@ -93,16 +92,14 @@ export default defineComponent({
             return 'uppercase';
         }
         function onPagerInput(page) {
-            emit('onPageChange', page);
+            emit('pageChanged', page);
         }
         function onActionClick(params) {
-            emit('onAction', params)
+            emit('action', params)
         }
-
         const currentPage = computed(() => {
             return getPaginationMeta('current_page');
         })
-
         const lastPage = computed(() => {
             return getPaginationMeta('last_page')
         })

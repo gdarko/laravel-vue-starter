@@ -20,7 +20,10 @@
 </template>
 
 <script>
-export default {
+
+import {defineComponent} from "vue";
+
+export default defineComponent({
     name: "TextInput",
     inheritAttrs: false,
     props: {
@@ -67,5 +70,5 @@ export default {
             onInput
         }
     }
-};
+});
 </script>

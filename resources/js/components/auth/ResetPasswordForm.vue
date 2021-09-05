@@ -30,10 +30,10 @@ import Alert from "@/components/utils/Alert";
 import AuthService from "@/services/AuthService";
 import Button from "@/components/utils/Button";
 
-import {reactive} from "vue";
+import {reactive, defineComponent} from "vue";
 import {useRoute} from "vue-router"
 
-export default {
+export default defineComponent({
     name: "ResetPasswordForm",
     components: {
         Button,
@@ -71,5 +71,5 @@ export default {
             state
         }
     },
-};
+});
 </script>

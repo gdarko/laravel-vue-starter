@@ -53,24 +53,22 @@ export default defineComponent({
         },
     },
     setup(props, {emit}) {
-        const error = ref('')
         const errorKeys = computed(() => {
-            if (!error || getType(error) === "string") {
+            if (!props.error || getType(props.error) === "string") {
                 return null;
             }
-            return Object.keys(error);
+            return Object.keys(props.error);
         })
         function getType(obj) {
             return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
         }
         function getError(key) {
-            return error[key][0];
+            return props.error[key][0];
         }
         function removeMessage() {
             emit('closed')
         }
         return {
-            error,
             errorKeys,
             getType,
             getError,

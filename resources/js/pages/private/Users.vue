@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 xl:px-0">
-        <SimpleTable v-if="table" :headers="table.headers" :records="table.records" :pagination="table.pagination" @page-changed="fetchPage">
+        <SimpleTable v-if="table" :headers="table.headers" :records="table.records" :pagination="table.pagination" @page-changed="goToPage">
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
@@ -37,7 +37,7 @@ import {getError} from "@/utils/helpers";
 import SimpleTable from "@/components/utils/SimpleTable";
 
 import {useRoute, useRouter} from 'vue-router'
-import {ref, watch, computed, onMounted, defineComponent} from 'vue';
+import {ref, watch, computed, onMounted, defineComponent, reactive} from 'vue';
 
 export default defineComponent({
     name: "UsersView",
@@ -49,12 +49,17 @@ export default defineComponent({
     setup() {
         const route = useRoute();
         const router = useRouter();
-        const currentPage = computed(() => route.params.hasOwnProperty('page') ? parseInt(route.params.page) : 1);
-        let state = ref({
-            isError: false,
-            isLoading: true,
+
+        const currentPage = computed(() => {
+            let page = route.query.page;
+            return page ? page : 1;
+        });
+
+        const state = reactive({
+            error: false,
+            loading: true,
         })
-        let table = ref({
+        const table = reactive({
             headers: {
                 id: 'Name',
                 status: 'Status',
@@ -66,34 +71,39 @@ export default defineComponent({
             },
             records: null,
         })
+
         function goToPage(page) {
-            state.value.isLoading = false;
+            state.loading = false;
             const query = {...route.query, page: page};
             router.replace({query});
         }
+
         function fetchPage(page) {
-            state.value.isLoading = true;
+            state.loading = true;
             page = page || currentPage.value;
             UserService.getUsers(page)
                 .then((response) => {
-                    table.value.records = response.data.data;
-                    table.value.pagination = {
-                        meta: response.data.meta,
-                        links: response.data.links,
-                    }
-                    goToPage(page);
+                    table.records = response.data.data;
+                    table.pagination.meta = response.data.meta;
+                    table.pagination.links = response.data.links;
                 })
                 .catch((error) => {
-                    state.value.isError = getError(error);
+                    state.error = getError(error);
                 });
         }
-        onMounted(fetchPage);
-        watch(currentPage, (newVal, oldVal) => {
-            fetchPage(newVal);
+
+        onMounted(() => {
+            fetchPage(currentPage.value)
         })
+
+        watch(route, (newV, oldV) => {
+            let page = newV.query.page ? newV.query.page : 1;
+            fetchPage(page);
+        })
+
         return {
             table,
-            fetchPage
+            goToPage
         }
 
     },

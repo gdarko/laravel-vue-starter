@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Alert v-if="state.error" :error="state.error" @closed="state.error = null;" class="mb-4"/>
+        <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
             <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" placeholder="luke@jedi.com" class="mb-2"/>
             <TextInput type="password" label="Password" name="password" v-model="form.password" class="mb-4"/>
@@ -26,7 +26,7 @@ import {useStore} from 'vuex';
 import {useRouter} from 'vue-router';
 
 export default defineComponent({
-    name: "LoginView",
+    name: "LoginForm",
     components: {
         Button,
         TextInput,

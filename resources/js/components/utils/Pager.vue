@@ -2,49 +2,34 @@
     <div class="flex flex-col items-center">
         <div class="flex text-gray-700">
             <div v-if="firstLastButton" :class="['w-16 h-10 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer' ]">
-                <a @click="selectFirstPage()"
-                   @keyup.enter="selectFirstPage()"
-                   :class="['w-16 h-10 flex justify-center uppercase text-xs items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]"
-                   tabindex="0"
-                   v-html="firstButtonText"></a>
+                <a @click="selectFirstPage()" @keyup.enter="selectFirstPage()" :class="['w-16 h-10 flex justify-center uppercase text-xs items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]" tabindex="0" v-html="firstButtonText"></a>
             </div>
             <div v-if="!(firstPageSelected() && hidePrevNext)" :class="['w-10 h-10 ml-2 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer' ]">
-                <a @click="prevPage()"
-                   @keyup.enter="prevPage()"
-                   :class="['w-10 h-10 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]"
-                   tabindex="0"
-                   v-html="prevText"></a>
+                <a @click="prevPage()" @keyup.enter="prevPage()" :class="['w-10 h-10 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]" tabindex="0" v-html="prevText"></a>
             </div>
             <div class="flex h-10 ml-2 mr-2 font-medium rounded-full bg-gray-200">
                 <template v-for="page in pages">
-                    <a v-if="page.disabled"
-                       :class="['w-10 md:flex justify-center items-center hidden  cursor-pointer leading-5 transition duration-150 ease-in  rounded-full', page.selected ? activeClass : '', disabledClass]"
-                       tabindex="0">{{ '...' }}</a>
-                    <a v-else
-                       @click="handlePageSelected(page.index + 1)"
-                       @keyup.enter="handlePageSelected(page.index + 1)"
-                       :class="['w-10 md:flex justify-center items-center hidden  cursor-pointer leading-5 transition duration-150 ease-in  rounded-full', page.selected ? activeClass : '']"
-                       tabindex="0">{{ page.content }}</a>
+                    <a v-if="page.disabled" :class="['w-10 md:flex justify-center items-center hidden  cursor-pointer leading-5 transition duration-150 ease-in  rounded-full', page.selected ? activeClass : '', disabledClass]" tabindex="0">{{
+                            '...'
+                        }}</a>
+                    <a v-else @click="handlePageSelected(page.index + 1)" @keyup.enter="handlePageSelected(page.index + 1)" :class="['w-10 md:flex justify-center items-center hidden  cursor-pointer leading-5 transition duration-150 ease-in  rounded-full', page.selected ? activeClass : '']" tabindex="0">{{
+                            page.content
+                        }}</a>
                 </template>
             </div>
             <div v-if="!(lastPageSelected() && hidePrevNext)" :class="['w-10 h-10 mr-2 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer', firstLastButton ? 'w-30' : 'w-10' ]">
-                <a @click="nextPage()" @keyup.enter="nextPage()"
-                   :class="['w-10 h-10 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]"
-                   tabindex="0"
-                   v-html="nextText"></a>
+                <a @click="nextPage()" @keyup.enter="nextPage()" :class="['w-10 h-10 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]" tabindex="0" v-html="nextText"></a>
             </div>
             <div v-if="firstLastButton" :class="['w-16 h-10 flex justify-center items-center rounded-full bg-gray-200 cursor-pointer', firstLastButton ? 'w-30' : 'w-10' ]">
-                <a @click="selectLastPage()"
-                   @keyup.enter="selectLastPage()"
-                   :class="['w-16 h-10 flex justify-center uppercase text-xs items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]"
-                   tabindex="0"
-                   v-html="lastButtonText"></a>
+                <a @click="selectLastPage()" @keyup.enter="selectLastPage()" :class="['w-16 h-10 flex justify-center uppercase text-xs items-center rounded-full bg-gray-200 cursor-pointer', (firstPageSelected() ? disabledClass : '') ]" tabindex="0" v-html="lastButtonText"></a>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import {computed, ref} from "vue";
+
 export default {
     name: 'Pager',
     props: {
@@ -108,40 +93,42 @@ export default {
             default: false
         }
     },
-    beforeUpdate() {
-        if (this.forcePage === undefined) return
-        if (this.forcePage !== this.selected) {
-            this.selected = this.forcePage
+    onBeforeUpdate(props) {
+        if (props.forcePage === undefined) return
+        if (props.forcePage !== props.selected) {
+            props.selected = props.forcePage
         }
     },
-    computed: {
-        selected: {
+    setup(props, {emit}) {
+        let innerValue = ref(1);
+        const selected = computed({
             get: function () {
-                return this.value || this.innerValue
+                return props.value || innerValue
             },
             set: function (newValue) {
-                this.innerValue = newValue
+                innerValue = newValue
             }
-        },
-        pages: function () {
+        });
+
+        const pages = computed(() => {
             let items = {}
-            if (this.pageCount <= this.pageRange) {
-                for (let index = 0; index < this.pageCount; index++) {
+            if (props.pageCount <= props.pageRange) {
+                for (let index = 0; index < props.pageCount; index++) {
                     let page = {
                         index: index,
                         content: index + 1,
-                        selected: index === (this.selected - 1)
+                        selected: index === (selected - 1)
                     }
                     items[index] = page
                 }
             } else {
-                const halfPageRange = Math.floor(this.pageRange / 2)
+                const halfPageRange = Math.floor(props.pageRange / 2)
 
                 let setPageItem = index => {
                     let page = {
                         index: index,
                         content: index + 1,
-                        selected: index === (this.selected - 1)
+                        selected: index === (selected - 1)
                     }
 
                     items[index] = page
@@ -157,89 +144,104 @@ export default {
                 }
 
                 // 1st - loop thru low end of margin pages
-                for (let i = 0; i < this.marginPages; i++) {
+                for (let i = 0; i < props.marginPages; i++) {
                     setPageItem(i);
                 }
 
                 // 2nd - loop thru selected range
                 let selectedRangeLow = 0;
-                if (this.selected - halfPageRange > 0) {
-                    selectedRangeLow = this.selected - 1 - halfPageRange;
+                if (selected - halfPageRange > 0) {
+                    selectedRangeLow = selected - 1 - halfPageRange;
                 }
 
-                let selectedRangeHigh = selectedRangeLow + this.pageRange - 1;
-                if (selectedRangeHigh >= this.pageCount) {
-                    selectedRangeHigh = this.pageCount - 1;
-                    selectedRangeLow = selectedRangeHigh - this.pageRange + 1;
+                let selectedRangeHigh = selectedRangeLow + props.pageRange - 1;
+                if (selectedRangeHigh >= props.pageCount) {
+                    selectedRangeHigh = props.pageCount - 1;
+                    selectedRangeLow = selectedRangeHigh - props.pageRange + 1;
                 }
 
-                for (let i = selectedRangeLow; i <= selectedRangeHigh && i <= this.pageCount - 1; i++) {
+                for (let i = selectedRangeLow; i <= selectedRangeHigh && i <= props.pageCount - 1; i++) {
                     setPageItem(i);
                 }
 
                 // Check if there is breakView in the left of selected range
-                if (selectedRangeLow > this.marginPages) {
+                if (selectedRangeLow > props.marginPages) {
                     setBreakView(selectedRangeLow - 1)
                 }
 
                 // Check if there is breakView in the right of selected range
-                if (selectedRangeHigh + 1 < this.pageCount - this.marginPages) {
+                if (selectedRangeHigh + 1 < props.pageCount - props.marginPages) {
                     setBreakView(selectedRangeHigh + 1)
                 }
 
                 // 3rd - loop thru high end of margin pages
-                for (let i = this.pageCount - 1; i >= this.pageCount - this.marginPages; i--) {
+                for (let i = props.pageCount - 1; i >= props.pageCount - props.marginPages; i--) {
                     setPageItem(i);
                 }
             }
             return items
+        })
+
+        function handlePageSelected(selected) {
+            if (selected === selected) {
+                return
+            }
+            innerValue = selected
+            emit('input', selected)
+            if (props.pageChanged) {
+                props.pageChanged(selected)
+            }
         }
-    },
-    data() {
+
+        function prevPage() {
+            if (selected <= 1) {
+                return
+            }
+            handlePageSelected(selected - 1)
+        }
+
+        function nextPage() {
+            if (selected >= props.pageCount) {
+                return
+            }
+            handlePageSelected(selected + 1)
+        }
+
+        function firstPageSelected() {
+            return selected === 1
+        }
+
+        function lastPageSelected() {
+            return (selected === props.pageCount) || (props.pageCount === 0)
+        }
+
+        function selectFirstPage() {
+            if (selected <= 1) {
+                return
+            }
+
+            handlePageSelected(1)
+        }
+
+        function selectLastPage() {
+            if (selected >= props.pageCount) {
+                return
+            }
+            handlePageSelected(props.pageCount)
+        }
+
         return {
-            innerValue: 1,
-        }
-    },
-    methods: {
-        handlePageSelected(selected) {
-            if (this.selected === selected) return
-
-            this.innerValue = selected
-            this.$emit('input', selected)
-            this.pageChanged(selected)
-        },
-        prevPage() {
-            if (this.selected <= 1) return
-
-            this.handlePageSelected(this.selected - 1)
-        },
-        nextPage() {
-            if (this.selected >= this.pageCount) return
-
-            this.handlePageSelected(this.selected + 1)
-        },
-        firstPageSelected() {
-            return this.selected === 1
-        },
-        lastPageSelected() {
-            return (this.selected === this.pageCount) || (this.pageCount === 0)
-        },
-        selectFirstPage() {
-            if (this.selected <= 1) return
-
-            this.handlePageSelected(1)
-        },
-        selectLastPage() {
-            if (this.selected >= this.pageCount) return
-
-            this.handlePageSelected(this.pageCount)
+            innerValue,
+            selected,
+            pages,
+            handlePageSelected,
+            selectFirstPage,
+            selectLastPage,
+            firstPageSelected,
+            lastPageSelected,
+            prevPage,
+            nextPage
         }
     }
 }
 </script>
-
-<style lang="css" scoped>
-a {
-    cursor: pointer;
-}
-</style>

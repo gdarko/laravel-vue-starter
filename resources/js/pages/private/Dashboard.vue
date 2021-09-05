@@ -24,15 +24,8 @@
                         </div>
                     </li>
                 </ul>
-                <Alert v-if="state.error"
-                       key="error"
-                       :error="state.error"
-                       @closed="state.error = null;"/>
-                <Pager v-if="table.pagination && table.pagination.meta.last_page > 1"
-                       :page-count="table.pagination.meta.last_page"
-                       :value="table.pagination.meta.current_page"
-                       class="mt-6 mb-6"
-                       @input="fetchPage"/>
+                <Alert v-if="state.error" key="error" :error="state.error" @closed="state.error = null;"/>
+                <Pager v-if="table.pagination && table.pagination.meta.last_page > 1" :page-count="table.pagination.meta.last_page" :value="table.pagination.meta.current_page" class="mt-6 mb-6" @input="goToPage"/>
             </article>
         </div>
         <footer class="py-5 text-center">
@@ -86,7 +79,11 @@ export default defineComponent({
         })
         const route = useRoute();
         const router = useRouter();
-        const currentPage = computed(() => route.params.hasOwnProperty('page') ? parseInt(route.params.page) : 1);
+
+        const currentPage = computed(() => {
+            let page = route.query.page;
+            return page ? page : 1;
+        });
 
         function goToPage(page) {
             state.loading = false;
@@ -101,7 +98,6 @@ export default defineComponent({
                 table.records = response.data.data;
                 table.pagination.meta = response.data.meta;
                 table.pagination.links = response.data.links;
-                goToPage(page);
             }).catch((error) => {
                 state.error = getError(error);
             });
@@ -117,14 +113,18 @@ export default defineComponent({
             });
         }
 
-        onMounted(fetchPage);
-        watch(currentPage, (newVal, oldVal) => {
-            console.log('fetching new page: ' + newVal);
-            fetchPage(newVal);
+        onMounted(() => {
+            fetchPage(route.query.page)
+        })
+
+        watch(route, (newV, oldV) => {
+            let page = newV.query.page ? newV.query.page : 1;
+            fetchPage(page);
         })
 
         return {
             onFormSubmit,
+            goToPage,
             fetchPage,
             form,
             state,

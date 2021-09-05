@@ -31,7 +31,6 @@
 import HomeIcon from "@/components/icons/HomeIcon";
 import LoginIcon from "@/components/icons/LoginIcon";
 import LogoutIcon from "@/components/icons/LogoutIcon";
-import {mapGetters} from "vuex";
 
 import {useAuth} from "@/modules/auth";
 import {defineComponent} from 'vue'
