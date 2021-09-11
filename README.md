@@ -1,3 +1,7 @@
+<p align="center">
+<a href="https://laravel.com" target="_blank"><img src="https://user-images.githubusercontent.com/5760249/132945127-a7d3a4bb-1ffc-4658-8096-c9cfc2f5c3dd.png" width="400"></a>
+</p>
+
 # Laravel Vue Starter
 
 The project was created to save myself time for redoing the same things all over again when starting a new Laravel/Vue project.
@@ -13,7 +17,7 @@ The project is built with the following components:
 - Laravel Fortify
 - Tailwind
 
-## How to install
+## ⚡️ How to install
 
 Installation is simple. Just like your ordinary Laravel app.
 
@@ -25,9 +29,9 @@ Installation is simple. Just like your ordinary Laravel app.
 6. `npm install`
 7. `npm run dev`
 
-## How it works
+## ⚡️ How it works
 
-### Authentication
+### ➡️ Authentication
 
 The project ships with complete authentication boilerplate and includes the following pages:
 - Login
@@ -35,29 +39,35 @@ The project ships with complete authentication boilerplate and includes the foll
 - Forget Password
 - Reset Password
 
-### Structure
+### ➡️ Structure
 
-All the front-end code is located in `resources/js`. The code is well organized in different directories to make things more readable.
+The front-end code is located in `resources/js`. The code is organized in different directories to make things more readable.
 
-- `components` - This is the reusable components home
-- `pages` - Here you will add the pages
-- `plugins` - The plugins configurations
-- `router` -  The router configuration including the middleware and the routes
-- `services` - The API services reside here
-- `store` - The store configuration
-- `utils` - Misc reusable functions and utils
+| Directory  | Description                           |
+|------------|---------------------------------------|
+| components | The home of the reusable components   |
+| modules    | The home of the reusable modules      |
+| pages      | The home of the page components       |
+| plugins    | The home of the plugins configuration |
+| router     | The home of the router configuration  |
+| services   | The home of the API services          |
+| store      | The home of the Vuex store            |
+| utils      | The home of the various other utils   |
 
-### Examples
+### ➡️ Examples
 
-The project ships with the `Messages` component that is just an example of the CRUD operations in a Laravel and Vue project. 
+The project ships with two examples as follows:
+
+- Dashboard.vue - Shows paginated list of messages with a form for sending a message.
+- Users.vue - Shows paginated list of system users.
 
 You will probably remove the examples once you start developing your app on top of this project.
 
-## Contributions
+## ⚡️ Contributions
 
 Pull requests are welcome, feel free to contribute to this project.
 
-## LICENSE
+## ⚡️ License
 
 ```
 Copyright (C) 2021 Darko Gjorgjijoski (https://darkog.com)
