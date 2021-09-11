@@ -1,8 +1,8 @@
 <template>
     <form @submit.prevent="onFormSubmit">
         <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
-        <TextInput type="text" label="Name" name="name" v-model="form.name" placeholder="Luke Skywalker" class="mb-2"/>
-        <TextInput type="email" label="Email" name="email" v-model="form.email" placeholder="luke@jedi.com" class="mb-2"/>
+        <TextInput type="text" label="Name" name="name" v-model="form.name" class="mb-2"/>
+        <TextInput type="email" label="Email" name="email" v-model="form.email" class="mb-2"/>
         <TextInput type="password" label="Password" name="password" v-model="form.password" class="mb-2"/>
         <TextInput type="password" label="Confirm Password" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
         <Button type="submit" text="Register"/>

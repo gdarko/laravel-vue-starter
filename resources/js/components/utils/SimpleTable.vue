@@ -37,7 +37,7 @@
         </table>
     </div>
 
-    <Pager :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
+    <Pager v-if="lastPage" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
 
 </template>
 

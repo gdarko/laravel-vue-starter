@@ -2,7 +2,7 @@
     <form @submit.prevent="onFormSubmit">
         <Alert :message="state.message" :error="state.error" @closed="state.error = null; state.message = null" class="mb-4"/>
         <TextInput type="text" label="Name" name="name" v-model="form.name" class="mb-2"/>
-        <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" placeholder="luke@jedi.com" class="mb-4"/>
+        <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
         <Button type="submit" text="Update"/>
     </form>
 </template>

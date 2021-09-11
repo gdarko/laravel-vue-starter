@@ -117,7 +117,7 @@ export default {
                     let page = {
                         index: index,
                         content: index + 1,
-                        selected: index === (selected - 1)
+                        selected: index === (selected.value - 1)
                     }
                     items[index] = page
                 }
@@ -128,7 +128,7 @@ export default {
                     let page = {
                         index: index,
                         content: index + 1,
-                        selected: index === (selected - 1)
+                        selected: index === (selected.value - 1)
                     }
 
                     items[index] = page
@@ -150,8 +150,8 @@ export default {
 
                 // 2nd - loop thru selected range
                 let selectedRangeLow = 0;
-                if (selected - halfPageRange > 0) {
-                    selectedRangeLow = selected - 1 - halfPageRange;
+                if (selected.value - halfPageRange > 0) {
+                    selectedRangeLow = selected.value - 1 - halfPageRange;
                 }
 
                 let selectedRangeHigh = selectedRangeLow + props.pageRange - 1;
@@ -182,41 +182,41 @@ export default {
             return items
         })
 
-        function handlePageSelected(selected) {
-            if (selected === selected) {
+        function handlePageSelected(newSelected) {
+            if (selected.value === newSelected) {
                 return
             }
-            innerValue = selected
-            emit('input', selected)
+            innerValue = newSelected
+            emit('input', innerValue)
             if (props.pageChanged) {
-                props.pageChanged(selected)
+                props.pageChanged(innerValue)
             }
         }
 
         function prevPage() {
-            if (selected <= 1) {
+            if (selected.value <= 1) {
                 return
             }
-            handlePageSelected(selected - 1)
+            handlePageSelected(selected.value - 1)
         }
 
         function nextPage() {
-            if (selected >= props.pageCount) {
+            if (selected.value >= props.pageCount) {
                 return
             }
-            handlePageSelected(selected + 1)
+            handlePageSelected(selected.value + 1)
         }
 
         function firstPageSelected() {
-            return selected === 1
+            return selected.value === 1
         }
 
         function lastPageSelected() {
-            return (selected === props.pageCount) || (props.pageCount === 0)
+            return (selected.value === props.pageCount) || (props.pageCount === 0)
         }
 
         function selectFirstPage() {
-            if (selected <= 1) {
+            if (selected.value <= 1) {
                 return
             }
 
@@ -224,7 +224,7 @@ export default {
         }
 
         function selectLastPage() {
-            if (selected >= props.pageCount) {
+            if (selected.value >= props.pageCount) {
                 return
             }
             handlePageSelected(props.pageCount)

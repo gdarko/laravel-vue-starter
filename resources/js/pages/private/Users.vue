@@ -93,7 +93,7 @@ export default defineComponent({
         }
 
         onMounted(() => {
-            fetchPage(currentPage.value)
+            fetchPage(route.query.page ? route.query.page : 1)
         })
 
         watch(route, (newV, oldV) => {
