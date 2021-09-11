@@ -18,11 +18,11 @@
                 </div>
             </template>
             <template v-slot:content-status="props">
-                <span v-if="props.item.emailVerified" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Active</span>
-                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Inactive</span>
+                <span v-if="props.item.emailVerified" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ trans('users.status.verified') }}</span>
+                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{{ trans('users.status.not_verified') }}</span>
             </template>
             <template v-slot:content-role="props">
-                {{ props.item.isAdmin ? 'Admin' : 'Regular ' }}
+                {{ props.item.isAdmin ? trans('users.roles.admin') : trans('users.roles.regular') }}
             </template>
         </SimpleTable>
     </div>
@@ -35,6 +35,8 @@ import AvatarIcon from "@/components/icons/AvatarIcon";
 import UserService from "@/services/UserService";
 import {getError} from "@/utils/helpers";
 import SimpleTable from "@/components/utils/SimpleTable";
+
+import {trans} from "@/modules/i18n";
 
 import {useRoute, useRouter} from 'vue-router'
 import {ref, watch, computed, onMounted, defineComponent, reactive} from 'vue';
@@ -61,9 +63,9 @@ export default defineComponent({
         })
         const table = reactive({
             headers: {
-                id: 'Name',
-                status: 'Status',
-                role: 'Role',
+                id: trans('users.labels.name'),
+                status: trans('users.labels.status'),
+                role: trans('users.labels.role'),
             },
             pagination: {
                 meta: null,
@@ -103,7 +105,8 @@ export default defineComponent({
 
         return {
             table,
-            goToPage
+            goToPage,
+            trans
         }
 
     },

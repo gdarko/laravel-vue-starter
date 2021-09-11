@@ -30,7 +30,7 @@
             </tbody>
             <tbody v-else>
             <tr>
-                <td :colspan="headers.length">No records found.</td>
+                <td :colspan="headers.length">{{ trans('global.phrases.no_records') }}</td>
             </tr>
             </tbody>
 
@@ -43,6 +43,7 @@
 
 <script>
 import Pager from "@/components/utils/Pager";
+import {trans} from "@/modules/i18n";
 
 import {computed, defineComponent} from "vue";
 
@@ -109,7 +110,8 @@ export default defineComponent({
             lastPage,
             actionClass,
             onActionClick,
-            onPagerInput
+            onPagerInput,
+            trans
         }
     }
 });

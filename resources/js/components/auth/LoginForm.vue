@@ -2,12 +2,12 @@
     <div>
         <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
-            <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" class="mb-2"/>
-            <TextInput type="password" label="Password" name="password" v-model="form.password" class="mb-4"/>
+            <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-2"/>
+            <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-4"/>
             <div class="flex justify-between">
-                <Button type="submit" text="Login"/>
+                <Button type="submit" :text="trans('global.buttons.login')"/>
                 <router-link to="/forgot-password" class="text-sm base-link">
-                    Forgot your password?
+                    {{ trans('global.phrases.forgot_password') }}
                 </router-link>
             </div>
         </form>
@@ -20,6 +20,7 @@ import AuthService from "@/services/AuthService";
 import Button from "@/components/utils/Button";
 import TextInput from "@/components/utils/TextInput";
 import Alert from "@/components/utils/Alert";
+import {trans} from "@/modules/i18n"
 
 import {reactive, defineComponent} from "vue";
 import {useStore} from 'vuex';
@@ -68,7 +69,8 @@ export default defineComponent({
         return {
             onFormSubmit,
             form,
-            state
+            state,
+            trans
         }
     }
 });

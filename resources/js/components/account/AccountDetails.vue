@@ -1,9 +1,9 @@
 <template>
     <form @submit.prevent="onFormSubmit">
         <Alert :message="state.message" :error="state.error" @closed="state.error = null; state.message = null" class="mb-4"/>
-        <TextInput type="text" label="Name" name="name" v-model="form.name" class="mb-2"/>
-        <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
-        <Button type="submit" text="Update"/>
+        <TextInput type="text" :label="trans('users.labels.name')" name="name" v-model="form.name" class="mb-2"/>
+        <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
+        <Button type="submit" :text="trans('global.buttons.save')"/>
     </form>
 </template>
 
@@ -15,6 +15,7 @@ import AuthService from "@/services/AuthService";
 
 import {getError} from "@/utils/helpers";
 import {useAuth} from '@/modules/auth';
+import {trans} from "@/modules/i18n";
 
 import {defineComponent, reactive, computed, onMounted} from "vue";
 import {useStore} from 'vuex';
@@ -62,6 +63,7 @@ export default defineComponent({
             onFormSubmit,
             state,
             form,
+            trans,
         }
     },
 });

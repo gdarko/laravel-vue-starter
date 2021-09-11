@@ -2,8 +2,8 @@
     <div>
         <Alert :error="state.error" :message="state.message" @closed="state.message = null; state.error = null;" class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
-            <TextInput type="email" label="Email" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
-            <Button type="submit" text="Send"/>
+            <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
+            <Button type="submit" :text="trans('global.buttons.send')"/>
         </form>
     </div>
 </template>
@@ -15,6 +15,8 @@ import TextInput from "@/components/utils/TextInput";
 import AuthService from "@/services/AuthService";
 import Alert from "@/components/utils/Alert";
 import {reactive, defineComponent} from "vue";
+
+import {trans} from "@/modules/i18n";
 
 export default defineComponent({
     name: "ForgotPasswordForm",
@@ -43,7 +45,8 @@ export default defineComponent({
         return {
             onFormSubmit,
             form,
-            state
+            state,
+            trans
         }
     },
 });

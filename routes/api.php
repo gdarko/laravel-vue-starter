@@ -20,7 +20,7 @@ use App\Http\Controllers\MessageController;
 
 Route::post('/sanctum/token', TokenController::class);
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
 
     Route::get('/users/auth', AuthController::class);
     Route::get('/users/{user}', [UserController::class, 'show']);

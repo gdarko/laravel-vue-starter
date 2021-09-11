@@ -7,13 +7,13 @@
             <li class="mb-1 font-bold">{{ user.name }}</li>
             <li>Email: {{ user.email }}</li>
             <li v-if="user.emailVerified" class="text-green-500 mt-2">
-                Email Verified
+                {{ trans('users.status.verified') }}
             </li>
         </ul>
         <div v-if="!user.emailVerified" class="mt-4">
             <Alert :message="state.message" :error="state.error" @closed="state.message = null; state.error = null" class="mb-4"/>
             <form @submit.prevent="onVerificationSend">
-                <Button type="submit" text="Verify Email"/>
+                <Button type="submit" :text="trans('users.status.ask_verify')"/>
             </form>
         </div>
     </div>
@@ -26,6 +26,8 @@ import Alert from "@/components/utils/Alert";
 import Button from "@/components/utils/Button";
 
 import {useAuth} from "@/modules/auth";
+import {trans} from "@/modules/i18n";
+
 import {reactive, defineComponent} from 'vue'
 
 export default defineComponent({
@@ -52,7 +54,8 @@ export default defineComponent({
         return {
             state,
             user,
-            onVerificationSend
+            onVerificationSend,
+            trans
         }
     }
 });

@@ -1,11 +1,11 @@
 <template>
     <form @submit.prevent="onFormSubmit">
         <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
-        <TextInput type="text" label="Name" name="name" v-model="form.name" class="mb-2"/>
-        <TextInput type="email" label="Email" name="email" v-model="form.email" class="mb-2"/>
-        <TextInput type="password" label="Password" name="password" v-model="form.password" class="mb-2"/>
-        <TextInput type="password" label="Confirm Password" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
-        <Button type="submit" text="Register"/>
+        <TextInput type="text" :label="trans('users.labels.name')" name="name" v-model="form.name" class="mb-2"/>
+        <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" class="mb-2"/>
+        <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-2"/>
+        <TextInput type="password" :label="trans('users.labels.confirm_password')" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
+        <Button type="submit" :text="trans('global.buttons.register')"/>
     </form>
 </template>
 
@@ -17,6 +17,8 @@ import Alert from "@/components/utils/Alert";
 import Button from "@/components/utils/Button";
 import {reactive, defineComponent} from "vue";
 import {useRouter} from 'vue-router';
+
+import {trans} from "@/modules/i18n"
 
 export default defineComponent({
     name: "RegisterForm",
@@ -53,7 +55,8 @@ export default defineComponent({
         return {
             onFormSubmit,
             form,
-            state
+            state,
+            trans
         }
     }
 });

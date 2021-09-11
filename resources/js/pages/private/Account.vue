@@ -5,7 +5,8 @@
             <AccountDetails class="p-5 bg-white border rounded shadow"/>
             <AccountPassword class="p-5 bg-white border rounded shadow"/>
             <FileUpload class="p-5 bg-white border rounded shadow"
-                label="Upload Avatar"
+                :label="trans('users.labels.ask_upload_avatar')"
+                :button="trans('global.buttons.save')"
                 :fileTypes="['image/*']"
                 endpoint="/users/auth/avatar"
                 @done="reloadAvatar()"/>
@@ -21,6 +22,7 @@ import FileUpload from "@/components/utils/FileUpload";
 
 import {defineComponent} from "vue";
 import {useStore} from 'vuex';
+import {trans} from "@/modules/i18n";
 
 export default defineComponent({
     name: "UserView",
@@ -36,7 +38,8 @@ export default defineComponent({
             store.dispatch("auth/getCurrentUser");
         }
         return {
-            reloadAvatar
+            reloadAvatar,
+            trans
         }
     }
 });

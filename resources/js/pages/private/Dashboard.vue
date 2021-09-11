@@ -2,9 +2,9 @@
     <div class="p-5 xl:px-0">
         <div class="max-w-xl m-auto">
             <form @submit.prevent="onFormSubmit" class="mb-4">
-                <TextInput type="message" label="Message" name="message" v-model="form.body" class="mb-4"/>
+                <TextInput type="message" :label="trans('messages.name')" name="message" v-model="form.body" class="mb-4"/>
                 <div class="flex justify-end mb-2 mt-2">
-                    <Button type="submit" text="Message"/>
+                    <Button type="submit" :text="trans('global.buttons.send')"/>
                 </div>
                 <Alert :error="state.error" @closed="state.error = null;"/>
             </form>
@@ -29,8 +29,7 @@
             </article>
         </div>
         <footer class="py-5 text-center">
-            <p class="text-gray-400">
-                Let's build something fun. </p>
+            <p class="text-gray-400">{{ trans('global.phrases.inspire') }}</p>
         </footer>
     </div>
 </template>
@@ -50,6 +49,8 @@ import SpinnerIcon from "@/components/icons/SpinnerIcon";
 
 import {reactive, onMounted, watch, computed, defineComponent} from 'vue';
 import {useRoute, useRouter} from "vue-router";
+
+import {trans} from "@/modules/i18n";
 
 export default defineComponent({
     name: "Dashboard",
@@ -128,7 +129,8 @@ export default defineComponent({
             fetchPage,
             form,
             state,
-            table
+            table,
+            trans
         }
     }
 });

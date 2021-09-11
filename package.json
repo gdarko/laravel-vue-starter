@@ -18,6 +18,7 @@
         "resolve-url-loader": "^4.0.0",
         "tailwindcss": "^2.2.7",
         "vue": "^3.2.6",
+        "vue-i18n": "^9.1.7",
         "vue-loader": "^16.5.0",
         "vue-router": "^4.0.11",
         "vuex": "^4.0.2"

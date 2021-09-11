@@ -4,9 +4,9 @@
             <div v-if="user" class="flex items-center space-x-5">
                 <router-link to="/dashboard">
                     <HomeIcon class="w-6 h-6 text-white"/>
-                    <span class="sr-only">Dashboard</span>
+                    <span class="sr-only">{{ trans('global.pages.home') }}</span>
                 </router-link>
-                <router-link to="/users" v-if="user && user.isAdmin">Users</router-link>
+                <router-link to="/users" v-if="user && user.isAdmin">{{ trans('global.pages.users') }}</router-link>
             </div>
             <router-link to="/" v-else>
                 <HomeIcon class="w-6 h-6 text-white"/>
@@ -14,12 +14,12 @@
             <div class="inline-flex items-center space-x-5" v-if="user">
                 <router-link to="/account">{{ user.name }}</router-link>
                 <button type="button" @click="onLogout" class="inline-flex items-center space-x-2">
-                    <span class="hidden sm:inline">Logout</span>
+                    <span class="hidden sm:inline">{{ trans('global.pages.logout') }}</span>
                     <LogoutIcon class="w-6 h-6 text-white"/>
                 </button>
             </div>
             <router-link v-else to="/login" class="inline-flex items-center space-x-2">
-                <span>Login</span>
+                <span>{{ trans('global.pages.login') }}</span>
                 <LoginIcon class="w-6 h-6 text-white"/>
             </router-link>
         </nav>
@@ -35,6 +35,8 @@ import LogoutIcon from "@/components/icons/LogoutIcon";
 import {useAuth} from "@/modules/auth";
 import {defineComponent} from 'vue'
 import {useStore} from 'vuex';
+
+import {trans} from '@/modules/i18n';
 
 export default defineComponent({
     name: "Header",
@@ -54,7 +56,8 @@ export default defineComponent({
         return {
             onLogout,
             store,
-            user
+            user,
+            trans
         }
     }
 });
