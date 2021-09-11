@@ -63,6 +63,8 @@ The project ships with two examples as follows:
 
 You will probably remove the examples once you start developing your app on top of this project.
 
+<p><img width="100%" src="https://user-images.githubusercontent.com/5760249/132946970-2e74e2d5-bb13-4190-953d-14e8a7d9b7d7.gif"/></p>
+
 ## ⚡️ Contributions
 
 Pull requests are welcome, feel free to contribute to this project.
