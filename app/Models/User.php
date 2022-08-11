@@ -15,19 +15,18 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * The attributes that are mass assignable.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $fillable = [
         'name',
         'email',
-        'avatar',
         'password',
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
+     * The attributes that should be hidden for serialization.
      *
-     * @var array
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -35,22 +34,31 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be cast to native types.
+     * The attributes that should be cast.
      *
      * @var array
      */
     protected $casts = [
-        'is_admin' => 'boolean',
         'email_verified_at' => 'datetime',
+        'is_admin'          => 'boolean',
     ];
 
+    /**
+     * Is the user administrator
+     *
+     * @return bool
+     */
     public function isAdmin(): bool
     {
-      return $this->is_admin;
+        return $this->is_admin;
     }
 
+    /**
+     * Returns the user messages
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function messages()
     {
-      return $this->hasMany(Message::class);
+        return $this->hasMany(Message::class);
     }
 }

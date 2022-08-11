@@ -61,6 +61,7 @@ return [
     |
     */
 
+    //'home' => RouteServiceProvider::HOME,
     'home' => env( 'SPA_URL' ) . '/dashboard',
 
     /*
@@ -89,7 +90,7 @@ return [
     |
     */
 
-    'middleware' => [ 'web' ],
+    'middleware' => ['web'],
 
     /*
     |--------------------------------------------------------------------------
@@ -103,7 +104,8 @@ return [
     */
 
     'limiters' => [
-        'login' => null,
+        'login' => 'login',
+        'two-factor' => 'two-factor',
     ],
 
     /*
@@ -137,7 +139,9 @@ return [
         Features::updateProfileInformation(),
         Features::updatePasswords(),
         //Features::twoFactorAuthentication([
-        //   'confirmPassword' => true,
+        //    'confirm' => true,
+        //    'confirmPassword' => true,
+            // 'window' => 0,
         //]),
     ],
 
