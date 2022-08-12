@@ -1,22 +1,21 @@
 {
     "private": true,
     "scripts": {
-        "dev": "npm run development",
-        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
-        "watch-poll": "npm run watch -- --watch-poll",
-        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --disable-host-check --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "prod": "npm run production",
-        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --config=node_modules/laravel-mix/setup/webpack.config.js"
+        "dev": "vite",
+        "build": "vite build",
+        "prod": "vite build",
+        "watch": "vite build --watch"
     },
     "dependencies": {
         "@tailwindcss/aspect-ratio": "^0.2.0",
         "@tailwindcss/forms": "^0.2.1",
         "@tailwindcss/typography": "^0.4.0",
+        "@vitejs/plugin-vue": "^3.0.2",
         "axios": "^0.21.1",
         "js-cookie": "^3.0.0",
         "resolve-url-loader": "^4.0.0",
         "tailwindcss": "^2.2.7",
+        "vite-plugin-resolve-extension-vue": "^0.1.0",
         "vue": "^3.2.6",
         "vue-i18n": "^9.1.7",
         "vue-loader": "^16.5.0",
@@ -28,11 +27,11 @@
         "acorn": "^8.4.1",
         "autoprefixer": "^10.3.3",
         "cross-env": "^7.0.3",
-        "laravel-mix": "^6.0.28",
+        "laravel-vite-plugin": "^0.5.3",
         "lodash": "^4.17.19",
-        "mix-tailwindcss": "^1.3.0",
         "postcss": "^8.3.6",
         "sass": "^1.38.1",
-        "sass-loader": "^12.1.0"
+        "sass-loader": "^12.1.0",
+        "vite": "^3.0.6"
     }
 }
