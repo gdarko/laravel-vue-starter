@@ -1,13 +1,13 @@
 import * as API from "@/services/API";
 
 export default {
-    getMessages(page) {
+    get(page) {
         return API.apiClient.get(`/messages/?page=${page}`);
     },
-    postMessage(payload) {
+    store(payload) {
         return API.apiClient.post("/messages", payload);
     },
-    paginateMessages(link) {
+    paginate(link) {
         return API.apiClient.get(link);
     },
 };

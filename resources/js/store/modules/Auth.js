@@ -1,5 +1,5 @@
 import router from "@/router";
-import {getError} from "@/utils/helpers";
+import {getError} from "@/modules/helpers";
 import AuthService from "@/services/AuthService";
 
 export const namespaced = true;

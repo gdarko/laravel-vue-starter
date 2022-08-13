@@ -10,7 +10,13 @@
 
     <script>
         window.AppConfig = {
-            csrf: '{{ csrf_token() }}'
+            csrf: '{{ csrf_token() }}',
+            defaultLocale: '{{ env('APP_LOCALE', 'en') }}',
+            defaultTimezone: '{{ env('APP_TIMEZONE', 'UTC') }}',
+            locales: {
+                en: {!! json_encode(\Illuminate\Support\Facades\Lang::get('frontend', [], 'en')) !!},
+                mk: {!! json_encode(\Illuminate\Support\Facades\Lang::get('frontend', [], 'mk')) !!},
+            }
         }
     </script>
 </head>

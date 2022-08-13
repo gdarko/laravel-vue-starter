@@ -1,13 +1,13 @@
 import * as API from "@/services/API";
 
 export default {
-    getUser(userId) {
+    find(userId) {
         return API.apiClient.get(`/users/${userId}`);
     },
-    getUsers(page) {
+    get(page) {
         return API.apiClient.get(`/users/?page=${page}`);
     },
-    paginateUsers(link) {
+    paginate(link) {
         return API.apiClient.get(link);
     },
 };

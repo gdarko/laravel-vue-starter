@@ -5,69 +5,70 @@ import admin from "@/router/middleware/admin";
 import guest from "@/router/middleware/guest";
 import pipeline from "@/router/pipeline";
 
-import Home from "@/pages/public/Home";
-import Dashboard from "@/pages/private/Dashboard";
-import Account from "@/pages/private/Account";
-import Users from "@/pages/private/Users";
-import Login from "@/pages/auth/Login";
-import Register from "@/pages/auth/Register";
-import ResetPassword from "@/pages/auth/ResetPassword";
-import ForgotPassword from "@/pages/auth/ForgotPassword";
-import NotFound from "@/pages/shared/NotFound";
+import {default as PageHome} from "@/views/pages/public/Home";
+import {default as PageDashboard} from "@/views/pages/private/dashboard/Main";
+import {default as PageLogin} from "@/views/pages/auth/login/Main";
+import {default as PageRegister} from "@/views/pages/auth/register/Main";
+import {default as PageResetPassword} from "@/views/pages/auth/reset-password/Main";
+import {default as PageForgotPassword} from "@/views/pages/auth/forgot-password/Main";
+import {default as PageNotFound} from "@/views/pages/shared/404/Main";
+import {default as PageProfile} from "@/views/pages/private/profile/Main";
+import {default as PageUsers} from "@/views/pages/private/users/Main";
+
 
 const routes = [
     {
         path: "/",
         name: "home",
         meta: {middleware: [guest]},
-        component: Home,
+        component: PageHome,
     },
     {
         path: "/dashboard",
         name: "dashboard",
         meta: {middleware: [auth]},
-        component: Dashboard,
+        component: PageDashboard,
     },
     {
-        path: "/account",
-        name: "account",
+        path: "/profile",
+        name: "profile",
         meta: {middleware: [auth]},
-        component: Account,
+        component: PageProfile,
     },
     {
         path: "/users",
         name: "users",
         meta: {middleware: [auth, admin]},
-        component: Users,
+        component: PageUsers,
     },
     {
         path: "/login",
         name: "login",
         meta: {middleware: [guest]},
-        component: Login,
+        component: PageLogin,
     },
     {
         path: "/register",
         name: "register",
         meta: {middleware: [guest]},
-        component: Register,
+        component: PageRegister,
     },
     {
         path: "/reset-password",
         name: "resetPassword",
         meta: {middleware: [guest]},
-        component: ResetPassword,
+        component: PageResetPassword,
     },
     {
         path: "/forgot-password",
         name: "forgotPassword",
         meta: {middleware: [guest]},
-        component: ForgotPassword,
+        component: PageForgotPassword,
     },
     {
         path: "/:catchAll(.*)",
         name: "notFound",
-        component: NotFound,
+        component: PageNotFound,
     },
 ];
 
