@@ -5,8 +5,18 @@ import admin from "@/router/middleware/admin";
 import guest from "@/router/middleware/guest";
 import pipeline from "@/router/pipeline";
 
+import Home from "@/pages/public/Home";
+import Dashboard from "@/pages/private/Dashboard";
+import Account from "@/pages/private/Account";
+import Users from "@/pages/private/Users";
+import Login from "@/pages/auth/Login";
+import Register from "@/pages/auth/Register";
+import ResetPassword from "@/pages/auth/ResetPassword";
+import ForgotPassword from "@/pages/auth/ForgotPassword";
+import NotFound from "@/pages/shared/NotFound";
+
 function page(path) {
-    return () => import(/* webpackChunkName: '' */ `@/pages/${path}`).then(m => m.default || m)
+    return () => import('@/pages/'+path+'.vue').then(m => m.default || m)
 }
 
 const routes = [
@@ -14,55 +24,54 @@ const routes = [
         path: "/",
         name: "home",
         meta: {middleware: [guest]},
-        component: page("public/Home"),
+        component: Home,
     },
     {
         path: "/dashboard",
         name: "dashboard",
         meta: {middleware: [auth]},
-        component: page("private/Dashboard"),
+        component: Dashboard,
     },
     {
         path: "/account",
         name: "account",
         meta: {middleware: [auth]},
-        component: page("private/Account"),
+        component: Account,
     },
     {
         path: "/users",
         name: "users",
         meta: {middleware: [auth, admin]},
-        component: page("private/Users"),
+        component: Users,
     },
     {
         path: "/login",
         name: "login",
         meta: {middleware: [guest]},
-        component: page("auth/Login"),
+        component: Login,
     },
     {
         path: "/register",
         name: "register",
         meta: {middleware: [guest]},
-        component: page("auth/Register"),
+        component: Register,
     },
     {
         path: "/reset-password",
         name: "resetPassword",
         meta: {middleware: [guest]},
-        component: page("auth/ResetPassword"),
+        component: ResetPassword,
     },
     {
         path: "/forgot-password",
         name: "forgotPassword",
         meta: {middleware: [guest]},
-        component: page("auth/ForgotPassword"),
+        component: ForgotPassword,
     },
     {
         path: "/:catchAll(.*)",
         name: "notFound",
-        component: () =>
-            import(/* webpackChunkName: "not-found" */ "@/pages/shared/NotFound"),
+        component: NotFound,
     },
 ];
 

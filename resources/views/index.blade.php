@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>{{env('APP_NAME')}}</title>
-    <link href="{{ mix('css/main.css') }}" type="text/css" rel="stylesheet"/>
+
+    @vite(['resources/scss/main.scss', 'resources/js/main.js'])
+
     <script>
         window.AppConfig = {
             csrf: '{{ csrf_token() }}'
@@ -18,7 +20,5 @@
 </noscript>
 <div id="app"></div>
 <!-- built files will be auto injected -->
-
-<script src="{{ mix('js/main.js') }}"></script>
 </body>
 </html>

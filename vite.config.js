@@ -1,8 +1,7 @@
 import laravel from 'laravel-vite-plugin'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue';
-
-const path = require('path')
+import path from 'path'
 
 export default defineConfig({
     plugins: [
@@ -34,5 +33,5 @@ export default defineConfig({
             '@': path.resolve(__dirname, './resources/js'),
         },
         extensions: ['.js', '.ts', '.jsx', '.tsx', '.json', '.vue', '.mjs']
-    },
+    }
 });
