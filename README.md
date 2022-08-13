@@ -43,16 +43,19 @@ The project ships with complete authentication boilerplate and includes the foll
 
 The front-end code is located in `resources/js`. The code is organized in different directories to make things more readable.
 
-| Directory  | Description                           |
-|------------|---------------------------------------|
-| components | The home of the reusable components   |
-| modules    | The home of the reusable modules      |
-| pages      | The home of the page components       |
-| plugins    | The home of the plugins configuration |
-| router     | The home of the router configuration  |
-| services   | The home of the API services          |
-| store      | The home of the Vuex store            |
-| utils      | The home of the various other utils   |
+| Directory | Description                             |
+|-----------|-----------------------------------------|
+| views     | The home of the views                   |
+| + pages   | The home of the pages                   |
+| + icons   | The home of the icons                   |
+| + layouts | The home of the global layouts          |
+| + utils   | The home of the other utilities         | 
+| modules   | The home of the reusable modules        |
+| plugins   | The home of the plugins configuration   |
+| router    | The home of the router configuration    |
+| services  | The home of the API services            |
+| store     | The home of the Vuex store              |
+| functions | The home of the various other functions |
 
 ### ➡️ Examples
 
@@ -72,7 +75,7 @@ Pull requests are welcome, feel free to contribute to this project.
 ## ⚡️ License
 
 ```
-Copyright (C) 2021 Darko Gjorgjijoski (https://darkog.com)
+Copyright (C) 2022 Darko Gjorgjijoski (https://darkog.com)
 
 This file is part of Laravel Vue Starter
 
