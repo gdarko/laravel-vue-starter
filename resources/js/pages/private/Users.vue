@@ -4,7 +4,7 @@
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
-                        <img v-if="props.item.avatar" :src="props.item.avatar" class="h-10 w-10 rounded-full" alt=""/>
+                        <img v-if="props.item.avatar" :src="props.item.avatar_url" class="h-10 w-10 rounded-full" alt=""/>
                         <AvatarIcon v-else class="w-10 h-10 text-gray-400 rounded-full"/>
                     </div>
                     <div class="ml-4">

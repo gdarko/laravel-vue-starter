@@ -1,7 +1,7 @@
 <template>
     <div v-if="user">
         <transition name="fade">
-            <img v-if="user.avatar" :src="user.avatar" class="w-16 h-16 rounded-full lg:w-20 lg:h-20" alt=""/>
+            <img v-if="user.avatar" :src="user.avatar_url" class="w-16 h-16 rounded-full lg:w-20 lg:h-20" alt=""/>
         </transition>
         <ul>
             <li class="mb-1 font-bold">{{ user.name }}</li>

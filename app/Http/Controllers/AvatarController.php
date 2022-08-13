@@ -21,7 +21,7 @@ class AvatarController extends Controller
     public function store(Request $request)
     {
         try {
-            $user         = Auth::user();
+            $user         = $request->user();
             $fileName     = 'avatars/'.$user->id;
             $filePath     = Storage::putFile($fileName, $request->file, 'public');
             $user->avatar = $filePath;

@@ -44,6 +44,15 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'avatar_url',
+    ];
+
+    /**
      * Is the user administrator
      *
      * @return bool
@@ -60,5 +69,19 @@ class User extends Authenticatable implements MustVerifyEmail
     public function messages()
     {
         return $this->hasMany(Message::class);
+    }
+
+    /**
+     * Returns the avatar url attribute
+     * @return string|null
+     */
+    public function getAvatarUrlAttribute()
+    {
+        $src = $this->getAttribute('avatar');
+        if (is_null($src)) {
+            return null;
+        }
+
+        return asset($src);
     }
 }
