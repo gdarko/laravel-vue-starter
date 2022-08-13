@@ -15,10 +15,6 @@ import ResetPassword from "@/pages/auth/ResetPassword";
 import ForgotPassword from "@/pages/auth/ForgotPassword";
 import NotFound from "@/pages/shared/NotFound";
 
-function page(path) {
-    return () => import('@/pages/'+path+'.vue').then(m => m.default || m)
-}
-
 const routes = [
     {
         path: "/",
