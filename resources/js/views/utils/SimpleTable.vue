@@ -1,6 +1,6 @@
 <template>
-    <div class="shadow overflow-hidden border-b border-gray-200 mb-8 sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-200">
+    <div class="shadow border-b border-gray-200 mb-8 sm:rounded-lg overflow-auto">
+        <table class="w-full divide-y divide-gray-200 table-auto">
             <thead class="bg-gray-50">
             <tr>
                 <th v-for="(item, i) in headers" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
