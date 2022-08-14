@@ -30,7 +30,6 @@
 
 <script>
 
-import MailIcon from "@/views/icons/MailIcon";
 import AvatarIcon from "@/views/icons/AvatarIcon";
 import UserService from "@/services/UserService";
 import {getError} from "@/modules/helpers";
@@ -44,7 +43,6 @@ import {ref, watch, computed, onMounted, defineComponent, reactive} from 'vue';
 export default defineComponent({
     components: {
         SimpleTable,
-        MailIcon,
         AvatarIcon
     },
     setup() {
