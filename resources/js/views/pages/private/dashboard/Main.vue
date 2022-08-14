@@ -10,7 +10,7 @@
             </form>
             <article class="p-5 bg-white rounded shadow relative" v-if="table.records && table.records.length">
                 <ul>
-                    <li v-for="(message, index) in table.records" :key="message.id" :class="['flex', 'py-3', 'space-x-2', 'border-b']">
+                    <li v-for="(message, index) in table.records" :key="message.id" :class="['flex', 'py-3', 'space-x-2', index === table.records.length-1 ? '' : 'border-b']">
                         <div>
                             <img v-if="message.user.avatar" :src="message.user.avatar_url" class="w-10 h-10 rounded-full" alt=""/>
                             <AvatarIcon v-else class="w-10 h-10 text-gray-400 rounded-full"/>

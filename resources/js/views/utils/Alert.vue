@@ -5,7 +5,7 @@
             <strong class="font-bold mr-2">{{ trans('global.phrases.success') }}</strong>
             <span class="block sm:inline">{{ message }}</span>
             <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" @click="removeMessage">
-                <CloseIcon/>
+                <Icon name="times"/>
             </span>
         </div>
 
@@ -13,7 +13,7 @@
             <strong class="font-bold mr-2">{{ trans('global.phrases.argh') }}</strong>
             <span class="block sm:inline">{{ error }}</span>
             <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" @click="removeMessage">
-                <CloseIcon/>
+                <Icon name="times"/>
             </span>
         </div>
 
@@ -26,7 +26,7 @@
                 </li>
             </ul>
             <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" @click="removeMessage">
-                <CloseIcon/>
+                <Icon name="times"/>
             </span>
         </div>
 
@@ -35,13 +35,13 @@
 
 <script>
 
-import CloseIcon from "@/views/icons/CloseIcon";
 import {computed, defineComponent, ref} from "vue";
 import {trans} from "@/modules/i18n";
+import Icon from "@/views/utils/Icon";
 
 export default defineComponent({
     name: "Alert",
-    components: {CloseIcon},
+    components: {Icon},
     inheritAttrs: true,
     props: {
         message: {

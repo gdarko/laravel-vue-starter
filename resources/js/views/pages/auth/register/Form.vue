@@ -5,7 +5,9 @@
         <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" class="mb-2"/>
         <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-2"/>
         <TextInput type="password" :label="trans('users.labels.confirm_password')" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
-        <Button type="submit" :text="trans('global.buttons.register')"/>
+        <div class="text-center">
+            <Button type="submit" :text="trans('global.buttons.register')"/>
+        </div>
     </form>
 </template>
 

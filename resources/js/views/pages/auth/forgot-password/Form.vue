@@ -3,7 +3,9 @@
         <Alert :error="state.error" :message="state.message" @closed="state.message = null; state.error = null;" class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
             <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
-            <Button type="submit" :text="trans('global.buttons.send')"/>
+            <div class="text-center">
+                <Button type="submit" :text="trans('global.buttons.send')"/>
+            </div>
         </form>
     </div>
 </template>

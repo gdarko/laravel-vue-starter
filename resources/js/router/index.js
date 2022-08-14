@@ -5,7 +5,6 @@ import admin from "@/router/middleware/admin";
 import guest from "@/router/middleware/guest";
 import pipeline from "@/router/pipeline";
 
-import {default as PageHome} from "@/views/pages/public/Home";
 import {default as PageDashboard} from "@/views/pages/private/dashboard/Main";
 import {default as PageLogin} from "@/views/pages/auth/login/Main";
 import {default as PageRegister} from "@/views/pages/auth/register/Main";
@@ -21,7 +20,7 @@ const routes = [
         path: "/",
         name: "home",
         meta: {middleware: [guest]},
-        component: PageHome,
+        component: PageLogin,
     },
     {
         path: "/dashboard",

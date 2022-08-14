@@ -14,11 +14,8 @@
                 <label for="password-confirm" class="text-sm text-gray-500">{{ trans('users.labels.confirm_password') }}</label>
                 <input type="password" id="password-confirm" v-model="form.passwordConfirm" class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
             </div>
-            <div class="flex justify-between">
+            <div class="text-center">
                 <Button type="submit" :text="trans('global.buttons.submit')"/>
-                <router-link to="/login" class="text-sm base-link">
-                    {{ trans('global.phrases.already_registered_login') }}
-                </router-link>
             </div>
         </form>
     </div>

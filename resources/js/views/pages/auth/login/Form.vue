@@ -1,17 +1,12 @@
 <template>
-    <div>
-        <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
-        <form @submit.prevent="onFormSubmit">
-            <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-2"/>
-            <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-4"/>
-            <div class="flex justify-between">
-                <Button type="submit" :text="trans('global.buttons.login')"/>
-                <router-link to="/forgot-password" class="text-sm base-link">
-                    {{ trans('global.phrases.forgot_password') }}
-                </router-link>
-            </div>
-        </form>
-    </div>
+    <Alert :error="state.error" @closed="state.error = null;" class="mb-4"/>
+    <form @submit.prevent="onFormSubmit">
+        <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-2"/>
+        <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-4"/>
+        <div class="text-center">
+            <Button type="submit" :text="trans('global.buttons.login')"/>
+        </div>
+    </form>
 </template>
 
 <script>

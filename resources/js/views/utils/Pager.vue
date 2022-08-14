@@ -70,7 +70,7 @@ export default {
         },
         activeClass: {
             type: String,
-            default: 'bg-green-400 text-white'
+            default: 'bg-theme-600 text-white'
         },
         disabledClass: {
             type: String,

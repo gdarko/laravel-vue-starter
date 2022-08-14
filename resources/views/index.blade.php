@@ -10,21 +10,27 @@
 
     <script>
         window.AppConfig = {
+            name: '{{ env('APP_NAME') }}',
+            logo: '{{ env('APP_LOGO') }}',
             csrf: '{{ csrf_token() }}',
             defaultLocale: '{{ env('APP_LOCALE', 'en') }}',
             defaultTimezone: '{{ env('APP_TIMEZONE', 'UTC') }}',
             locales: {
                 en: {!! json_encode(\Illuminate\Support\Facades\Lang::get('frontend', [], 'en')) !!},
                 mk: {!! json_encode(\Illuminate\Support\Facades\Lang::get('frontend', [], 'mk')) !!},
-            }
+            },
+            roles: {!! json_encode(\App\Enums\UserRole::all()) !!},
         }
     </script>
 </head>
+
 <body>
 <noscript>
     <strong>We're sorry but this application doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
 </noscript>
+
 <div id="app"></div>
-<!-- built files will be auto injected -->
+
 </body>
+
 </html>

@@ -4,7 +4,7 @@
         "dev": "vite",
         "build": "vite build",
         "prod": "vite build",
-        "watch": "vite build --watch"
+        "watch": "vite build --mode development --watch"
     },
     "dependencies": {
         "@tailwindcss/aspect-ratio": "^0.2.0",
@@ -12,6 +12,7 @@
         "@tailwindcss/typography": "^0.4.0",
         "@vitejs/plugin-vue": "^3.0.2",
         "axios": "^0.21.1",
+        "fork-awesome": "^1.2.0",
         "js-cookie": "^3.0.0",
         "resolve-url-loader": "^4.0.0",
         "tailwindcss": "^2.2.7",
