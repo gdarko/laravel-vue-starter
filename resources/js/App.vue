@@ -1,7 +1,7 @@
 <template>
     <div class="bg-gray-100 font-family-karla flex" v-if="user && user.hasOwnProperty('id')">
         <aside class="relative bg-theme-600 h-screen w-64 hidden sm:block shadow-xl">
-            <div class="p-6">
+            <div class="p-6 border-b border-theme-600">
                 <router-link class="text-white text-3xl font-semibold uppercase hover:text-gray-300" to="/dashboard">
                    <template v-if="state.app.logo">
                        <img :src="state.app.logo" :alt="state.app.name" />
@@ -31,7 +31,7 @@
                 </template>
             </nav>
             <template v-if="state.footerLeftLink">
-                <a v-if="state.footerLeftLink.href" :href="state.footerLeftLink.href" class="absolute w-full nav-dark-btn bottom-0 active-nav-link text-white flex items-center justify-center py-4">
+                <a v-if="state.footerLeftLink.href" :href="state.footerLeftLink.href" class="absolute w-full bottom-0 bg-theme-800 text-white flex items-center justify-center py-4">
                     <Icon :name="state.footerLeftLink.icon" class="mr-3"/>
                     {{ state.footerLeftLink.name }}
                 </a>
@@ -54,8 +54,8 @@
                     </a>
                     <button v-if="state.isAccountDropdownOpen" @click="state.isAccountDropdownOpen = false" class="h-full w-full fixed inset-0 cursor-default"></button>
                     <div v-if="state.isAccountDropdownOpen" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
-                        <router-link to="/profile" class="block px-4 py-2 dropdown-link hover:opacity-80">{{ trans('global.pages.profile') }}</router-link>
-                        <a href="#" @click.prevent="onLogout" class="block px-4 py-2 dropdown-link hover:opacity-80">{{ trans('global.phrases.sign_out') }}</a>
+                        <router-link to="/profile" class="block px-4 py-2 hover:bg-theme-800 hover:text-white hover:opacity-80">{{ trans('global.pages.profile') }}</router-link>
+                        <a href="#" @click.prevent="onLogout" class="block px-4 py-2 hover:bg-theme-800 hover:text-white hover:opacity-80">{{ trans('global.phrases.sign_out') }}</a>
                     </div>
                 </div>
             </header>
@@ -75,13 +75,13 @@
                 <!-- Dropdown Nav -->
                 <nav :class="state.isMobileMenuOpen ? 'flex': 'hidden'" class="flex flex-col pt-4">
                     <template v-for="item in state.mainMenu">
-                        <router-link v-if="canMenuItemShow(item, user, 'mobile')" :to="item.to ? item.to : '#'" class="flex items-center text-white opacity-75 hover:opacity-100 py-2 pl-4 nav-item">
+                        <router-link v-if="canMenuItemShow(item, user, 'mobile')" :to="item.to ? item.to : '#'" class="flex items-center text-white opacity-90 hover:opacity-100 py-2 pl-4 nav-item">
                             <Icon :name="item.icon" class="mr-2"/>
                             {{ item.name }}
                             <span class="sr-only" v-html="item.name"></span>
                         </router-link>
                     </template>
-                    <button class="w-full bg-white bg-theme-800 font-semibold py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center">
+                    <button class="w-full bg-theme-800 text-white font-semibold py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:text-theme-800 hover:bg-gray-300 flex items-center justify-center">
                         <Icon name="paperclip" class="mr-3"/>
                         {{ trans('global.buttons.documentation') }}
                     </button>
