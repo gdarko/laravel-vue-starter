@@ -145,7 +145,7 @@ export default {
                 },
                 {
                     name: trans('global.phrases.sign_out'),
-                    icon: 'users',
+                    icon: 'sign-out',
                     showDesktop: false,
                     showMobile: true,
                     showIfRole: false,
