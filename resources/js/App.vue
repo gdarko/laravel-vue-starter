@@ -44,6 +44,7 @@
                         <span class="relative pt-3 mr-2">{{ user.name }} <Icon :name="state.isAccountDropdownOpen ? 'angle-up' : 'angle-down'"/></span>
                         <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
                             <img :alt="user.name" v-if="user.avatar_url" :src="user.avatar_url">
+                            <AvatarIcon v-else/>
                         </button>
                     </a>
                     <button v-if="state.isAccountDropdownOpen" @click="state.isAccountDropdownOpen = false" class="h-full w-full fixed inset-0 cursor-default"></button>
@@ -97,10 +98,12 @@ import {useAuth} from "@/modules/auth";
 import {useStore} from "vuex";
 import Menu from "@/views/layouts/Menu";
 import Icon from "@/views/utils/Icon";
+import AvatarIcon from "@/views/icons/AvatarIcon";
 
 export default {
     name: "app",
     components: {
+        AvatarIcon,
         Menu,
         Icon
     },
@@ -172,7 +175,11 @@ export default {
         });
 
         function onLogout() {
-            store.dispatch("auth/logout");
+            store.dispatch("auth/logout").then(() => {
+                if (!store.getters["auth/authUser"]) {
+                    window.location.href = '/login'
+                }
+            })
         }
 
         return {

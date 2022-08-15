@@ -24,6 +24,7 @@ import {default as ProfileOverview} from "@/views/pages/private/profile/Overview
 import {default as ProfileForm} from "@/views/pages/private/profile/Form";
 import {default as ProfilePassword} from "@/views/pages/private/profile/Password";
 import FileUpload from "@/views/utils/FileUpload";
+import {useAuth} from "@/modules/auth";
 
 export default defineComponent({
     components: {
@@ -34,6 +35,7 @@ export default defineComponent({
     },
     setup() {
         const store = useStore();
+        const {user} = useAuth()
         function reloadAvatar() {
             store.dispatch("auth/getCurrentUser");
         }

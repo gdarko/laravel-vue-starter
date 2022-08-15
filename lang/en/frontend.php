@@ -56,6 +56,7 @@ return [
             "fix_errors"               => "Please fix the following errors:",
             "no_records"               => "No records found.",
             'login_desc'               => 'If you are already a member, easily log in.',
+            'login_not_verified'       => 'Please verify your email in order to be able to log in.',
             'register_desc'            => 'If you don\'t have an account, register.',
             'reset_password_desc'      => 'Fill the form to reset your password.',
             'login_ask'                => 'Already have an account?',

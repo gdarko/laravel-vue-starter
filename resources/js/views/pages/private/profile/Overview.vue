@@ -2,8 +2,9 @@
     <div v-if="user">
         <transition name="fade">
             <img v-if="user.avatar" :src="user.avatar_url" class="w-16 h-16 rounded-full lg:w-20 lg:h-20" alt=""/>
+            <span v-else class="w-16 h-16 rounded-full lg:w-20 lg:h-20"><AvatarIcon></AvatarIcon></span>
         </transition>
-        <ul>
+        <ul class="mt-2">
             <li class="mb-1 font-bold">{{ user.name }}</li>
             <li>Email: {{ user.email }}</li>
             <li v-if="user.emailVerified" class="text-green-500 mt-2">
@@ -29,9 +30,11 @@ import {useAuth} from "@/modules/auth";
 import {trans} from "@/modules/i18n";
 
 import {reactive, defineComponent} from 'vue'
+import AvatarIcon from "@/views/icons/AvatarIcon";
 
 export default defineComponent({
     components: {
+        AvatarIcon,
         Alert,
         Button
     },
