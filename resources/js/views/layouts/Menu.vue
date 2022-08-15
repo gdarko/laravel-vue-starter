@@ -1,7 +1,7 @@
 <template>
     <ul class="space-y-2">
         <template v-for="item in $props.state.mainMenu">
-            <li v-if="item.hasOwnProperty('subitems') && item.subitems.length > 0">
+            <li v-if="item.hasOwnProperty('subitems') && item.subitems.length > 0 && isEnabled(item, $props.user, $props.type)">
                 <button @click.prevent="state.currentExpandedMenuItem  ? state.currentExpandedMenuItem = null : state.currentExpandedMenuItem = item" type="button" class="transition duration-75 group w-full flex items-center p-2 text-base font-normal text-white font-semibold rounded-lg hover:text-theme-300 hover:bg-theme-800 dark:hover:bg-theme-800" :class="isActive(item) ? 'bg-theme-800' : ''">
                     <Icon :name="item.icon" class="mr-2 text-3xl pl-2 -mt-1"/>
                     <span class="flex-1 text-left" v-html="item.name"></span>
@@ -87,10 +87,21 @@ export default defineComponent({
                 return false;
             }
             let roleCheck = (false !== obj.showIfRole) ? parseInt(obj.showIfRole) === parseInt(user.role) : true;
+            let totalEnabledSubItems = 0;
+            if(obj.hasOwnProperty('subitems')) {
+                for(var i in obj.subitems) {
+                    if(isEnabled(obj.subitems[i], user, type)) {
+                        totalEnabledSubItems++;
+                    }
+                }
+            } else {
+                totalEnabledSubItems = 1;
+            }
+
             if (type === 'desktop') {
-                return roleCheck && obj.showDesktop;
+                return roleCheck && obj.showDesktop && totalEnabledSubItems > 0;
             } else if (type === 'mobile') {
-                return roleCheck && obj.showMobile;
+                return roleCheck && obj.showMobile && totalEnabledSubItems > 0;
             }
             return false;
         }
