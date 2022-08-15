@@ -9,7 +9,7 @@ module.exports = {
                 sans: ["'Open Sans'", "sans-serif"],
             },
             colors: {
-                theme: colors.cyan
+                theme: colors.teal
             }
         }
     },
