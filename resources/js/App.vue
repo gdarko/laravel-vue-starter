@@ -1,11 +1,11 @@
 <template>
-    <div class="bg-gray-100 font-family-karla flex" v-if="user && user.hasOwnProperty('id')">
+    <div class="bg-gray-100 flex" v-if="user && user.hasOwnProperty('id')">
         <aside class="relative bg-theme-600 h-screen w-64 hidden sm:block shadow-xl">
             <div class="p-6 border-b border-theme-600">
                 <router-link class="text-white text-3xl font-semibold uppercase hover:text-gray-300" to="/dashboard">
-                   <template v-if="state.app.logo">
-                       <img :src="state.app.logo" :alt="state.app.name" />
-                   </template>
+                    <template v-if="state.app.logo">
+                        <img :src="state.app.logo" :alt="state.app.name"/>
+                    </template>
                     <template v-else>
                         {{ state.app.name }}
                     </template>
@@ -21,14 +21,8 @@
                     </router-link>
                 </template>
             </div>
-            <nav class="text-white text-base font-semibold pt-3">
-                <template v-for="item in state.mainMenu">
-                    <router-link v-if="canMenuItemShow(item, user, 'desktop')" :to="item.to ? item.to : '#'" @click.prevent="item.hasOwnProperty('onClick') ?? item.onClick" class="flex items-center text-white opacity-85 hover:opacity-100 py-4 pl-6 nav-item">
-                        <Icon :name="item.icon" class="mr-2"/>
-                        {{ item.name }}
-                        <span class="sr-only" v-html="item.name"></span>
-                    </router-link>
-                </template>
+            <nav class="text-white text-base py-4 px-3 rounded">
+                <Menu :state="state" :user="user" :type="'desktop'"/>
             </nav>
             <template v-if="state.footerLeftLink">
                 <a v-if="state.footerLeftLink.href" :href="state.footerLeftLink.href" class="absolute w-full bottom-0 bg-theme-800 text-white flex items-center justify-center py-4">
@@ -71,16 +65,8 @@
                         <i v-else class="fa fa-times"></i>
                     </button>
                 </div>
-
-                <!-- Dropdown Nav -->
-                <nav :class="state.isMobileMenuOpen ? 'flex': 'hidden'" class="flex flex-col pt-4">
-                    <template v-for="item in state.mainMenu">
-                        <router-link v-if="canMenuItemShow(item, user, 'mobile')" :to="item.to ? item.to : '#'" class="flex items-center text-white opacity-90 hover:opacity-100 py-2 pl-4 nav-item">
-                            <Icon :name="item.icon" class="mr-2"/>
-                            {{ item.name }}
-                            <span class="sr-only" v-html="item.name"></span>
-                        </router-link>
-                    </template>
+                <nav :class="state.isMobileMenuOpen ? 'flex': 'hidden'" class="flex flex-col pt-4 text-base text-white">
+                    <Menu :state="state" :user="user" :type="'mobile'"/>
                     <button class="w-full bg-theme-800 text-white font-semibold py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:text-theme-800 hover:bg-gray-300 flex items-center justify-center">
                         <Icon name="paperclip" class="mr-3"/>
                         {{ trans('global.buttons.documentation') }}
@@ -108,12 +94,14 @@ import {reactive} from "vue";
 
 import {trans} from '@/modules/i18n';
 import {useAuth} from "@/modules/auth";
-import Icon from "@/views/utils/Icon";
 import {useStore} from "vuex";
+import Menu from "@/views/layouts/Menu";
+import Icon from "@/views/utils/Icon";
 
 export default {
     name: "app",
     components: {
+        Menu,
         Icon
     },
     setup() {
@@ -136,6 +124,24 @@ export default {
                     showMobile: true,
                     showIfRole: window.AppConfig.roles.admin,
                     to: '/users',
+                    subitems: [
+                        {
+                            name: trans('global.phrases.all_records'),
+                            icon: '',
+                            showDesktop: true,
+                            showMobile: true,
+                            showIfRole: window.AppConfig.roles.admin,
+                            to: '/users',
+                        },
+                        {
+                            name: trans('global.phrases.add_new'),
+                            icon: '',
+                            showDesktop: true,
+                            showMobile: true,
+                            showIfRole: window.AppConfig.roles.admin,
+                            to: '/users/create',
+                        }
+                    ]
                 },
                 {
                     name: trans('global.phrases.sign_out'),
@@ -161,28 +167,15 @@ export default {
             },
             isAccountDropdownOpen: false,
             isMobileMenuOpen: false,
+            currentExpandedMenuItem: null,
             app: window.AppConfig,
         });
-
-        function canMenuItemShow(obj, user, type) {
-            if (!obj) {
-                return false;
-            }
-            let roleCheck = (false !== obj.showIfRole) ? parseInt(obj.showIfRole) === parseInt(user.role) : true;
-            if (type === 'desktop') {
-                return roleCheck && obj.showDesktop;
-            } else if (type === 'mobile') {
-                return roleCheck && obj.showMobile;
-            }
-            return false;
-        }
 
         function onLogout() {
             store.dispatch("auth/logout");
         }
 
         return {
-            canMenuItemShow,
             state,
             user,
             trans,

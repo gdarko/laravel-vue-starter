@@ -49,6 +49,8 @@ return [
         ],
         "phrases" => [
             "sign_out"                 => "Sign Out",
+            'all_records'              => 'All Records',
+            'add_new'                  => 'Add New',
             "argh"                     => "Argh!",
             "success"                  => "Success!",
             "fix_errors"               => "Please fix the following errors:",
