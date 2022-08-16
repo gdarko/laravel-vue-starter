@@ -47,7 +47,7 @@
                             <AvatarIcon v-else/>
                         </button>
                     </a>
-                    <button v-if="state.isAccountDropdownOpen" @click="state.isAccountDropdownOpen = false" class="h-full w-full fixed inset-0 cursor-default"></button>
+                    <button v-if="state.isAccountDropdownOpen" @click="state.isAccountDropdownOpen = false" class="h-full w-full fixed inset-0 cursor-pointer"></button>
                     <div v-if="state.isAccountDropdownOpen" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16">
                         <router-link to="/profile" class="block px-4 py-2 hover:bg-theme-800 hover:text-white hover:opacity-80">{{ trans('global.pages.profile') }}</router-link>
                         <a href="#" @click.prevent="onLogout" class="block px-4 py-2 hover:bg-theme-800 hover:text-white hover:opacity-80">{{ trans('global.phrases.sign_out') }}</a>
