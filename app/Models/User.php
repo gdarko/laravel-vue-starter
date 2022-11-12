@@ -9,20 +9,15 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail
-{
+class User extends Authenticatable implements MustVerifyEmail {
     use HasApiTokens, HasFactory, Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that aren't mass assignable.
      *
-     * @var array<int, string>
+     * @var array<string>|bool
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $guarded = ['id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,31 +52,39 @@ class User extends Authenticatable implements MustVerifyEmail
      *
      * @return bool
      */
-    public function isAdmin(): bool
-    {
-        return UserRole::ADMIN === (int) $this->getAttribute('role');
+    public function isAdmin(): bool {
+        return UserRole::ADMIN === (int) $this->getAttribute( 'role' );
     }
 
     /**
      * Returns the user messages
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function messages()
-    {
-        return $this->hasMany(Message::class);
+    public function messages() {
+        return $this->hasMany( Message::class );
     }
 
     /**
      * Returns the avatar url attribute
      * @return string|null
      */
-    public function getAvatarUrlAttribute()
-    {
-        $src = $this->getAttribute('avatar');
-        if (is_null($src)) {
+    public function getAvatarUrlAttribute() {
+        $src = $this->getAttribute( 'avatar' );
+        if ( is_null( $src ) ) {
             return null;
         }
 
-        return asset($src);
+        return asset( $src );
+    }
+
+    /**
+     * Return list of roles
+     * @return array
+     */
+    public static function roles() {
+        return [
+            UserRole::ADMIN   => trans( 'frontend.users.roles.admin' ),
+            UserRole::REGULAR => trans( 'frontend.users.roles.regular' ),
+        ];
     }
 }

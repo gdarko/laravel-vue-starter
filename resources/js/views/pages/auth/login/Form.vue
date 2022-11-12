@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 import AuthService from "@/services/AuthService";
 import Button from "@/views/utils/Button";
 import TextInput from "@/views/utils/TextInput";
@@ -57,7 +57,7 @@ export default defineComponent({
                     );
                 }
             } catch (error) {
-                state.error = getError(error);
+                state.error = apiUtils.getError(error);
                 emit('error', state.error);
             }
         }

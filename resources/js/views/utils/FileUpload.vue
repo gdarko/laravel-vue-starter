@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 import FileService from "@/services/FileService";
 import Button from "@/views/utils/Button";
 import Alert from "@/views/utils/Alert";
@@ -71,7 +71,7 @@ export default defineComponent({
                 emit("done");
             }).catch((error) => {
                 state.message = null;
-                state.error = getError(error)
+                state.error = apiUtils.getError(error)
             });
         }
 

@@ -1,5 +1,9 @@
 {
     "private": true,
+    "env": {
+        "node": true,
+        "vue/setup-compiler-macros": true
+    },
     "scripts": {
         "dev": "vite",
         "build": "vite build --mode production",

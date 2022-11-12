@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 xl:px-0">
-        <SimpleTable v-if="table" :headers="table.headers" :records="table.records" :pagination="table.pagination" @page-changed="goToPage">
+        <SimpleTable v-if="table" :headers="table.headers" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="goToPage" @action="onAction">
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
@@ -30,15 +30,16 @@
 
 <script>
 
-import AvatarIcon from "@/views/icons/AvatarIcon";
-import UserService from "@/services/UserService";
-import {getError} from "@/modules/helpers";
-import SimpleTable from "@/views/utils/SimpleTable";
-
 import {trans} from "@/modules/i18n";
 
+import AvatarIcon from "@/views/icons/AvatarIcon";
+import UserService from "@/services/UserService";
+import apiUtils from "@/utils/api";
+import SimpleTable from "@/views/utils/SimpleTable";
+
 import {useRoute, useRouter} from 'vue-router'
-import {ref, watch, computed, onMounted, defineComponent, reactive} from 'vue';
+import {watch, computed, onMounted, defineComponent, reactive} from 'vue';
+import alertUtils from "@/utils/alert";
 
 export default defineComponent({
     components: {
@@ -68,8 +69,37 @@ export default defineComponent({
                 meta: null,
                 links: null,
             },
+            actions: {
+                edit: {
+                    id: 'edit',
+                    name: trans('global.actions.edit'),
+                    icon: "fa fa-edit",
+                    showName: false,
+                    to: '/users/{id}/edit'
+                },
+                delete: {
+                    id: 'delete',
+                    name: trans('global.actions.delete'),
+                    icon: "fa fa-trash",
+                    showName: false,
+                    danger: true,
+                }
+            },
             records: null,
         })
+
+        function onAction(params) {
+            switch (params.action.id) {
+                case 'delete':
+                    alertUtils.confirmDanger(function () {
+                        UserService.delete(params.item.id).then(function (response) {
+                            console.log(response);
+                            fetchPage();
+                        });
+                    })
+                    break;
+            }
+        }
 
         function goToPage(page) {
             state.loading = false;
@@ -80,14 +110,15 @@ export default defineComponent({
         function fetchPage(page) {
             state.loading = true;
             page = page || currentPage.value;
-            UserService.get(page)
+            UserService
+                .index({page: page})
                 .then((response) => {
                     table.records = response.data.data;
                     table.pagination.meta = response.data.meta;
                     table.pagination.links = response.data.links;
                 })
                 .catch((error) => {
-                    state.error = getError(error);
+                    state.error = apiUtils.getError(error);
                 });
         }
 
@@ -103,7 +134,8 @@ export default defineComponent({
         return {
             table,
             goToPage,
-            trans
+            trans,
+            onAction
         }
 
     },

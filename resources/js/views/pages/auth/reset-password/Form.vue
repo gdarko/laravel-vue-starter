@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 import Alert from "@/views/utils/Alert";
 import AuthService from "@/services/AuthService";
 import Button from "@/views/utils/Button";
@@ -61,7 +61,7 @@ export default defineComponent({
             };
             AuthService.resetPassword(payload)
                 .then((response) => (state.message = response.data.message))
-                .catch((error) => (state.error = getError(error)));
+                .catch((error) => (state.error = apiUtils.getError(error)));
         }
 
         return {

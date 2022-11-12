@@ -1,5 +1,5 @@
 import router from "@/router";
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 import AuthService from "@/services/AuthService";
 
 export const namespaced = true;
@@ -32,7 +32,7 @@ export const actions = {
                     router.push({path: "/login"});
             })
             .catch((error) => {
-                commit("SET_ERROR", getError(error));
+                commit("SET_ERROR", apiUtils.getError(error));
             });
     },
     async getCurrentUser({commit}) {
@@ -45,7 +45,7 @@ export const actions = {
         } catch (error) {
             commit("SET_LOADING", false);
             commit("SET_USER", null);
-            commit("SET_ERROR", getError(error));
+            commit("SET_ERROR", apiUtils.getError(error));
         }
     },
     setGuest(context, {value}) {

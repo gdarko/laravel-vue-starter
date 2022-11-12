@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 import AuthService from "@/services/AuthService";
 import TextInput from "@/views/utils/TextInput";
 import Alert from "@/views/utils/Alert";
@@ -51,7 +51,7 @@ export default defineComponent({
             };
             AuthService.registerUser(payload)
                 .then(() => router.push("/dashboard"))
-                .catch((error) => (state.error = getError(error)));
+                .catch((error) => (state.error = apiUtils.getError(error)));
         }
 
         return {

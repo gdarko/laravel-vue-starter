@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 import Button from "@/views/utils/Button";
 import TextInput from "@/views/utils/TextInput";
 import AuthService from "@/services/AuthService";
@@ -41,7 +41,7 @@ export default defineComponent({
             state.error = null;
             AuthService.forgotPassword({email: form.email})
                 .then((response) => (state.message = response.data.message))
-                .catch((error) => (state.error = getError(error)));
+                .catch((error) => (state.error = apiUtils.getError(error)));
         }
 
         return {

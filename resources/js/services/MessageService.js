@@ -1,8 +1,13 @@
 import * as API from "@/services/API";
 
 export default {
-    get(page) {
-        return API.apiClient.get(`/messages/?page=${page}`);
+    index(params) {
+        let path = '/messages'
+        let query = new URLSearchParams(params).toString();
+        if (query) {
+            path += '?' + query
+        }
+        return API.apiClient.get(path);
     },
     store(payload) {
         return API.apiClient.post("/messages", payload);

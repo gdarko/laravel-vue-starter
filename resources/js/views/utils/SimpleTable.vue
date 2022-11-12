@@ -6,7 +6,7 @@
                 <th v-for="(item, i) in headers" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     <slot :name="'header-'+i">{{ item }}</slot>
                 </th>
-                <th v-if="actions && actions.length > 0" scope="col" class="relative px-6 py-3">
+                <th v-if="actions" scope="col" class="relative px-6 py-3">
                     <slot name="actions"></slot>
                 </th>
             </tr>
@@ -14,15 +14,17 @@
             <tbody v-if="records && records.length" class="bg-white divide-y divide-gray-200">
             <tr v-for="(record, i) in records">
                 <td v-for="(header, j) in headers" class="px-6 py-4 whitespace-nowrap">
-                    <slot :item="record" :name="'content-'+j">{{
-                            record && record.hasOwnProperty(j) ? record[j] : ''
-                        }}
-                    </slot>
+                    <slot :item="record" :name="'content-'+j">{{ record && record.hasOwnProperty(j) ? record[j] : '' }}</slot>
                 </td>
-                <td v-for="(action, j) in actions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <slot :name="'actions-'+i+'-'+j">
-                        <a :class="actionClass(j)" @click="onActionClick({action: j, item: record})">
-                            {{ action }}
+                <td v-if="actions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <slot :name="'actions-'+j" v-for="(action, j) in actions">
+                        <router-link v-if="action.hasOwnProperty('to') && action.to" :to="getActionPage(action, record)" :class="getActionClass(action)" :title="action.name">
+                            <i v-if="action.icon" :class="action.icon"></i>
+                            <span v-if="(!action.hasOwnProperty('showName') || action.showName)">{{ action.name }}</span>
+                        </router-link>
+                        <a v-else :class="getActionClass(action)" @click="onActionClick({action: action, item: record})" :title="action.name">
+                            <i v-if="action.icon" :class="action.icon"></i>
+                            <span v-if="(!action.hasOwnProperty('showName') || action.showName)">{{ action.name }}</span>
                         </a>
                     </slot>
                 </td>
@@ -89,15 +91,40 @@ export default defineComponent({
             return value;
         }
 
-        function actionClass(action) {
-            return 'uppercase';
+        function getActionPage(action, record) {
+            if (!action.hasOwnProperty('to')) {
+                return '#';
+            }
+            for (let key in record) {
+                if (action.to.indexOf('{' + key + '}') !== -1) {
+                    return action.to.replace('{' + key + '}', record[key]);
+                }
+            }
+            return action.to;
         }
+
+        function getActionClass(action) {
+
+            let classes = 'uppercase cursor-pointer text-lg';
+            if (Object.keys(props.actions).length > 1) {
+                classes += ' mr-3';
+            }
+
+            if (action.hasOwnProperty('danger') && action.danger) {
+                classes += ' text-danger-400'
+            }
+
+            return classes;
+        }
+
         function onPagerInput(page) {
             emit('pageChanged', page);
         }
+
         function onActionClick(params) {
             emit('action', params)
         }
+
         const currentPage = computed(() => {
             return getPaginationMeta('current_page');
         })
@@ -108,10 +135,12 @@ export default defineComponent({
         return {
             currentPage,
             lastPage,
-            actionClass,
+            getActionClass,
+            getActionPage,
             onActionClick,
             onPagerInput,
-            trans
+            trans,
+            emit
         }
     }
 });

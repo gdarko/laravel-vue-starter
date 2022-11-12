@@ -22,7 +22,7 @@
             <span class="block sm:inline">{{ trans('global.phrases.fix_errors') }}</span>
             <ul class="mt-2 list-disc pl-5" key="error-list">
                 <li v-for="key in errorKeys" :key="key">
-                    {{ getError(key) }}
+                    {{ getMessageError(key) }}
                 </li>
             </ul>
             <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" @click="removeMessage">
@@ -63,7 +63,7 @@ export default defineComponent({
         function getType(obj) {
             return Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
         }
-        function getError(key) {
+        function getMessageError(key) {
             return props.error[key][0];
         }
         function removeMessage() {
@@ -72,7 +72,7 @@ export default defineComponent({
         return {
             errorKeys,
             getType,
-            getError,
+            getMessageError,
             removeMessage,
             trans
         }

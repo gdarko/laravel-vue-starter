@@ -22,11 +22,20 @@ Route::post('/sanctum/token', TokenController::class);
 
 Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
 
+    /**
+     * Auth related
+     */
     Route::get('/users/auth', AuthController::class);
-    Route::get('/users/{user}', [UserController::class, 'show']);
-    Route::get('/users', [UserController::class, 'index']);
-    Route::post('/users/auth/avatar', [AvatarController::class, 'store']);
 
+    /**
+     * Users
+     */
+    Route::post('/users/auth/avatar', [UserController::class, 'store_avatar']);
+    Route::resource('users', UserController::class);
+
+    /**
+     * Messages
+     */
     Route::post('/messages', [MessageController::class, 'store']);
     Route::get('/messages', [MessageController::class, 'index']);
 });

@@ -12,7 +12,10 @@ import {default as PageResetPassword} from "@/views/pages/auth/reset-password/Ma
 import {default as PageForgotPassword} from "@/views/pages/auth/forgot-password/Main";
 import {default as PageNotFound} from "@/views/pages/shared/404/Main";
 import {default as PageProfile} from "@/views/pages/private/profile/Main";
+
 import {default as PageUsers} from "@/views/pages/private/users/Main";
+import {default as PageUsersCreate} from "@/views/pages/private/users/Create";
+import {default as PageUsersEdit} from "@/views/pages/private/users/Edit";
 
 
 const routes = [
@@ -39,6 +42,18 @@ const routes = [
         name: "users",
         meta: {middleware: [auth, admin]},
         component: PageUsers,
+    },
+    {
+        path: "/users/create",
+        name: "users.create",
+        meta: {middleware: [auth, admin]},
+        component: PageUsersCreate,
+    },
+    {
+        path: "/users/:id/edit",
+        name: "users.edit",
+        meta: {middleware: [auth, admin]},
+        component: PageUsersEdit,
     },
     {
         path: "/login",

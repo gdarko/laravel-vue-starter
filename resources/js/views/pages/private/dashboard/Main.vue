@@ -36,7 +36,7 @@
 
 <script>
 
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 
 import Alert from "@/views/utils/Alert";
 import AvatarIcon from "@/views/icons/AvatarIcon";
@@ -94,12 +94,12 @@ export default defineComponent({
         function fetchPage(page) {
             state.loading = true;
             page = page || currentPage.value;
-            MessageService.get(page).then((response) => {
+            MessageService.index({page: page}).then((response) => {
                 table.records = response.data.data;
                 table.pagination.meta = response.data.meta;
                 table.pagination.links = response.data.links;
             }).catch((error) => {
-                state.error = getError(error);
+                state.error = apiUtils.getError(error);
             });
         }
 
@@ -109,7 +109,7 @@ export default defineComponent({
                 form.body = null;
                 fetchPage()
             }).catch((error) => {
-                state.error = getError(error);
+                state.error = apiUtils.getError(error);
             });
         }
 

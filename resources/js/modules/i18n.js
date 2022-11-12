@@ -1,6 +1,6 @@
-import {useI18n} from "vue-i18n";
+import i18n from "@/plugins/i18n"
 
 export function trans(key) {
-    const {t} = useI18n();
-    return t(key);
+    const {t} = i18n.global;
+    return t(key)
 }

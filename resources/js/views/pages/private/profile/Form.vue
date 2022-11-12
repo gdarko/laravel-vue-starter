@@ -13,7 +13,7 @@ import TextInput from "@/views/utils/TextInput";
 import Alert from "@/views/utils/Alert";
 import AuthService from "@/services/AuthService";
 
-import {getError} from "@/modules/helpers";
+import apiUtils from "@/utils/api";
 import {useAuth} from '@/modules/auth';
 import {trans} from "@/modules/i18n";
 
@@ -56,7 +56,7 @@ export default defineComponent({
             AuthService.updateUser(form)
                 .then(() => store.dispatch("auth/getCurrentUser"))
                 .then((response) => (state.message = 'Profile updated successfully.'))
-                .catch((error) => (state.error = getError(error)));
+                .catch((error) => (state.error = apiUtils.getError(error)));
         }
 
         return {
