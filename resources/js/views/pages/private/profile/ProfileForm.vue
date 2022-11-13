@@ -1,7 +1,9 @@
 <template>
     <form @submit.prevent="onFormSubmit">
         <FormAlert class="mb-4"></FormAlert>
-        <TextInput type="text" :label="trans('users.labels.name')" name="name" v-model="form.name" class="mb-2"/>
+        <TextInput type="text" :label="trans('users.labels.first_name')" name="name" v-model="form.first_name" class="mb-2"/>
+        <TextInput type="text" :label="trans('users.labels.last_name')" name="name" v-model="form.last_name" class="mb-2"/>
+        <TextInput type="text" :label="trans('users.labels.middle_name')" name="name" v-model="form.middle_name" class="mb-2"/>
         <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
         <Button type="submit" :text="trans('global.buttons.save')"/>
     </form>
@@ -35,7 +37,9 @@ export default defineComponent({
         const alertStore = useAlertStore();
         const authStore = useAuthStore();
         const form = reactive({
-            name: null,
+            first_name: null,
+            last_name:null,
+            middle_name:null,
             email: null,
         })
 
@@ -43,7 +47,9 @@ export default defineComponent({
             if (!authStore.user) {
                 return;
             }
-            form.name = authStore.user.name;
+            form.first_name = authStore.user.first_name;
+            form.last_name = authStore.user.last_name;
+            form.middle_name = authStore.user.middle_name;
             form.email = authStore.user.email;
         })
 

@@ -22,6 +22,10 @@ return [
             "admin" => "Admin"
         ],
         "labels" => [
+            "id" => "ID",
+            "first_name" => "First name",
+            "last_name" => "Last name",
+            "middle_name" => "Middle name",
             "name" => "Name",
             "email" => "Email",
             "role" => "Role",

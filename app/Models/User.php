@@ -19,7 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail {
      * ALlowed search fields
      * @var string[]
      */
-    protected $searchFields = ['name', 'email'];
+    protected $searchFields = ['first_name', 'last_name', 'middle_name', 'email'];
 
     /**
      * The attributes that aren't mass assignable.

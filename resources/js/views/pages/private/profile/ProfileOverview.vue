@@ -5,7 +5,7 @@
             <span v-else class="w-16 h-16 rounded-full lg:w-20 lg:h-20"><AvatarIcon></AvatarIcon></span>
         </transition>
         <ul class="mt-2">
-            <li class="mb-1 font-bold">{{ user.name }}</li>
+            <li class="mb-1 font-bold">{{ user.full_name }}</li>
             <li>Email: {{ user.email }}</li>
             <li v-if="user.emailVerified" class="text-green-500 mt-2">
                 {{ trans('users.status.verified') }}

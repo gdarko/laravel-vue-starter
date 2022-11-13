@@ -17,7 +17,7 @@
                         </div>
                         <div>
                             <div class="flex space-x-2">
-                                <span class="font-bold">{{ message.user.name }}</span>
+                                <span class="font-bold">{{ message.user.first_name + ' ' + message.user.last_name }}</span>
                                 <span class="text-gray-400">{{ message.createdAt }}</span>
                             </div>
                             <div class="text-gray-600">{{ message.body }}</div>

@@ -1,7 +1,8 @@
 <template>
     <form @submit.prevent="onFormSubmit">
         <FormAlert class="mb-4"/>
-        <TextInput type="text" :label="trans('users.labels.name')" name="name" v-model="form.name" class="mb-2"/>
+        <TextInput type="text" :label="trans('users.labels.first_name')" name="first_name" v-model="form.first_name" class="mb-2"/>
+        <TextInput type="text" :label="trans('users.labels.last_name')" name="last_name" v-model="form.last_name" class="mb-2"/>
         <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" class="mb-2"/>
         <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-2"/>
         <TextInput type="password" :label="trans('users.labels.confirm_password')" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
@@ -32,7 +33,8 @@ export default defineComponent({
     setup() {
         const authStore = useAuthStore();
         const form = reactive({
-            name: null,
+            first_name: null,
+            last_name: null,
             email: null,
             password: null,
             passwordConfirm: null,
@@ -40,7 +42,8 @@ export default defineComponent({
 
         function onFormSubmit() {
             const payload = {
-                name: form.name,
+                first_name: form.first_name,
+                last_name: form.last_name,
                 email: form.email,
                 password: form.password,
                 password_confirmation: form.passwordConfirm,

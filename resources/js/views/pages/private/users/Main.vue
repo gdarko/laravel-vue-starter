@@ -8,11 +8,11 @@
                         <AvatarIcon v-else class="w-10 h-10 text-gray-400 rounded-full"/>
                     </div>
                     <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900">
-                            {{ props.item.name }}
-                        </div>
+                        <!--<div class="text-sm font-medium text-gray-900">
+                            {{ props.item.full_name }}
+                        </div>-->
                         <div class="text-sm text-gray-500">
-                            {{ props.item.email }}
+                            {{ trans('users.labels.id') + ': '+ props.item.id }}
                         </div>
                     </div>
                 </div>
@@ -65,7 +65,9 @@ export default defineComponent({
 
         const table = reactive({
             headers: {
-                name: trans('users.labels.name'),
+                first_name: trans('users.labels.first_name'),
+                last_name: trans('users.labels.last_name'),
+                email: trans('users.labels.email'),
                 status: trans('users.labels.status'),
                 role: trans('users.labels.role'),
             },

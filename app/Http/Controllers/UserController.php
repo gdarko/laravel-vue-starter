@@ -28,7 +28,6 @@ class UserController extends Controller
             if ( ! empty($search)) {
                 $query = $query->search($search);
             }
-
             $sort_by = $request->get('sort_by');
             $sort    = $request->get('sort');
             if ($sort && $sort_by) {
@@ -61,7 +60,7 @@ class UserController extends Controller
     public function store(StoreUserRequest $request)
     {
 
-        $data                      = $request->only(['name', 'email', 'role', 'avatar', 'password']);
+        $data                      = $request->only(['first_name', 'last_name', 'middle_name', 'email', 'role', 'avatar', 'password']);
         $data['password']          = bcrypt($data['password']);
         $data['email_verified_at'] = Carbon::now()->toDateTimeString();
 
@@ -146,7 +145,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $request->only(['name', 'email', 'role']);
+        $data = $request->only(['first_name', 'last_name', 'middle_name', 'email', 'role']);
         if ( ! empty($request->get('password'))) {
             $data['password'] = bcrypt($request->get('password'));
         }

@@ -23,7 +23,13 @@
                     <div class="px-6 py-4 whitespace-nowrap bg-white">
                         <form @submit.prevent="onSubmit">
                             <div class="mb-4">
-                                <TextInput type="text" name="name" v-model="form.name" :label="trans('users.labels.name')"/>
+                                <TextInput type="text" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
+                            </div>
+                            <div class="mb-4">
+                                <TextInput type="text" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
+                            </div>
+                            <div class="mb-4">
+                                <TextInput type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
                             </div>
                             <div class="mb-4">
                                 <TextInput type="email" :rows="8" name="email" v-model="form.email" :label="trans('users.labels.email')"/>
@@ -67,7 +73,9 @@ export default defineComponent({
         const route = useRoute();
         const form = reactive({
             id: null,
-            name: null,
+            first_name: null,
+            last_name: null,
+            middle_name: null,
             email: null,
             role: null,
             avatar: null,
