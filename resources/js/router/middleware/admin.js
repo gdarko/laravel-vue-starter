@@ -1,5 +1,5 @@
 export default function admin({next, store}) {
-    if (store.getters["auth/isAdmin"]) {
+    if (store.isAdmin) {
         next();
     } else {
         next({name: "notFound"});

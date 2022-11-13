@@ -3,7 +3,7 @@
         <div class="grid grid-cols-1 gap-10 md:grid-cols-2 lg:grid-cols-3">
             <ProfileOverview class="p-5 bg-white border rounded shadow"/>
             <ProfileForm class="p-5 bg-white border rounded shadow"/>
-            <ProfilePassword class="p-5 bg-white border rounded shadow"/>
+            <PasswordForm class="p-5 bg-white border rounded shadow"/>
             <FileUpload class="p-5 bg-white border rounded shadow"
                 :label="trans('users.labels.ask_upload_avatar')"
                 :button="trans('global.buttons.save')"
@@ -17,27 +17,27 @@
 <script>
 
 import {defineComponent} from "vue";
-import {useStore} from 'vuex';
 import {trans} from "@/modules/i18n";
 
-import {default as ProfileOverview} from "@/views/pages/private/profile/Overview";
-import {default as ProfileForm} from "@/views/pages/private/profile/Form";
-import {default as ProfilePassword} from "@/views/pages/private/profile/Password";
+
 import FileUpload from "@/views/utils/FileUpload";
-import {useAuth} from "@/modules/auth";
+import {useAuthStore} from "@/store/auth";
+
+import PasswordForm from "@/views/pages/private/profile/PasswordForm";
+import ProfileForm from "@/views/pages/private/profile/ProfileForm";
+import ProfileOverview from "@/views/pages/private/profile/ProfileOverview";
 
 export default defineComponent({
     components: {
-        ProfileForm,
         ProfileOverview,
-        ProfilePassword,
+        ProfileForm,
+        PasswordForm,
         FileUpload,
     },
     setup() {
-        const store = useStore();
-        const {user} = useAuth()
+        const store = useAuthStore()
         function reloadAvatar() {
-            store.dispatch("auth/getCurrentUser");
+            store.getCurrentUser();
         }
         return {
             reloadAvatar,

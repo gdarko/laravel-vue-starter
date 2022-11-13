@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 xl:px-0">
-        <SimpleTable v-if="table" :headers="table.headers" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="goToPage" @action="onAction">
+        <SimpleTable v-if="table" :headers="table.headers" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="goToPage" @action="onAction" @search="onSearch">
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
@@ -40,6 +40,7 @@ import SimpleTable from "@/views/utils/SimpleTable";
 import {useRoute, useRouter} from 'vue-router'
 import {watch, computed, onMounted, defineComponent, reactive} from 'vue';
 import alertUtils from "@/utils/alert";
+import {useAlertStore} from "@/store";
 
 export default defineComponent({
     components: {
@@ -50,15 +51,13 @@ export default defineComponent({
         const route = useRoute();
         const router = useRouter();
 
+        const alertStore = useAlertStore();
+
         const currentPage = computed(() => {
             let page = route.query.page;
             return page ? page : 1;
         });
 
-        const state = reactive({
-            error: false,
-            loading: true,
-        })
         const table = reactive({
             headers: {
                 id: trans('users.labels.name'),
@@ -88,12 +87,19 @@ export default defineComponent({
             records: null,
         })
 
+        function onSearch(value) {
+            if (value !== '') {
+                fetchPage(1, value);
+            } else {
+                fetchPage(1);
+            }
+        }
+
         function onAction(params) {
             switch (params.action.id) {
                 case 'delete':
                     alertUtils.confirmDanger(function () {
                         UserService.delete(params.item.id).then(function (response) {
-                            console.log(response);
                             fetchPage();
                         });
                     })
@@ -102,23 +108,25 @@ export default defineComponent({
         }
 
         function goToPage(page) {
-            state.loading = false;
             const query = {...route.query, page: page};
             router.replace({query});
         }
 
-        function fetchPage(page) {
-            state.loading = true;
+        function fetchPage(page, search = null) {
             page = page || currentPage.value;
+            let params = {page: page}
+            if (search) {
+                params.search = search;
+            }
             UserService
-                .index({page: page})
+                .index(params)
                 .then((response) => {
                     table.records = response.data.data;
                     table.pagination.meta = response.data.meta;
                     table.pagination.links = response.data.links;
                 })
                 .catch((error) => {
-                    state.error = apiUtils.getError(error);
+                    alertStore.error(apiUtils.getError(error));
                 });
         }
 
@@ -127,15 +135,15 @@ export default defineComponent({
         })
 
         watch(route, (newV, oldV) => {
-            let page = newV.query.page ? newV.query.page : 1;
-            fetchPage(page);
+            (newV.name === 'users') && fetchPage(newV.query.page ? newV.query.page : 1);
         })
 
         return {
             table,
             goToPage,
             trans,
-            onAction
+            onAction,
+            onSearch
         }
 
     },

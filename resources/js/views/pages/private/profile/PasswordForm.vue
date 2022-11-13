@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onFormSubmit">
-        <Alert :message="state.message" :error="state.error" @closed="state.message = null; state.error = null" class="mb-4"/>
+        <FormAlert class="mb-4"/>
         <div class="mb-2">
             <label for="password" class="text-sm text-gray-500">{{ trans('users.labels.current_password') }}</label>
             <input type="password" id="current-password" v-model="form.currentPassword" class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
@@ -20,45 +20,41 @@
 <script>
 import apiUtils from "@/utils/api";
 import AuthService from "@/services/AuthService";
-import Alert from "@/views/utils/Alert";
 import Button from "@/views/utils/Button";
 import {trans} from "@/modules/i18n";
 
 import {reactive, defineComponent} from "vue";
+import {useAlertStore} from "@/store";
+import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({
     components: {
+        FormAlert,
         Button,
-        Alert,
     },
     setup() {
+
+        const alertStore = useAlertStore();
         const form = reactive({
             currentPassword: null,
             password: null,
             passwordConfirm: null,
         })
-        const state = reactive({
-            message: null,
-            error: null,
-        })
 
         function onFormSubmit() {
-            state.message = null;
-            state.error = null;
             const payload = {
                 current_password: form.currentPassword,
                 password: form.password,
                 password_confirmation: form.passwordConfirm,
             };
             AuthService.updatePassword(payload)
-                .then((response) => (state.message = 'Password updated successfully.'))
-                .catch((error) => (state.error = apiUtils.getError(error)));
+                .then((response) => (alertStore.success(trans('global.phrases.password_updated'))))
+                .catch((error) => (alertStore.error(apiUtils.getError(error))));
         }
 
         return {
             onFormSubmit,
             form,
-            state,
             trans
         }
     }

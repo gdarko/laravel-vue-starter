@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onSubmit">
-        <Alert v-if="state.message || state.error" class="mb-3" :message="state.message" :error="state.error" @closed="clearAlert"/>
+        <FormAlert class="mb-4"/>
         <div class="mb-4">
             <label for="file" class="text-sm text-gray-500 mb-5">{{ label }}</label>
             <input type="file" :accept="fileTypes" @change="onChange" id="file"/>
@@ -16,6 +16,9 @@ import Button from "@/views/utils/Button";
 import Alert from "@/views/utils/Alert";
 
 import {reactive, defineComponent} from "vue";
+import {useAlertStore} from "@/store";
+import {trans} from "@/modules/i18n";
+import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({
     name: "FileUpload",
@@ -39,47 +42,40 @@ export default defineComponent({
     },
     emits: ['done'],
     components: {
+        FormAlert,
         Button,
         Alert,
     },
     setup(props, {emit}) {
+
+        const alertStore = useAlertStore();
         const form = reactive({
             file: null,
         })
-        const state = reactive({
-            message: null,
-            error: null,
-        })
 
-        function clearAlert() {
-            state.message = null;
-            state.error = null;
-        }
         function onChange(event) {
-            clearAlert();
+            alertStore.clear();
             form.file = event.target.files[0];
         }
+
         function onSubmit() {
             const payload = {};
             const formData = new FormData();
             formData.append("file", form.file);
             payload.file = formData;
             payload.endpoint = this.endpoint;
-            clearAlert();
+            alertStore.clear();
             FileService.upload(payload).then(() => {
-                state.message = "File uploaded.";
+                alertStore.success(trans('global.phrases.file_uploaded'))
                 emit("done");
             }).catch((error) => {
-                state.message = null;
-                state.error = apiUtils.getError(error)
+                alertStore.error(apiUtils.getError(error));
             });
         }
 
         return {
             onSubmit,
             onChange,
-            clearAlert,
-            state,
             form,
         }
     }

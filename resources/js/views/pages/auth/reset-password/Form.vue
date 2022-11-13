@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Alert :message="state.message" :error="state.error" @closed="state.message = null; state.error = null;" class="mb-4"/>
+        <FormAlert class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
             <div class="mb-2">
                 <label for="email" class="text-sm text-gray-500">{{ trans('users.labels.email') }}</label>
@@ -31,28 +31,26 @@ import {reactive, defineComponent} from "vue";
 import {useRoute} from "vue-router"
 
 import {trans} from "@/modules/i18n"
+import {useAlertStore} from "@/store";
+import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({
     name: "ResetPasswordForm",
     components: {
+        FormAlert,
         Button,
         Alert,
     },
     setup() {
+        const alertStore = useAlertStore();
         const route = useRoute();
         const form = reactive({
             email: null,
             password: null,
             passwordConfirm: null,
         })
-        const state = reactive({
-            message: null,
-            error: null,
-        })
 
         function onFormSubmit() {
-            state.message = null;
-            state.error = null;
             const payload = {
                 email: form.email,
                 password: form.password,
@@ -60,14 +58,13 @@ export default defineComponent({
                 token: route.query.token,
             };
             AuthService.resetPassword(payload)
-                .then((response) => (state.message = response.data.message))
-                .catch((error) => (state.error = apiUtils.getError(error)));
+                .then((response) => (alertStore.success(response.data.message)))
+                .catch((error) => (alertStore.error(apiUtils.getError(error))));
         }
 
         return {
             onFormSubmit,
             form,
-            state,
             trans
         }
     },

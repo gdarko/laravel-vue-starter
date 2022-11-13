@@ -1,4 +1,5 @@
 <template>
+    <FormAlert class="mb-5"></FormAlert>
     <div class="p-5 xl:px-0">
         <div class="max-w-xl m-auto">
             <form @submit.prevent="onFormSubmit" class="mb-4">
@@ -6,7 +7,6 @@
                 <div class="flex justify-end mb-2 mt-2">
                     <Button type="submit" :text="trans('global.buttons.send')"/>
                 </div>
-                <Alert :error="state.error" @closed="state.error = null;"/>
             </form>
             <article class="p-5 bg-white rounded shadow relative" v-if="table.records && table.records.length">
                 <ul>
@@ -24,7 +24,6 @@
                         </div>
                     </li>
                 </ul>
-                <Alert v-if="state.error" key="error" :error="state.error" @closed="state.error = null;"/>
                 <Pager v-if="table.pagination && table.pagination.meta.last_page > 1" :page-count="table.pagination.meta.last_page" :value="table.pagination.meta.current_page" class="mt-6 mb-6" @input="goToPage"/>
             </article>
         </div>
@@ -51,9 +50,12 @@ import {reactive, onMounted, watch, computed, defineComponent} from 'vue';
 import {useRoute, useRouter} from "vue-router";
 
 import {trans} from "@/modules/i18n";
+import {useAlertStore} from "@/store";
+import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({
     components: {
+        FormAlert,
         SpinnerIcon,
         Pager,
         Spinner,
@@ -63,12 +65,11 @@ export default defineComponent({
         Button
     },
     setup() {
+
+        const alertStore = useAlertStore();
+
         const form = reactive({
             body: null,
-        })
-        const state = reactive({
-            loading: true,
-            error: null,
         })
         const table = reactive({
             records: null,
@@ -86,30 +87,27 @@ export default defineComponent({
         });
 
         function goToPage(page) {
-            state.loading = false;
             const query = {...route.query, page: page};
             router.replace({query});
         }
 
         function fetchPage(page) {
-            state.loading = true;
             page = page || currentPage.value;
             MessageService.index({page: page}).then((response) => {
                 table.records = response.data.data;
                 table.pagination.meta = response.data.meta;
                 table.pagination.links = response.data.links;
             }).catch((error) => {
-                state.error = apiUtils.getError(error);
+                alertStore.error(apiUtils.getError(error));
             });
         }
 
         function onFormSubmit() {
             MessageService.store({body: form.body}).then((response) => {
-                state.error = null;
                 form.body = null;
                 fetchPage()
             }).catch((error) => {
-                state.error = apiUtils.getError(error);
+                alertStore.error(apiUtils.getError(error));
             });
         }
 
@@ -118,8 +116,7 @@ export default defineComponent({
         })
 
         watch(route, (newV, oldV) => {
-            let page = newV.query.page ? newV.query.page : 1;
-            fetchPage(page);
+            (newV.name === 'dashboard') && fetchPage(newV.query.page ? newV.query.page : 1);
         })
 
         return {
@@ -127,7 +124,6 @@ export default defineComponent({
             goToPage,
             fetchPage,
             form,
-            state,
             table,
             trans
         }

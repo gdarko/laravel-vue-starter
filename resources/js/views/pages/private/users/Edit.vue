@@ -1,4 +1,5 @@
 <template>
+
     <div class="p-5 mt-4 xl:px-0">
         <div class="grid grid-cols-2 mb-3">
             <div>
@@ -10,6 +11,9 @@
                 </div>
             </div>
         </div>
+
+        <FormAlert class="mb-4"/>
+
         <div class="grid grid-cols-1">
             <div class="shadow overflow-hidden border-b border-gray-200 mb-8 sm:rounded-lg">
                 <div class="min-w-full divide-y divide-gray-200">
@@ -17,9 +21,6 @@
                         {{ trans('users.labels.new_record') }}
                     </div>
                     <div class="px-6 py-4 whitespace-nowrap bg-white">
-
-                        <Alert :message="state.message" :error="state.error" @closed="state.message = null; state.error = null" class="mb-4"/>
-
                         <form @submit.prevent="onSubmit">
                             <div class="mb-4">
                                 <TextInput type="text" name="name" v-model="form.name" :label="trans('users.labels.name')"/>
@@ -37,7 +38,6 @@
                                 <Button type="submit" :text="trans('global.buttons.submit')"/>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
@@ -52,22 +52,21 @@ import {trans} from "@/modules/i18n";
 import Alert from "@/views/utils/Alert";
 import TextInput from "@/views/utils/TextInput";
 import Dropdown from "@/views/utils/Dropdown";
-import {useAuth} from "@/modules/auth";
 import UserService from "@/services/UserService";
-import {useRoute, useRouter} from "vue-router";
+import {useRoute} from "vue-router";
+import {useAuthStore} from "@/store/auth";
+import FormAlert from "@/views/utils/FormAlert";
+import {useAlertStore} from "@/store";
 
 export default defineComponent({
-    components: {Dropdown, TextInput, Alert, Button},
+    components: {FormAlert, Dropdown, TextInput, Alert, Button},
     setup() {
         let model = null;
-        const {user} = useAuth();
+        const alertStore = useAlertStore();
+        const {user} = useAuthStore();
         const route = useRoute();
-        const state = reactive({
-            message: null,
-            error: null,
-        })
         const form = reactive({
-            id:null,
+            id: null,
             name: null,
             email: null,
             role: null,
@@ -97,14 +96,12 @@ export default defineComponent({
             if (!model.hasOwnProperty('id')) {
                 return false;
             }
-            state.message = '';
-            state.error = null;
             UserService.update(model.id, form).then((response) => {
                 let answer = response.data;
-                state.message = answer.message;
+                alertStore.success(answer.message);
             }).catch((error) => {
                 if (error.response.data.hasOwnProperty('errors')) {
-                    state.error = error.response.data.errors;
+                    alertStore.error(error.response.data.errors);
                 }
             });
             return false;
@@ -113,7 +110,6 @@ export default defineComponent({
         return {
             trans,
             user,
-            state,
             form,
             properties,
             onSubmit,

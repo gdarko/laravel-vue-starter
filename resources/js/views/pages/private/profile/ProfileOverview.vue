@@ -12,7 +12,7 @@
             </li>
         </ul>
         <div v-if="!user.emailVerified" class="mt-4">
-            <Alert :message="state.message" :error="state.error" @closed="state.message = null; state.error = null" class="mb-4"/>
+            <FormAlert class="mb-4"/>
             <form @submit.prevent="onVerificationSend">
                 <Button type="submit" :text="trans('users.status.ask_verify')"/>
             </form>
@@ -26,35 +26,32 @@ import AuthService from "@/services/AuthService";
 import Alert from "@/views/utils/Alert";
 import Button from "@/views/utils/Button";
 
-import {useAuth} from "@/modules/auth";
 import {trans} from "@/modules/i18n";
 
-import {reactive, defineComponent} from 'vue'
+import {defineComponent} from 'vue'
 import AvatarIcon from "@/views/icons/AvatarIcon";
+import {useAuthStore} from "@/store/auth";
+import FormAlert from "@/views/utils/FormAlert";
+import {useAlertStore} from "@/store";
 
 export default defineComponent({
     components: {
+        FormAlert,
         AvatarIcon,
         Alert,
         Button
     },
     setup() {
-        const {user} = useAuth()
-        const state = reactive({
-            message: null,
-            error: null,
-        })
+        const alertStore = useAlertStore();
+        const {user} = useAuthStore()
 
         function onVerificationSend() {
-            state.message = null;
-            state.error = null;
             AuthService.sendVerification({user: user.id})
-                .then((response) => (state.message = "Email verification link sent."))
-                .catch((error) => (state.error = apiUtils.getError(error)));
+                .then((response) => (alertStore.success("Email verification link sent.")))
+                .catch((error) => (alertStore.error(apiUtils.getError(error))));
         }
 
         return {
-            state,
             user,
             onVerificationSend,
             trans

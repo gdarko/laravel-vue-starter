@@ -19,10 +19,17 @@ class UserController extends Controller
      * Display a listing of the resource.
      * @return JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
         if ($this->getCurrentUser()->isAdmin()) {
-            return UserResource::collection(User::paginate(10));
+
+            $query  = User::query();
+            $search = $request->get('search');
+            if ( ! empty($search)) {
+                $query = $query->search($search);
+            }
+
+            return UserResource::collection($query->paginate(10));
         }
 
         return response()->json(["message" => "Forbidden"], 403);

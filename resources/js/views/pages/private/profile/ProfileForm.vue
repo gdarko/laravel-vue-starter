@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onFormSubmit">
-        <Alert :message="state.message" :error="state.error" @closed="state.error = null; state.message = null" class="mb-4"/>
+        <FormAlert class="mb-4"></FormAlert>
         <TextInput type="text" :label="trans('users.labels.name')" name="name" v-model="form.name" class="mb-2"/>
         <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
         <Button type="submit" :text="trans('global.buttons.save')"/>
@@ -14,16 +14,17 @@ import Alert from "@/views/utils/Alert";
 import AuthService from "@/services/AuthService";
 
 import apiUtils from "@/utils/api";
-import {useAuth} from '@/modules/auth';
 import {trans} from "@/modules/i18n";
 
 import {defineComponent, reactive, computed, onMounted} from "vue";
-import {useStore} from 'vuex';
+import {useAuthStore} from "@/store/auth";
+import {useAlertStore} from "@/store";
+import FormAlert from "@/views/utils/FormAlert";
 
 
 export default defineComponent({
-    name: "AccountDetails",
     components: {
+        FormAlert,
         Button,
         TextInput,
         Alert,
@@ -31,37 +32,30 @@ export default defineComponent({
 
     setup: function () {
 
-        const store = useStore();
-        const {user} = useAuth();
-        const state = reactive({
-            message: null,
-            error: null,
-        })
+        const alertStore = useAlertStore();
+        const authStore = useAuthStore();
         const form = reactive({
             name: null,
             email: null,
         })
 
         onMounted(() => {
-            if (!user) {
+            if (!authStore.user) {
                 return;
             }
-            form.name = user.value.name;
-            form.email = user.value.email;
+            form.name = authStore.user.name;
+            form.email = authStore.user.email;
         })
 
         function onFormSubmit() {
-            state.error = null;
-            state.message = null;
             AuthService.updateUser(form)
-                .then(() => store.dispatch("auth/getCurrentUser"))
-                .then((response) => (state.message = 'Profile updated successfully.'))
-                .catch((error) => (state.error = apiUtils.getError(error)));
+                .then(() => authStore.getCurrentUser())
+                .then((response) => (alertStore.success(trans('global.phrases.profile_updated'))))
+                .catch((error) => (alertStore.error(apiUtils.getError(error))));
         }
 
         return {
             onFormSubmit,
-            state,
             form,
             trans,
         }

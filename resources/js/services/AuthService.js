@@ -1,5 +1,5 @@
 import axios from "@/plugins/axios";
-import store from "@/store/index";
+import {useAuthStore} from "@/store/auth";
 
 export const authClient = axios.create({
     baseURL: '/',
@@ -14,13 +14,14 @@ authClient.interceptors.response.use(
         return response;
     },
     function (error) {
+        const store = useAuthStore();
         if (
             error.response &&
             [401, 419].includes(error.response.status) &&
-            store.getters["auth/authUser"] &&
-            !store.getters["auth/guest"]
+            store.user &&
+            !store.guest
         ) {
-            store.dispatch("auth/logout");
+            store.logout();
         }
         return Promise.reject(error);
     }

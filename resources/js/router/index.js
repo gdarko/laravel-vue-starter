@@ -1,5 +1,4 @@
 import {createWebHistory, createRouter} from "vue-router";
-import store from "@/store/index";
 import auth from "@/router/middleware/auth";
 import admin from "@/router/middleware/admin";
 import guest from "@/router/middleware/guest";
@@ -16,7 +15,7 @@ import {default as PageProfile} from "@/views/pages/private/profile/Main";
 import {default as PageUsers} from "@/views/pages/private/users/Main";
 import {default as PageUsersCreate} from "@/views/pages/private/users/Create";
 import {default as PageUsersEdit} from "@/views/pages/private/users/Edit";
-
+import {useAuthStore} from "@/store/auth";
 
 const routes = [
     {
@@ -92,6 +91,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+
+    const store = useAuthStore();
+
     const middleware = to.meta.middleware;
     const context = {to, from, next, store};
 

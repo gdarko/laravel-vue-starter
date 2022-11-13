@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-gray-100 flex" v-if="user && user.hasOwnProperty('id')">
+    <div class="bg-gray-100 flex" v-if="authStore.user && authStore.user.hasOwnProperty('id')">
         <aside class="relative bg-theme-600 h-screen w-64 hidden sm:block shadow-xl">
             <div class="p-6 border-b border-theme-600">
                 <router-link class="text-white text-3xl font-semibold uppercase hover:text-gray-300" to="/dashboard">
@@ -22,7 +22,7 @@
                 </template>
             </div>
             <nav class="text-white text-base py-4 px-3 rounded">
-                <Menu :state="state" :user="user" :type="'desktop'"/>
+                <Menu :state="state" :type="'desktop'"/>
             </nav>
             <template v-if="state.footerLeftLink">
                 <a v-if="state.footerLeftLink.href" :href="state.footerLeftLink.href" class="absolute w-full bottom-0 bg-theme-800 text-white flex items-center justify-center py-4">
@@ -41,9 +41,9 @@
                 <div class="w-1/2"></div>
                 <div class="relative w-1/2 flex justify-end">
                     <a class="flex cursor-pointer focus:outline-none align-middle" @click="state.isAccountDropdownOpen = !state.isAccountDropdownOpen">
-                        <span class="relative pt-3 mr-2">{{ user.name }} <Icon :name="state.isAccountDropdownOpen ? 'angle-up' : 'angle-down'"/></span>
+                        <span class="relative pt-3 mr-2">{{ authStore.user.name }} <Icon :name="state.isAccountDropdownOpen ? 'angle-up' : 'angle-down'"/></span>
                         <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
-                            <img :alt="user.name" v-if="user.avatar_url" :src="user.avatar_url">
+                            <img :alt="authStore.user.name" v-if="authStore.user.avatar_url" :src="authStore.user.avatar_url">
                             <AvatarIcon v-else/>
                         </button>
                     </a>
@@ -67,7 +67,7 @@
                     </button>
                 </div>
                 <nav :class="state.isMobileMenuOpen ? 'flex': 'hidden'" class="flex flex-col pt-4 text-base text-white">
-                    <Menu :state="state" :user="user" :type="'mobile'"/>
+                    <Menu :state="state" :type="'mobile'"/>
                     <button class="w-full bg-theme-800 text-white font-semibold py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:text-theme-800 hover:bg-gray-300 flex items-center justify-center">
                         <Icon name="paperclip" class="mr-3"/>
                         {{ trans('global.buttons.documentation') }}
@@ -79,8 +79,7 @@
                 <main class="w-full flex-grow p-6">
                     <router-view/>
                 </main>
-                <footer class="w-full bg-white text-center text-sm p-4" v-html="trans('global.phrases.copyright')">
-                </footer>
+                <footer class="w-full bg-white text-center text-sm p-4" v-html="trans('global.phrases.copyright')"></footer>
             </div>
 
         </div>
@@ -91,14 +90,13 @@
 </template>
 
 <script>
-import {reactive} from "vue";
+import {reactive, ref} from "vue";
 
 import {trans} from '@/modules/i18n';
-import {useAuth} from "@/modules/auth";
-import {useStore} from "vuex";
 import Menu from "@/views/layouts/Menu";
 import Icon from "@/views/utils/Icon";
 import AvatarIcon from "@/views/icons/AvatarIcon";
+import {useAuthStore} from "@/store/auth";
 
 export default {
     name: "app",
@@ -108,8 +106,8 @@ export default {
         Icon
     },
     setup() {
-        const store = useStore();
-        const {user} = useAuth();
+        const authStore = useAuthStore();
+
         const state = reactive({
             mainMenu: [
                 {
@@ -175,8 +173,8 @@ export default {
         });
 
         function onLogout() {
-            store.dispatch("auth/logout").then(() => {
-                if (!store.getters["auth/authUser"]) {
+            authStore.logout().then(() => {
+                if (!authStore.user) {
                     window.location.href = '/login'
                 }
             })
@@ -184,7 +182,7 @@ export default {
 
         return {
             state,
-            user,
+            authStore,
             trans,
             onLogout,
         }

@@ -1,5 +1,19 @@
 <template>
-    <div class="shadow border-b border-gray-200 mb-8 sm:rounded-lg overflow-auto">
+    <div class="w-90 mb-4 pull-right" v-if="isSearchEnabled">
+        <div class="relative w-full">
+            <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <input v-model="inputSearch" type="search" class="block w-full px-10 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500" required>
+            <button @click.prevent="onSearchSubmit" type="submit" class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-theme-700 rounded-r-lg border border-theme-700 hover:bg-theme-800 focus:ring-4 focus:outline-none focus:ring-theme-300 dark:bg-theme-600 dark:hover:bg-theme-700 dark:focus:ring-theme-800">
+                {{  trans('global.buttons.search') }}
+            </button>
+        </div>
+    </div>
+
+    <div class="w-full shadow border-b border-gray-200 mb-8 sm:rounded-lg overflow-auto">
         <table class="w-full divide-y divide-gray-200 table-auto">
             <thead class="bg-gray-50">
             <tr>
@@ -47,12 +61,12 @@
 import Pager from "@/views/utils/Pager";
 import {trans} from "@/modules/i18n";
 
-import {computed, defineComponent} from "vue";
+import {computed, defineComponent, ref} from "vue";
 
 export default defineComponent({
     name: "SimpleTable",
     components: {Pager},
-    emits: ['pageChanged', 'action'],
+    emits: ['pageChanged', 'action', 'search'],
     props: {
         headers: {
             type: [Array, Object],
@@ -66,6 +80,10 @@ export default defineComponent({
             type: [Array, Object],
             default: [],
         },
+        search: {
+            type: [Array, Object],
+            default: null,
+        },
         pagination: {
             type: Object,
             default: {
@@ -78,6 +96,16 @@ export default defineComponent({
         }
     },
     setup(props, {emit}) {
+
+        const inputSearch = ref("")
+
+        const isSearchEnabled = computed(() => {
+            let enabled = true;
+            if (props.search && props.search.hasOwnProperty('enabled') && !props.search.enabled) {
+                enabled = false;
+            }
+            return enabled;
+        })
 
         function getPaginationMeta(key) {
             var value = null;
@@ -117,6 +145,10 @@ export default defineComponent({
             return classes;
         }
 
+        function onSearchSubmit() {
+            emit('search', inputSearch.value);
+        }
+
         function onPagerInput(page) {
             emit('pageChanged', page);
         }
@@ -137,8 +169,11 @@ export default defineComponent({
             lastPage,
             getActionClass,
             getActionPage,
+            isSearchEnabled,
             onActionClick,
             onPagerInput,
+            onSearchSubmit,
+            inputSearch,
             trans,
             emit
         }
