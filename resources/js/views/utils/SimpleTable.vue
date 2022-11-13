@@ -8,7 +8,7 @@
             </div>
             <input v-model="inputSearch" type="search" class="block w-full px-10 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500" required>
             <button @click.prevent="onSearchSubmit" type="submit" class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-theme-700 rounded-r-lg border border-theme-700 hover:bg-theme-800 focus:ring-4 focus:outline-none focus:ring-theme-300 dark:bg-theme-600 dark:hover:bg-theme-700 dark:focus:ring-theme-800">
-                {{  trans('global.buttons.search') }}
+                {{ trans('global.buttons.search') }}
             </button>
         </div>
     </div>
@@ -17,8 +17,14 @@
         <table class="w-full divide-y divide-gray-200 table-auto">
             <thead class="bg-gray-50">
             <tr>
-                <th v-for="(item, i) in headers" scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    <slot :name="'header-'+i">{{ item }}</slot>
+                <th v-for="(item, i) in headers" scope="col" class="align-middle px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <slot :name="'header-'+i">
+                        <div class="leading-loose inline-block">{{ item }}</div>
+                        <div class="sort-arrows inline-block text-center absolute" v-if="sorting.hasOwnProperty(i) && sorting[i]">
+                            <span @click.prevent="onSortChange(i, 'asc')" :class="sortControlClasses(i, 'asc')" class="w-full block cursor-pointer font-normal hover:font-bold focus:font-bold hover:text-theme-600 focus:text-theme-600 dark:hover:text-theme-500 dark:focus:text-theme-500"><i class="fa fa-caret-up"></i></span>
+                            <span @click.prevent="onSortChange(i, 'desc')" :class="sortControlClasses(i, 'desc')" class="w-full block cursor-pointer font-normal hover:font-bold focus:font-bold hover:text-theme-600 focus:text-theme-600 dark:hover:text-theme-500 dark:focus:text-theme-500"><i class="fa fa-caret-down"></i></span>
+                        </div>
+                    </slot>
                 </th>
                 <th v-if="actions" scope="col" class="relative px-6 py-3">
                     <slot name="actions"></slot>
@@ -61,12 +67,12 @@
 import Pager from "@/views/utils/Pager";
 import {trans} from "@/utils/i18n";
 
-import {computed, defineComponent, ref} from "vue";
+import {computed, defineComponent, reactive, ref} from "vue";
 
 export default defineComponent({
     name: "SimpleTable",
     components: {Pager},
-    emits: ['pageChanged', 'action', 'search'],
+    emits: ['pageChanged', 'action', 'search', 'sort'],
     props: {
         headers: {
             type: [Array, Object],
@@ -84,6 +90,10 @@ export default defineComponent({
             type: [Array, Object],
             default: null,
         },
+        sorting: {
+            type: [Object],
+            default: {}
+        },
         pagination: {
             type: Object,
             default: {
@@ -98,6 +108,7 @@ export default defineComponent({
     setup(props, {emit}) {
 
         const inputSearch = ref("")
+        const currentSort = reactive({column: null, direction: 'ASC'});
 
         const isSearchEnabled = computed(() => {
             let enabled = true;
@@ -157,6 +168,28 @@ export default defineComponent({
             emit('action', params)
         }
 
+        function onSortChange(column, direction) {
+            if (currentSort.column === column && currentSort.direction === direction) {
+                clearSorting();
+            } else {
+                currentSort.column = column;
+                currentSort.direction = direction;
+            }
+            emit('sort', {column: currentSort.column, direction: currentSort.direction});
+        }
+
+        function sortControlClasses(column, direction) {
+            if (currentSort.column === column && currentSort.direction === direction) {
+                return 'text-theme-500'
+            }
+            return '';
+        }
+
+        function clearSorting() {
+            currentSort.column = null;
+            currentSort.direction = null;
+        }
+
         const currentPage = computed(() => {
             return getPaginationMeta('current_page');
         })
@@ -173,10 +206,27 @@ export default defineComponent({
             onActionClick,
             onPagerInput,
             onSearchSubmit,
+            onSortChange,
             inputSearch,
+            sortControlClasses,
             trans,
             emit
         }
     }
 });
 </script>
+<style>
+.sort-arrows {
+    font-size: 1.2em;
+    line-height: 0.7;
+    width: 30px;
+}
+
+.sort-arrows i.fa {
+    line-height: 0.1;
+}
+
+.sort-arrows .fa {
+    font-size: 15px;
+}
+</style>

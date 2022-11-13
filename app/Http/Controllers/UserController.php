@@ -29,6 +29,12 @@ class UserController extends Controller
                 $query = $query->search($search);
             }
 
+            $sort_by = $request->get('sort_by');
+            $sort    = $request->get('sort');
+            if ($sort && $sort_by) {
+                $query = $query->orderBy($sort_by, $sort);
+            }
+
             return UserResource::collection($query->paginate(10));
         }
 

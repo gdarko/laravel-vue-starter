@@ -1,6 +1,6 @@
 <template>
     <div class="p-5 xl:px-0">
-        <SimpleTable v-if="table" :headers="table.headers" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="goToPage" @action="onAction" @search="onSearch">
+        <SimpleTable v-if="table" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="goToPage" @action="onAction" @search="onSearch" @sort="onSort">
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
@@ -58,11 +58,20 @@ export default defineComponent({
             return page ? page : 1;
         });
 
+        const tableState = reactive({
+            search: '',
+            sort: '',
+        });
+
         const table = reactive({
             headers: {
-                id: trans('users.labels.name'),
+                name: trans('users.labels.name'),
                 status: trans('users.labels.status'),
                 role: trans('users.labels.role'),
+            },
+            sorting: {
+                name: true,
+                status: true,
             },
             pagination: {
                 meta: null,
@@ -87,12 +96,12 @@ export default defineComponent({
             records: null,
         })
 
+        function onSort(params) {
+            tableState.sort = params;
+        }
+
         function onSearch(value) {
-            if (value !== '') {
-                fetchPage(1, value);
-            } else {
-                fetchPage(1);
-            }
+            tableState.search = value;
         }
 
         function onAction(params) {
@@ -112,11 +121,17 @@ export default defineComponent({
             router.replace({query});
         }
 
-        function fetchPage(page, search = null) {
+        function fetchPage(page, search = null, sort = null) {
             page = page || currentPage.value;
             let params = {page: page}
             if (search) {
                 params.search = search;
+            }
+            if (sort && sort.hasOwnProperty('column') && sort.hasOwnProperty('direction')) {
+                if (sort.column && sort.direction) {
+                    params.sort_by = sort.column;
+                    params.sort = sort.direction;
+                }
             }
             UserService
                 .index(params)
@@ -138,12 +153,17 @@ export default defineComponent({
             (newV.name === 'users') && fetchPage(newV.query.page ? newV.query.page : 1);
         })
 
+        watch(tableState, (newTableState) => {
+            fetchPage(1, newTableState.search, newTableState.sort);
+        });
+
         return {
             table,
             goToPage,
             trans,
             onAction,
-            onSearch
+            onSearch,
+            onSort
         }
 
     },
