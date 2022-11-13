@@ -46,7 +46,6 @@ export default defineComponent({
         return {
             onFormSubmit,
             form,
-            state,
             trans
         }
     },
