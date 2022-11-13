@@ -36,7 +36,7 @@
 <script>
 
 import {computed, defineComponent, ref} from "vue";
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 import Icon from "@/views/utils/Icon";
 
 export default defineComponent({

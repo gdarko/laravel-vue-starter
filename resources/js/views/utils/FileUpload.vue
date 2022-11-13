@@ -16,8 +16,8 @@ import Button from "@/views/utils/Button";
 import Alert from "@/views/utils/Alert";
 
 import {reactive, defineComponent} from "vue";
-import {useAlertStore} from "@/store";
-import {trans} from "@/modules/i18n";
+import {useAlertStore} from "@/stores";
+import {trans} from "@/utils/i18n";
 import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({

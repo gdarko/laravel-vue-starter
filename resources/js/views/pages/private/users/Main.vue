@@ -30,7 +30,7 @@
 
 <script>
 
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 
 import AvatarIcon from "@/views/icons/AvatarIcon";
 import UserService from "@/services/UserService";
@@ -40,7 +40,7 @@ import SimpleTable from "@/views/utils/SimpleTable";
 import {useRoute, useRouter} from 'vue-router'
 import {watch, computed, onMounted, defineComponent, reactive} from 'vue';
 import alertUtils from "@/utils/alert";
-import {useAlertStore} from "@/store";
+import {useAlertStore} from "@/stores";
 
 export default defineComponent({
     components: {

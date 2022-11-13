@@ -15,7 +15,7 @@ import {default as PageProfile} from "@/views/pages/private/profile/Main";
 import {default as PageUsers} from "@/views/pages/private/users/Main";
 import {default as PageUsersCreate} from "@/views/pages/private/users/Create";
 import {default as PageUsersEdit} from "@/views/pages/private/users/Edit";
-import {useAuthStore} from "@/store/auth";
+import {useAuthStore} from "@/stores/auth";
 
 const routes = [
     {

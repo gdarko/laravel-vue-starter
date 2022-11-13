@@ -1,4 +1,4 @@
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 
 /**
  * Custom alert message

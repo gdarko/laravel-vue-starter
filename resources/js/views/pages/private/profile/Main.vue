@@ -17,11 +17,11 @@
 <script>
 
 import {defineComponent} from "vue";
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 
 
 import FileUpload from "@/views/utils/FileUpload";
-import {useAuthStore} from "@/store/auth";
+import {useAuthStore} from "@/stores/auth";
 
 import PasswordForm from "@/views/pages/private/profile/PasswordForm";
 import ProfileForm from "@/views/pages/private/profile/ProfileForm";

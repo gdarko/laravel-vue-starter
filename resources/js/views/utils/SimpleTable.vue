@@ -59,7 +59,7 @@
 
 <script>
 import Pager from "@/views/utils/Pager";
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 
 import {computed, defineComponent, ref} from "vue";
 

@@ -30,8 +30,8 @@ import Button from "@/views/utils/Button";
 import {reactive, defineComponent} from "vue";
 import {useRoute} from "vue-router"
 
-import {trans} from "@/modules/i18n"
-import {useAlertStore} from "@/store";
+import {trans} from "@/utils/i18n"
+import {useAlertStore} from "@/stores";
 import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({

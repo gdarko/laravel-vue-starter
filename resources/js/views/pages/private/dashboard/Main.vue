@@ -49,8 +49,8 @@ import SpinnerIcon from "@/views/icons/SpinnerIcon";
 import {reactive, onMounted, watch, computed, defineComponent} from 'vue';
 import {useRoute, useRouter} from "vue-router";
 
-import {trans} from "@/modules/i18n";
-import {useAlertStore} from "@/store";
+import {trans} from "@/utils/i18n";
+import {useAlertStore} from "@/stores";
 import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({

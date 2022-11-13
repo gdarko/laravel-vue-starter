@@ -16,7 +16,7 @@
 
 <script>
 import {default as RegisterForm} from "@/views/pages/auth/register/Form";
-import {trans} from "@/modules/i18n"
+import {trans} from "@/utils/i18n"
 import Auth from "@/views/layouts/Auth";
 
 export default {

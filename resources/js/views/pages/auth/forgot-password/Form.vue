@@ -18,8 +18,8 @@ import AuthService from "@/services/AuthService";
 import Alert from "@/views/utils/Alert";
 import {reactive, defineComponent} from "vue";
 
-import {trans} from "@/modules/i18n";
-import {useAlertStore} from "@/store";
+import {trans} from "@/utils/i18n";
+import {useAlertStore} from "@/stores";
 import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({

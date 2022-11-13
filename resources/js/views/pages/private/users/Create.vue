@@ -52,10 +52,10 @@ import TextInput from "@/views/utils/TextInput";
 import Dropdown from "@/views/utils/Dropdown";
 import UserService from "@/services/UserService";
 
-import {trans} from "@/modules/i18n";
-import {useAuthStore} from "@/store/auth";
+import {trans} from "@/utils/i18n";
+import {useAuthStore} from "@/stores/auth";
 import FormAlert from "@/views/utils/FormAlert";
-import {useAlertStore} from "@/store";
+import {useAlertStore} from "@/stores";
 
 export default defineComponent({
     components: {FormAlert, Dropdown, TextInput, Button},

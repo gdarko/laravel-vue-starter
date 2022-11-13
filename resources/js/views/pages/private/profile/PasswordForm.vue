@@ -21,10 +21,10 @@
 import apiUtils from "@/utils/api";
 import AuthService from "@/services/AuthService";
 import Button from "@/views/utils/Button";
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 
 import {reactive, defineComponent} from "vue";
-import {useAlertStore} from "@/store";
+import {useAlertStore} from "@/stores";
 import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({

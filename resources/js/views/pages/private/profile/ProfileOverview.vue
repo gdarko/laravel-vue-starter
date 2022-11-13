@@ -26,13 +26,13 @@ import AuthService from "@/services/AuthService";
 import Alert from "@/views/utils/Alert";
 import Button from "@/views/utils/Button";
 
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 
 import {defineComponent} from 'vue'
 import AvatarIcon from "@/views/icons/AvatarIcon";
-import {useAuthStore} from "@/store/auth";
+import {useAuthStore} from "@/stores/auth";
 import FormAlert from "@/views/utils/FormAlert";
-import {useAlertStore} from "@/store";
+import {useAlertStore} from "@/stores";
 
 export default defineComponent({
     components: {

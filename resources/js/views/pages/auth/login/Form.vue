@@ -13,11 +13,11 @@
 import Button from "@/views/utils/Button";
 import TextInput from "@/views/utils/TextInput";
 import Alert from "@/views/utils/Alert";
-import {trans} from "@/modules/i18n"
+import {trans} from "@/utils/i18n"
 
 import {reactive, defineComponent} from "vue";
 import {useRouter} from 'vue-router';
-import {useAuthStore} from "@/store/auth";
+import {useAuthStore} from "@/stores/auth";
 import FormAlert from "@/views/utils/FormAlert";
 
 export default defineComponent({

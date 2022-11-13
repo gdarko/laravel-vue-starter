@@ -14,11 +14,11 @@ import Alert from "@/views/utils/Alert";
 import AuthService from "@/services/AuthService";
 
 import apiUtils from "@/utils/api";
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 
 import {defineComponent, reactive, computed, onMounted} from "vue";
-import {useAuthStore} from "@/store/auth";
-import {useAlertStore} from "@/store";
+import {useAuthStore} from "@/stores/auth";
+import {useAlertStore} from "@/stores";
 import FormAlert from "@/views/utils/FormAlert";
 
 

@@ -48,15 +48,15 @@
 <script>
 import {defineComponent, onBeforeMount, reactive} from "vue";
 import Button from "@/views/utils/Button";
-import {trans} from "@/modules/i18n";
+import {trans} from "@/utils/i18n";
 import Alert from "@/views/utils/Alert";
 import TextInput from "@/views/utils/TextInput";
 import Dropdown from "@/views/utils/Dropdown";
 import UserService from "@/services/UserService";
 import {useRoute} from "vue-router";
-import {useAuthStore} from "@/store/auth";
+import {useAuthStore} from "@/stores/auth";
 import FormAlert from "@/views/utils/FormAlert";
-import {useAlertStore} from "@/store";
+import {useAlertStore} from "@/stores";
 
 export default defineComponent({
     components: {FormAlert, Dropdown, TextInput, Alert, Button},
