@@ -7,7 +7,7 @@
             </div>
             <div>
                 <div class="actions float-right">
-                    <Button type="route" to="/users" skin="" :text="trans('global.buttons.back')"/>
+                    <Button type="route" to="/users" skin="" :text="trans('global.buttons.back')" icon="fa fa-chevron-left"/>
                 </div>
             </div>
         </div>
@@ -26,10 +26,10 @@
                                 <TextInput type="text" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
                             </div>
                             <div class="mb-4">
-                                <TextInput type="text" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
+                                <TextInput type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
                             </div>
                             <div class="mb-4">
-                                <TextInput type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
+                                <TextInput type="text" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
                             </div>
                             <div class="mb-4">
                                 <TextInput type="email" :rows="8" name="email" v-model="form.email" :label="trans('users.labels.email')"/>

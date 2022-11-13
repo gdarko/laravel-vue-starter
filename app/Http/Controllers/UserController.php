@@ -21,7 +21,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        if ($this->getCurrentUser()->isAdmin()) {
+        if ($this->getCurrentUser()->is_admin) {
 
             $query  = User::query();
             $search = $request->get('search');
@@ -116,7 +116,7 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if ($this->getCurrentUser()->isAdmin()) {
+        if ($this->getCurrentUser()->is_admin) {
             return new UserResource($user);
         }
 

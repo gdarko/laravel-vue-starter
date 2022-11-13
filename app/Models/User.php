@@ -54,16 +54,9 @@ class User extends Authenticatable implements MustVerifyEmail {
      */
     protected $appends = [
         'avatar_url',
+        'full_name',
+        'is_admin',
     ];
-
-    /**
-     * Is the user administrator
-     *
-     * @return bool
-     */
-    public function isAdmin(): bool {
-        return UserRole::ADMIN === (int) $this->getAttribute( 'role' );
-    }
 
     /**
      * Returns the user messages
@@ -84,6 +77,29 @@ class User extends Authenticatable implements MustVerifyEmail {
         }
 
         return asset( $src );
+    }
+
+    /**
+     * Returns the full_name attribute
+     * @return string
+     */
+    public function getFullNameAttribute() {
+       $names = [];
+       foreach(['first_name', 'middle_name', 'last_name'] as $key) {
+           $value = $this->getAttribute($key);
+           if(!empty($value)) {
+               $names[] = $value;
+           }
+       }
+       return implode(' ', $names);
+    }
+
+    /**
+     * Returns the is_admin attribute
+     * @return bool
+     */
+    public function getIsAdminAttribute() {
+        return UserRole::ADMIN === (int) $this->getAttribute( 'role' );
     }
 
     /**

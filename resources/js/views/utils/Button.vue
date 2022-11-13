@@ -1,8 +1,8 @@
 <template>
-    <router-link v-if="$props.type === 'route'" :class="$props.class" :to="$props.to">{{ $props.text }}</router-link>
-    <a v-else-if="$props.type === 'url'" :class="$props.class" :href="$props.to" v-html="$props.text"></a>
+    <router-link v-if="$props.type === 'route'" :class="$props.class" :to="$props.to"><template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template> {{ $props.text }}</router-link>
+    <a v-else-if="$props.type === 'url'" :class="$props.class" :href="$props.to"><template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template> {{$props.text}}</a>
     <button v-else :type="type" @click="onClick" :class="$props.class">
-        {{ text }}
+        <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template> {{ text }}
     </button>
 </template>
 
@@ -20,6 +20,10 @@ export default defineComponent({
         text: {
             type: String,
             default: "Submit",
+        },
+        icon: {
+            type: String,
+            default: "",
         },
         class: {
             type: String,

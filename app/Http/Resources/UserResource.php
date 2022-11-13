@@ -19,20 +19,13 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        return [
-            'id'            => $this->id,
-            'first_name'    => $this->first_name,
-            'last_name'     => $this->last_name,
-            'middle_name'   => $this->middle_name,
-            'name'          => sprintf('%s %s', $this->first_name, $this->last_name),
-            'full_name'     => sprintf('%s %s', $this->first_name, $this->last_name),
-            'email'         => $this->email,
-            'avatar'        => $this->avatar,
-            'avatar_url'    => $this->avatar_url,
-            'isAdmin'       => $this->isAdmin(),
-            'emailVerified' => $this->email_verified_at,
-            'role'          => $this->role,
-            'original'      => $this->toArray($request)
-        ];
+
+        $data = $this->resource->toArray();
+        $data['is_admin'] = $this->is_admin;
+        $data['email_verified'] = !empty($this->email_verified_at);
+        $data['created_at'] = !empty($this->resource->created_at) ? $this->resource->created_at->diffForHumans() : null;
+        $data['updated_at'] = !empty($this->resource->updated_at) ? $this->resource->updated_at->diffForHumans() : null;
+
+        return $data;
     }
 }

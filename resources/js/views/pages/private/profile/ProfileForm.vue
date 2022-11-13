@@ -2,8 +2,8 @@
     <form @submit.prevent="onFormSubmit">
         <FormAlert class="mb-4"></FormAlert>
         <TextInput type="text" :label="trans('users.labels.first_name')" name="name" v-model="form.first_name" class="mb-2"/>
-        <TextInput type="text" :label="trans('users.labels.last_name')" name="name" v-model="form.last_name" class="mb-2"/>
         <TextInput type="text" :label="trans('users.labels.middle_name')" name="name" v-model="form.middle_name" class="mb-2"/>
+        <TextInput type="text" :label="trans('users.labels.last_name')" name="name" v-model="form.last_name" class="mb-2"/>
         <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
         <Button type="submit" :text="trans('global.buttons.save')"/>
     </form>

@@ -16,7 +16,7 @@
                 </template>
                 <template v-else>
                     <strong class="font-bold mr-2">{{ trans('global.phrases.argh') }}</strong>
-                    <span class="block sm:inline">{{ alertStore.messages[0][0] }}</span>
+                    <span class="block sm:inline">{{ Array.isArray(alertStore.messages[0]) ? alertStore.messages[0][0] : alertStore.messages[0] }}</span>
                     <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" @click="removeMessage">
                         <Icon name="times"/>
                     </span>
@@ -24,7 +24,7 @@
             </template>
             <template v-else>
                 <strong class="font-bold mr-2">{{ trans('global.phrases.success') }}</strong>
-                <span class="block sm:inline">{{ alertStore.messages[0][0] }}</span>
+                <span class="block sm:inline">{{ Array.isArray(alertStore.messages[0]) ? alertStore.messages[0][0] : alertStore.messages[0] }}</span>
                 <span class="absolute top-0 bottom-0 right-0 px-4 py-3 cursor-pointer" @click="removeMessage">
                 <Icon name="times"/>
             </span>

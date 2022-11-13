@@ -23,6 +23,7 @@ return [
         ],
         "labels" => [
             "id" => "ID",
+            "id_pound" => "#",
             "first_name" => "First name",
             "last_name" => "Last name",
             "middle_name" => "Middle name",
@@ -95,6 +96,7 @@ return [
             "back" => "Back",
         ],
         "actions" => [
+            "name" => "Actions",
             "edit" => "Edit",
             "delete" => "Delete"
         ],

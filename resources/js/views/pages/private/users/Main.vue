@@ -8,9 +8,9 @@
                         <AvatarIcon v-else class="w-10 h-10 text-gray-400 rounded-full"/>
                     </div>
                     <div class="ml-4">
-                        <!--<div class="text-sm font-medium text-gray-900">
+                        <div class="text-sm font-medium text-gray-900">
                             {{ props.item.full_name }}
-                        </div>-->
+                        </div>
                         <div class="text-sm text-gray-500">
                             {{ trans('users.labels.id') + ': '+ props.item.id }}
                         </div>
@@ -18,11 +18,11 @@
                 </div>
             </template>
             <template v-slot:content-status="props">
-                <span v-if="props.item.emailVerified" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ trans('users.status.verified') }}</span>
+                <span v-if="props.item.email_verified" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{ trans('users.status.verified') }}</span>
                 <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{{ trans('users.status.not_verified') }}</span>
             </template>
             <template v-slot:content-role="props">
-                {{ props.item.isAdmin ? trans('users.roles.admin') : trans('users.roles.regular') }}
+                {{ props.item.is_admin ? trans('users.roles.admin') : trans('users.roles.regular') }}
             </template>
         </SimpleTable>
     </div>
@@ -65,6 +65,7 @@ export default defineComponent({
 
         const table = reactive({
             headers: {
+                id: trans('users.labels.id_pound'),
                 first_name: trans('users.labels.first_name'),
                 last_name: trans('users.labels.last_name'),
                 email: trans('users.labels.email'),
@@ -72,8 +73,8 @@ export default defineComponent({
                 role: trans('users.labels.role'),
             },
             sorting: {
-                name: true,
-                status: true,
+                first_name: true,
+                last_name: true
             },
             pagination: {
                 meta: null,

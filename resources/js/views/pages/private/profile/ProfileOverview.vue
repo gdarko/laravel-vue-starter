@@ -7,11 +7,11 @@
         <ul class="mt-2">
             <li class="mb-1 font-bold">{{ user.full_name }}</li>
             <li>Email: {{ user.email }}</li>
-            <li v-if="user.emailVerified" class="text-green-500 mt-2">
+            <li v-if="user.email_verified" class="text-green-500 mt-2">
                 {{ trans('users.status.verified') }}
             </li>
         </ul>
-        <div v-if="!user.emailVerified" class="mt-4">
+        <div v-if="!user.email_verified" class="mt-4">
             <FormAlert class="mb-4"/>
             <form @submit.prevent="onVerificationSend">
                 <Button type="submit" :text="trans('users.status.ask_verify')"/>

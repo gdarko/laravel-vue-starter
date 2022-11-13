@@ -7,7 +7,7 @@
                 </svg>
             </div>
             <input v-model="inputSearch" type="search" class="block w-full px-10 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500" required>
-            <button @click.prevent="onSearchSubmit" type="submit" class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-theme-700 rounded-r-lg border border-theme-700 hover:bg-theme-800 focus:ring-4 focus:outline-none focus:ring-theme-300 dark:bg-theme-600 dark:hover:bg-theme-700 dark:focus:ring-theme-800">
+            <button @click.prevent="onSearchSubmit" type="submit" class="absolute top-0 right-0 p-2.5 text-sm font-medium text-white bg-theme-600 rounded-r-lg border border-theme-700 hover:bg-theme-800 focus:ring-4 focus:outline-none focus:ring-theme-300 dark:bg-theme-600 dark:hover:bg-theme-700 dark:focus:ring-theme-800">
                 {{ trans('global.buttons.search') }}
             </button>
         </div>
@@ -26,8 +26,8 @@
                         </div>
                     </slot>
                 </th>
-                <th v-if="actions" scope="col" class="relative px-6 py-3">
-                    <slot name="actions"></slot>
+                <th v-if="actions" scope="col" class="align-middle px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <slot name="actions">{{ trans('global.actions.name') }}</slot>
                 </th>
             </tr>
             </thead>
@@ -119,7 +119,7 @@ export default defineComponent({
         })
 
         function getPaginationMeta(key) {
-            var value = null;
+            let value = null;
             if (props.pagination) {
                 if (props.pagination.hasOwnProperty('meta') && props.pagination.meta) {
                     if (props.pagination.meta.hasOwnProperty(key)) {
