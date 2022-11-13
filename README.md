@@ -10,7 +10,7 @@ The main goal of this project is to reduce code and make everything simpler for 
 
 The project is built with the following components:
 
-- Vue 3 / Vuex / VueRouter
+- Vue 3 / Pinia / VueRouter
 - Vue 3 Composition API
 - Vite 3
 - Laravel Framework
@@ -47,19 +47,18 @@ Also, the project comes with complete `users` crud that can be taken as an examp
 
 The front-end code is located in `resources/js`. The code is organized in different directories to make things more readable.
 
-| Directory | Description                             |
-|-----------|-----------------------------------------|
-| views     | The home of the views                   |
-| + pages   | The home of the pages                   |
-| + icons   | The home of the icons                   |
-| + layouts | The home of the global layouts          |
-| + utils   | The home of the other utilities         | 
-| modules   | The home of the reusable modules        |
-| plugins   | The home of the plugins configuration   |
-| router    | The home of the router configuration    |
-| services  | The home of the API services            |
-| store     | The home of the Vuex store              |
-| functions | The home of the various other functions |
+| Directory | Description                           |
+|-----------|---------------------------------------|
+| views     | The home of the views                 |
+| + pages   | The home of the pages                 |
+| + icons   | The home of the icons                 |
+| + layouts | The home of the global layouts        |
+| + utils   | The home of the other utilities       |
+| plugins   | The home of the plugins configuration |
+| router    | The home of the router configuration  |
+| services  | The home of the API services          |
+| stores    | The home of the Pinia stores          |
+| utils     | The home of the utility functions     |
 
 ### ➡️ Examples
 
