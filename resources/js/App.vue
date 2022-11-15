@@ -92,10 +92,10 @@
 <script>
 import {reactive, ref} from "vue";
 
-import {trans} from '@/utils/i18n';
+import {trans} from '@/helpers/i18n';
 import Menu from "@/views/layouts/Menu";
-import Icon from "@/views/utils/Icon";
-import AvatarIcon from "@/views/icons/AvatarIcon";
+import Icon from "@/views/components/icons/Icon";
+import AvatarIcon from "@/views/components/icons/Avatar";
 import {useAuthStore} from "@/stores/auth";
 
 export default {
@@ -106,6 +106,7 @@ export default {
         Icon
     },
     setup() {
+
         const authStore = useAuthStore();
 
         const state = reactive({

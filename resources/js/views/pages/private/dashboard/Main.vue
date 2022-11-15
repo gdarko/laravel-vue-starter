@@ -1,7 +1,6 @@
 <template>
-    <FormAlert class="mb-5"></FormAlert>
-    <div class="p-5 xl:px-0">
-        <div class="max-w-xl m-auto">
+    <Page>
+        <div class="w-1/2 m-auto">
             <form @submit.prevent="onFormSubmit" class="mb-4">
                 <TextInput type="message" :label="trans('messages.name')" name="message" v-model="form.body" class="mb-4"/>
                 <div class="flex justify-end mb-2 mt-2">
@@ -13,7 +12,7 @@
                     <li v-for="(message, index) in table.records" :key="message.id" :class="['flex', 'py-3', 'space-x-2', index === table.records.length-1 ? '' : 'border-b']">
                         <div>
                             <img v-if="message.user.avatar" :src="message.user.avatar_url" class="w-10 h-10 rounded-full" alt=""/>
-                            <AvatarIcon v-else class="w-10 h-10 text-gray-400 rounded-full"/>
+                            <Avatar v-else class="w-10 h-10 text-gray-400 rounded-full"/>
                         </div>
                         <div>
                             <div class="flex space-x-2">
@@ -30,43 +29,38 @@
         <footer class="py-5 text-center">
             <p class="text-gray-400">{{ trans('global.phrases.inspire') }}</p>
         </footer>
-    </div>
+    </Page>
 </template>
 
 <script>
-
-import apiUtils from "@/utils/api";
-
-import Alert from "@/views/utils/Alert";
-import AvatarIcon from "@/views/icons/AvatarIcon";
-import Spinner from "@/views/utils/Spinner";
-import Pager from "@/views/utils/Pager";
-import MessageService from "@/services/MessageService";
-import TextInput from "@/views/utils/TextInput";
-import Button from "@/views/utils/Button";
-import SpinnerIcon from "@/views/icons/SpinnerIcon";
-
 import {reactive, onMounted, watch, computed, defineComponent} from 'vue';
 import {useRoute, useRouter} from "vue-router";
-
-import {trans} from "@/utils/i18n";
+import {trans} from "@/helpers/i18n";
 import {useAlertStore} from "@/stores";
-import FormAlert from "@/views/utils/FormAlert";
+import MessageService from "@/services/MessageService";
+import apiHelpers from "@/helpers/api";
+import TextInput from "@/views/components/input/TextInput";
+import Button from "@/views/components/input/Button";
+import Avatar from "@/views/components/icons/Avatar";
+import Spinner from "@/views/components/icons/Spinner";
+import Pager from "@/views/components/tables/Pager";
+import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import Page from "@/views/layouts/Page";
 
 export default defineComponent({
     components: {
-        FormAlert,
-        SpinnerIcon,
+        Page,
+        DefaultAlert,
         Pager,
         Spinner,
-        Alert,
-        AvatarIcon,
+        Avatar,
         TextInput,
         Button
     },
     setup() {
 
         const alertStore = useAlertStore();
+        const messageService = new MessageService();
 
         const form = reactive({
             body: null,
@@ -93,21 +87,21 @@ export default defineComponent({
 
         function fetchPage(page) {
             page = page || currentPage.value;
-            MessageService.index({page: page}).then((response) => {
+            messageService.index({page: page}).then((response) => {
                 table.records = response.data.data;
                 table.pagination.meta = response.data.meta;
                 table.pagination.links = response.data.links;
             }).catch((error) => {
-                alertStore.error(apiUtils.getError(error));
+                alertStore.error(apiHelpers.getError(error));
             });
         }
 
         function onFormSubmit() {
-            MessageService.store({body: form.body}).then((response) => {
+            messageService.store({body: form.body}).then((response) => {
                 form.body = null;
                 fetchPage()
             }).catch((error) => {
-                alertStore.error(apiUtils.getError(error));
+                alertStore.error(apiHelpers.getError(error));
             });
         }
 

@@ -2,7 +2,7 @@ import {createI18n} from 'vue-i18n'
 
 const messages = window.AppConfig.locales;
 
-var defaultLocale = window.AppConfig.defaultLocale;
+let defaultLocale = window.AppConfig.defaultLocale;
 
 const i18n = createI18n({
     locale: localStorage.locale ?? defaultLocale,

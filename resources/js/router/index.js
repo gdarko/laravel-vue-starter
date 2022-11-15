@@ -2,7 +2,6 @@ import {createWebHistory, createRouter} from "vue-router";
 import auth from "@/router/middleware/auth";
 import admin from "@/router/middleware/admin";
 import guest from "@/router/middleware/guest";
-import pipeline from "@/router/pipeline";
 
 import {default as PageDashboard} from "@/views/pages/private/dashboard/Main";
 import {default as PageLogin} from "@/views/pages/auth/login/Main";
@@ -11,10 +10,10 @@ import {default as PageResetPassword} from "@/views/pages/auth/reset-password/Ma
 import {default as PageForgotPassword} from "@/views/pages/auth/forgot-password/Main";
 import {default as PageNotFound} from "@/views/pages/shared/404/Main";
 import {default as PageProfile} from "@/views/pages/private/profile/Main";
-
 import {default as PageUsers} from "@/views/pages/private/users/Main";
 import {default as PageUsersCreate} from "@/views/pages/private/users/Create";
 import {default as PageUsersEdit} from "@/views/pages/private/users/Edit";
+
 import {useAuthStore} from "@/stores/auth";
 
 const routes = [
@@ -84,6 +83,19 @@ const routes = [
         component: PageNotFound,
     },
 ];
+
+function pipeline(context, middleware, index) {
+    const nextMiddleware = middleware[index];
+    if (!nextMiddleware) {
+        return context.next;
+    }
+    return () => {
+        nextMiddleware({
+            ...context,
+            next: pipeline(context, middleware, index + 1),
+        });
+    };
+}
 
 const router = createRouter({
     history: createWebHistory(),

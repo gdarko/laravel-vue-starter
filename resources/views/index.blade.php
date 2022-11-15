@@ -12,6 +12,7 @@
         window.AppConfig = {
             name: '{{ env('APP_NAME') }}',
             logo: '{{ env('APP_LOGO') }}',
+            url: '{{ env('APP_URL') }}',
             csrf: '{{ csrf_token() }}',
             defaultLocale: '{{ env('APP_LOCALE', 'en') }}',
             defaultTimezone: '{{ env('APP_TIMEZONE', 'UTC') }}',

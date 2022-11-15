@@ -1,6 +1,6 @@
 <template>
     <div>
-        <FormAlert class="mb-4"/>
+        <DefaultAlert class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
             <div class="mb-2">
                 <label for="email" class="text-sm text-gray-500">{{ trans('users.labels.email') }}</label>
@@ -22,26 +22,24 @@
 </template>
 
 <script>
-import apiUtils from "@/utils/api";
-import Alert from "@/views/utils/Alert";
 import AuthService from "@/services/AuthService";
-import Button from "@/views/utils/Button";
-
 import {reactive, defineComponent} from "vue";
 import {useRoute} from "vue-router"
-
-import {trans} from "@/utils/i18n"
+import {trans} from "@/helpers/i18n"
 import {useAlertStore} from "@/stores";
-import FormAlert from "@/views/utils/FormAlert";
+import apiHelpers from "@/helpers/api";
+import Button from "@/views/components/input/Button";
+import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 
 export default defineComponent({
     name: "ResetPasswordForm",
     components: {
-        FormAlert,
+        DefaultAlert,
         Button,
-        Alert,
     },
     setup() {
+
+        const authService = new AuthService();
         const alertStore = useAlertStore();
         const route = useRoute();
         const form = reactive({
@@ -57,9 +55,9 @@ export default defineComponent({
                 password_confirmation: form.passwordConfirm,
                 token: route.query.token,
             };
-            AuthService.resetPassword(payload)
+            authService.resetPassword(payload)
                 .then((response) => (alertStore.success(response.data.message)))
-                .catch((error) => (alertStore.error(apiUtils.getError(error))));
+                .catch((error) => (alertStore.error(apiHelpers.getError(error))));
         }
 
         return {

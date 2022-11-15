@@ -22,7 +22,7 @@
 <script>
 import {default as LoginForm} from "@/views/pages/auth/login/Form";
 
-import {trans} from "@/utils/i18n"
+import {trans} from "@/helpers/i18n"
 import Auth from "@/views/layouts/Auth";
 
 export default {

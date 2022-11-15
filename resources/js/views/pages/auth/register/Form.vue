@@ -1,11 +1,12 @@
 <template>
     <form @submit.prevent="onFormSubmit">
-        <FormAlert class="mb-4"/>
-        <TextInput type="text" :label="trans('users.labels.first_name')" name="first_name" v-model="form.first_name" class="mb-2"/>
-        <TextInput type="text" :label="trans('users.labels.last_name')" name="last_name" v-model="form.last_name" class="mb-2"/>
-        <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" class="mb-2"/>
-        <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-2"/>
-        <TextInput type="password" :label="trans('users.labels.confirm_password')" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
+        <DefaultAlert class="mb-4"/>
+        <TextInput type="text" :required="true" :label="trans('users.labels.first_name')" name="first_name" v-model="form.first_name" class="mb-2"/>
+        <TextInput type="text" :label="trans('users.labels.middle_name')" name="middle_name" v-model="form.middle_name" class="mb-2"/>
+        <TextInput type="text" :required="true" :label="trans('users.labels.last_name')" name="last_name" v-model="form.last_name" class="mb-2"/>
+        <TextInput type="email" :required="true" :label="trans('users.labels.email')" name="email" v-model="form.email" class="mb-2"/>
+        <TextInput type="password" :required="true" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-2"/>
+        <TextInput type="password" :required="true" :label="trans('users.labels.confirm_password')" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
         <div class="text-center">
             <Button type="submit" :text="trans('global.buttons.register')"/>
         </div>
@@ -13,27 +14,25 @@
 </template>
 
 <script>
-import TextInput from "@/views/utils/TextInput";
-import Alert from "@/views/utils/Alert";
-import Button from "@/views/utils/Button";
 import {reactive, defineComponent} from "vue";
-
-import {trans} from "@/utils/i18n"
+import {trans} from "@/helpers/i18n"
 import {useAuthStore} from "@/stores";
-import FormAlert from "@/views/utils/FormAlert";
+import TextInput from "@/views/components/input/TextInput";
+import Button from "@/views/components/input/Button";
+import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 
 export default defineComponent({
     name: "RegisterForm",
     components: {
-        FormAlert,
+        DefaultAlert,
         Button,
         TextInput,
-        Alert,
     },
     setup() {
         const authStore = useAuthStore();
         const form = reactive({
             first_name: null,
+            middle_name: null,
             last_name: null,
             email: null,
             password: null,
@@ -43,6 +42,7 @@ export default defineComponent({
         function onFormSubmit() {
             const payload = {
                 first_name: form.first_name,
+                middle_name: form.middle_name,
                 last_name: form.last_name,
                 email: form.email,
                 password: form.password,

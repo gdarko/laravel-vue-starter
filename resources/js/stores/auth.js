@@ -1,9 +1,8 @@
 import {defineStore} from 'pinia'
-import AuthService from "@/services/AuthService";
 import router from "@/router";
-import apiUtils from "@/utils/api";
+import apiHelpers from "@/helpers/api";
 import {useAlertStore} from "@/stores/alert";
-
+import AuthService from "@/services/AuthService";
 
 export const useAuthStore = defineStore("auth", {
     state: () => {
@@ -16,8 +15,9 @@ export const useAuthStore = defineStore("auth", {
     actions: {
         async login(payload) {
             const alertStore = useAlertStore();
+            const authService = new AuthService();
             try {
-                const response = await AuthService.login(payload);
+                const response = await authService.login(payload);
                 this.user = response.data.user;
                 this.setBrowserData();
                 alertStore.clear();
@@ -25,42 +25,45 @@ export const useAuthStore = defineStore("auth", {
                 await router.push("/dashboard");
                 //window.location.href = "/dashboard";
             } catch (error) {
-                alertStore.error(apiUtils.getError(error));
+                alertStore.error(apiHelpers.getError(error));
             }
         },
         async register(payload) {
             const alertStore = useAlertStore();
+            const authService = new AuthService();
             try {
-                const response = await AuthService.registerUser(payload);
+                const response = await authService.registerUser(payload);
                 await router.push("/dashboard");
                 alertStore.clear();
             } catch (error) {
-                alertStore.error(apiUtils.getError(error));
+                alertStore.error(apiHelpers.getError(error));
             }
         },
         async logout() {
             const alertStore = useAlertStore();
+            const authService = new AuthService();
             try {
-                await AuthService.logout();
+                await authService.logout();
                 this.user = null;
                 this.clearBrowserData()
                 if (router.currentRoute.name !== "login") {
                     await router.push({path: "/login"});
                 }
             } catch (error) {
-                alertStore.error(apiUtils.getError(error));
+                alertStore.error(apiHelpers.getError(error));
             }
         },
         async getCurrentUser() {
             this.loading = true;
+            const authService = new AuthService();
             try {
-                const response = await AuthService.getCurrentUser();
+                const response = await authService.getCurrentUser();
                 this.user = response.data.data;
                 this.loading = false
             } catch (error) {
                 this.loading = false
                 this.user = null;
-                this.error = apiUtils.getError(error);
+                this.error = apiHelpers.getError(error);
             }
             return this.user;
 

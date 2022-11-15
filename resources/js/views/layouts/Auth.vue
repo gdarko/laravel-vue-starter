@@ -14,7 +14,7 @@
 <script>
 
 import {defineComponent} from 'vue'
-import {trans} from '@/utils/i18n';
+import {trans} from '@/helpers/i18n';
 
 export default defineComponent({
     name: "Auth",

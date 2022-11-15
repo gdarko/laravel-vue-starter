@@ -28,6 +28,7 @@ return [
             "last_name" => "Last name",
             "middle_name" => "Middle name",
             "name" => "Name",
+            "avatar" => "Avatar",
             "email" => "Email",
             "role" => "Role",
             "status" => "Status",
@@ -37,6 +38,7 @@ return [
             "confirm_password" => "Confirm Password",
             "ask_upload_avatar" => "Upload Avatar",
             "new_record" => "New User",
+            "edit_record" => "Edit User",
         ]
     ],
     "messages" => [
@@ -83,6 +85,11 @@ return [
             'password_not_updated' => 'Unable to update password',
             'profile_updated' => 'Profile updated successfully',
             'profile_not_updated' => 'Unable to update password',
+            'not_found_title' => '404',
+            'not_found_text' => 'The page you\'re looking for is not here.',
+            'not_found_back' => 'Go back',
+            'input_files_select' => 'Drop files here or click to upload | Drop file here or click to upload',
+            'input_files_selected' => '{count} file selected | {count} files selected'
         ],
         "buttons" => [
             "save" => "Save",

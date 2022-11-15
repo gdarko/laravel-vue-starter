@@ -49,8 +49,8 @@
 
 import {defineComponent} from "vue";
 import {useRouter} from "vue-router";
-import Icon from "@/views/utils/Icon"
 import {useAuthStore} from "@/stores";
+import Icon from "@/views/components/icons/Icon"
 
 export default defineComponent({
     name: "Menu",

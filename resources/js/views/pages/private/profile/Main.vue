@@ -15,17 +15,13 @@
 </template>
 
 <script>
-
 import {defineComponent} from "vue";
-import {trans} from "@/utils/i18n";
-
-
-import FileUpload from "@/views/utils/FileUpload";
+import {trans} from "@/helpers/i18n";
 import {useAuthStore} from "@/stores/auth";
-
 import PasswordForm from "@/views/pages/private/profile/PasswordForm";
 import ProfileForm from "@/views/pages/private/profile/ProfileForm";
 import ProfileOverview from "@/views/pages/private/profile/ProfileOverview";
+import FileUpload from "@/views/components/input/FileUpload";
 
 export default defineComponent({
     components: {

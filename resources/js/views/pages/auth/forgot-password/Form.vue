@@ -1,8 +1,8 @@
 <template>
     <div>
-        <FormAlert class="mb-4"/>
+        <DefaultAlert class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
-            <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
+            <TextInput type="email" :required="true" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
             <div class="text-center">
                 <Button type="submit" :text="trans('global.buttons.send')"/>
             </div>
@@ -11,36 +11,34 @@
 </template>
 
 <script>
-import apiUtils from "@/utils/api";
-import Button from "@/views/utils/Button";
-import TextInput from "@/views/utils/TextInput";
 import AuthService from "@/services/AuthService";
-import Alert from "@/views/utils/Alert";
 import {reactive, defineComponent} from "vue";
-
-import {trans} from "@/utils/i18n";
+import {trans} from "@/helpers/i18n";
 import {useAlertStore} from "@/stores";
-import FormAlert from "@/views/utils/FormAlert";
+import apiHelpers from "@/helpers/api";
+import Button from "@/views/components/input/Button";
+import TextInput from "@/views/components/input/TextInput";
+import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 
 export default defineComponent({
     name: "ForgotPasswordForm",
     components: {
-        FormAlert,
+        DefaultAlert,
         Button,
         TextInput,
-        Alert,
     },
     setup() {
 
+        const authService = new AuthService();
         const alertStore = useAlertStore();
         const form = reactive({
             email: null,
         })
 
         function onFormSubmit() {
-            AuthService.forgotPassword({email: form.email})
+            authService.forgotPassword({email: form.email})
                 .then((response) => (alertStore.success(response.data.message)))
-                .catch((error) => (alertStore.error(apiUtils.getError(error))));
+                .catch((error) => (alertStore.error(apiHelpers.getError(error))));
         }
 
         return {

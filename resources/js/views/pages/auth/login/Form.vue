@@ -1,5 +1,5 @@
 <template>
-    <FormAlert class="mb-4"></FormAlert>
+    <DefaultAlert class="mb-4"></DefaultAlert>
     <form @submit.prevent="onFormSubmit">
         <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-2"/>
         <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-4"/>
@@ -10,23 +10,19 @@
 </template>
 
 <script>
-import Button from "@/views/utils/Button";
-import TextInput from "@/views/utils/TextInput";
-import Alert from "@/views/utils/Alert";
-import {trans} from "@/utils/i18n"
-
+import {trans} from "@/helpers/i18n"
 import {reactive, defineComponent} from "vue";
-import {useRouter} from 'vue-router';
 import {useAuthStore} from "@/stores/auth";
-import FormAlert from "@/views/utils/FormAlert";
+import Button from "@/views/components/input/Button";
+import TextInput from "@/views/components/input/TextInput";
+import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 
 export default defineComponent({
     name: "LoginForm",
     components: {
-        FormAlert,
+        DefaultAlert,
         Button,
         TextInput,
-        Alert,
     },
     emits: ['error'],
     setup(props, {emit}) {

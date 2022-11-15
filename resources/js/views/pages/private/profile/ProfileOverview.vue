@@ -1,18 +1,18 @@
 <template>
     <div v-if="user">
         <transition name="fade">
-            <img v-if="user.avatar" :src="user.avatar_url" class="w-16 h-16 rounded-full lg:w-20 lg:h-20" alt=""/>
-            <span v-else class="w-16 h-16 rounded-full lg:w-20 lg:h-20"><AvatarIcon></AvatarIcon></span>
+            <img v-if="user.avatar_url" :src="user.avatar_url" class="w-16 h-16 rounded-full lg:w-20 lg:h-20" alt=""/>
+            <span v-else class="w-16 h-16 rounded-full lg:w-20 lg:h-20"><Avatar></Avatar></span>
         </transition>
         <ul class="mt-2">
             <li class="mb-1 font-bold">{{ user.full_name }}</li>
-            <li>Email: {{ user.email }}</li>
+            <li>{{ trans('users.labels.email') }}: {{ user.email }}</li>
             <li v-if="user.email_verified" class="text-green-500 mt-2">
                 {{ trans('users.status.verified') }}
             </li>
         </ul>
         <div v-if="!user.email_verified" class="mt-4">
-            <FormAlert class="mb-4"/>
+            <DefaultAlert class="mb-4"/>
             <form @submit.prevent="onVerificationSend">
                 <Button type="submit" :text="trans('users.status.ask_verify')"/>
             </form>
@@ -21,34 +21,33 @@
 </template>
 
 <script>
-import apiUtils from "@/utils/api";
 import AuthService from "@/services/AuthService";
-import Alert from "@/views/utils/Alert";
-import Button from "@/views/utils/Button";
+import apiHelpers from "@/helpers/api";
+import Button from "@/views/components/input/Button";
 
-import {trans} from "@/utils/i18n";
+import {trans} from "@/helpers/i18n";
 
 import {defineComponent} from 'vue'
-import AvatarIcon from "@/views/icons/AvatarIcon";
 import {useAuthStore} from "@/stores/auth";
-import FormAlert from "@/views/utils/FormAlert";
 import {useAlertStore} from "@/stores";
+import Avatar from "@/views/components/icons/Avatar";
+import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 
 export default defineComponent({
     components: {
-        FormAlert,
-        AvatarIcon,
-        Alert,
+        DefaultAlert,
+        Avatar,
         Button
     },
     setup() {
+        const authService = new AuthService();
         const alertStore = useAlertStore();
         const {user} = useAuthStore()
 
         function onVerificationSend() {
-            AuthService.sendVerification({user: user.id})
+            authService.sendVerification({user: user.id})
                 .then((response) => (alertStore.success("Email verification link sent.")))
-                .catch((error) => (alertStore.error(apiUtils.getError(error))));
+                .catch((error) => (alertStore.error(apiHelpers.getError(error))));
         }
 
         return {

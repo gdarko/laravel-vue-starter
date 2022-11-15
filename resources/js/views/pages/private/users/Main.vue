@@ -1,11 +1,11 @@
 <template>
-    <div class="p-5 xl:px-0">
-        <SimpleTable v-if="table" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="goToPage" @action="onAction" @search="onSearch" @sort="onSort">
+    <Page>
+        <DefaultTable v-if="table" :title="trans('global.pages.users')" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="goToPage" @action="onAction" @search="onSearch" @sort="onSort">
             <template v-slot:content-id="props">
                 <div class="flex items-center">
                     <div class="flex-shrink-0 h-10 w-10">
-                        <img v-if="props.item.avatar" :src="props.item.avatar_url" class="h-10 w-10 rounded-full" alt=""/>
-                        <AvatarIcon v-else class="w-10 h-10 text-gray-400 rounded-full"/>
+                        <img v-if="props.item.avatar_url" :src="props.item.avatar_url" class="h-10 w-10 rounded-full" alt=""/>
+                        <Avatar v-else class="w-10 h-10 text-gray-400 rounded-full"/>
                     </div>
                     <div class="ml-4">
                         <div class="text-sm font-medium text-gray-900">
@@ -24,28 +24,28 @@
             <template v-slot:content-role="props">
                 {{ props.item.is_admin ? trans('users.roles.admin') : trans('users.roles.regular') }}
             </template>
-        </SimpleTable>
-    </div>
+        </DefaultTable>
+    </Page>
 </template>
 
 <script>
 
-import {trans} from "@/utils/i18n";
-
-import AvatarIcon from "@/views/icons/AvatarIcon";
+import {trans} from "@/helpers/i18n";
 import UserService from "@/services/UserService";
-import apiUtils from "@/utils/api";
-import SimpleTable from "@/views/utils/SimpleTable";
-
 import {useRoute, useRouter} from 'vue-router'
 import {watch, computed, onMounted, defineComponent, reactive} from 'vue';
-import alertUtils from "@/utils/alert";
 import {useAlertStore} from "@/stores";
+import alertHelpers from "@/helpers/alert";
+import apiHelpers from "@/helpers/api";
+import Page from "@/views/layouts/Page";
+import DefaultTable from "@/views/components/tables/DefaultTable";
+import Avatar from "@/views/components/icons/Avatar";
 
 export default defineComponent({
     components: {
-        SimpleTable,
-        AvatarIcon
+        Page,
+        DefaultTable,
+        Avatar
     },
     setup() {
         const route = useRoute();
@@ -62,6 +62,8 @@ export default defineComponent({
             search: '',
             sort: '',
         });
+
+        const service = new UserService();
 
         const table = reactive({
             headers: {
@@ -110,8 +112,8 @@ export default defineComponent({
         function onAction(params) {
             switch (params.action.id) {
                 case 'delete':
-                    alertUtils.confirmDanger(function () {
-                        UserService.delete(params.item.id).then(function (response) {
+                    alertHelpers.confirmDanger(function () {
+                        service.delete(params.item.id).then(function (response) {
                             fetchPage();
                         });
                     })
@@ -136,7 +138,7 @@ export default defineComponent({
                     params.sort = sort.direction;
                 }
             }
-            UserService
+            service
                 .index(params)
                 .then((response) => {
                     table.records = response.data.data;
@@ -144,7 +146,7 @@ export default defineComponent({
                     table.pagination.links = response.data.links;
                 })
                 .catch((error) => {
-                    alertStore.error(apiUtils.getError(error));
+                    alertStore.error(apiHelpers.getError(error));
                 });
         }
 

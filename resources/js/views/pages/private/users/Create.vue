@@ -1,70 +1,49 @@
 <template>
-    <div class="p-5 mt-4 xl:px-0">
-        <div class="grid grid-cols-2 mb-3">
-            <div>
-                <h2 class="bold text-2xl">{{ trans('global.pages.users') }}</h2>
-            </div>
-            <div>
-                <div class="actions float-right">
-                    <Button type="route" to="/users" skin="" :text="trans('global.buttons.back')" icon="fa fa-chevron-left"/>
+    <Page :title="trans('global.pages.users')" :back-to="'/users'">
+        <DefaultPanel :title="trans('users.labels.new_record')">
+            <form @submit.prevent="onSubmit">
+                <div class="mb-4">
+                    <TextInput type="text" :required="true" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
                 </div>
-            </div>
-        </div>
-
-        <FormAlert class="mb-4"/>
-
-        <div class="grid grid-cols-1">
-            <div class="shadow overflow-hidden border-b border-gray-200 mb-8 sm:rounded-lg">
-                <div class="min-w-full divide-y divide-gray-200">
-                    <div class="bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        {{ trans('users.labels.new_record') }}
-                    </div>
-                    <div class="px-6 py-4 whitespace-nowrap bg-white">
-                        <form @submit.prevent="onSubmit">
-                            <div class="mb-4">
-                                <TextInput type="text" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
-                            </div>
-                            <div class="mb-4">
-                                <TextInput type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
-                            </div>
-                            <div class="mb-4">
-                                <TextInput type="text" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
-                            </div>
-                            <div class="mb-4">
-                                <TextInput type="email" :rows="8" name="email" v-model="form.email" :label="trans('users.labels.email')"/>
-                            </div>
-                            <div class="mb-4">
-                                <Dropdown name="type" v-model="form.role" :label="trans('users.labels.role')" :options="properties.roles"/>
-                            </div>
-                            <div class="mb-4">
-                                <TextInput type="password" :rows="8" name="password" v-model="form.password" :label="trans('users.labels.password')"/>
-                            </div>
-                            <div class="mb-4">
-                                <Button type="submit" :text="trans('global.buttons.submit')"/>
-                            </div>
-                        </form>
-                    </div>
+                <div class="mb-4">
+                    <TextInput type="text" :required="true" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
                 </div>
-            </div>
-        </div>
-    </div>
+                <div class="mb-4">
+                    <TextInput type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
+                </div>
+                <div class="mb-4">
+                    <TextInput type="email" :required="true" name="email" v-model="form.email" :label="trans('users.labels.email')"/>
+                </div>
+                <div class="mb-4">
+                    <Dropdown :required="true" name="type" v-model="form.role" :label="trans('users.labels.role')" :options="properties.roles"/>
+                </div>
+                <div class="mb-4">
+                    <TextInput type="password" :required="true" name="password" v-model="form.password" :label="trans('users.labels.password')"/>
+                </div>
+                <div class="mb-4">
+                    <Button type="submit" icon="fa fa-floppy-o" :text="trans('global.buttons.submit')"/>
+                </div>
+            </form>
+        </DefaultPanel>
+    </Page>
 </template>
 
 <script>
 import {defineComponent, onBeforeMount, reactive} from "vue";
-
-import Button from "@/views/utils/Button";
-import TextInput from "@/views/utils/TextInput";
-import Dropdown from "@/views/utils/Dropdown";
-import UserService from "@/services/UserService";
-
-import {trans} from "@/utils/i18n";
+import {trans} from "@/helpers/i18n";
 import {useAuthStore} from "@/stores/auth";
-import FormAlert from "@/views/utils/FormAlert";
 import {useAlertStore} from "@/stores";
+import UserService from "@/services/UserService";
+import Button from "@/views/components/input/Button";
+import TextInput from "@/views/components/input/TextInput";
+import Dropdown from "@/views/components/input/Dropdown";
+import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import DefaultPanel from "@/views/components/panels/DefaultPanel";
+import Page from "@/views/layouts/Page";
+import FileInput from "@/views/components/input/FileInput";
 
 export default defineComponent({
-    components: {FormAlert, Dropdown, TextInput, Button},
+    components: {FileInput, DefaultPanel, DefaultAlert, Dropdown, TextInput, Button, Page},
     setup() {
         const alertStore = useAlertStore();
         const {user} = useAuthStore();
@@ -74,12 +53,13 @@ export default defineComponent({
             role: null,
             avatar: null,
             password: null,
-        })
+        });
         let properties = reactive({
             roles: [],
         });
+        let service = new UserService();
         onBeforeMount(() => {
-            UserService.create().then((response) => {
+            service.create().then((response) => {
                 for (let i in properties) {
                     if (response.data.properties.hasOwnProperty(i)) {
                         properties[i] = response.data.properties[i];
@@ -87,8 +67,9 @@ export default defineComponent({
                 }
             })
         });
+
         function onSubmit() {
-            UserService.store(form).then((response) => {
+            service.store(form).then((response) => {
                 let answer = response.data;
                 alertStore.success(answer.message);
                 for (var i in form) {

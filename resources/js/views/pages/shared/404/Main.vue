@@ -2,17 +2,27 @@
     <div class="max-w-lg p-5 m-auto">
         <article class="p-5">
             <h1 class="mb-2 text-6xl font-bold text-transparent bg-gradient-to-r bg-clip-text from-blue-500 to-green-500">
-                404 </h1>
+                {{ trans('global.phrases.not_found_title') }} </h1>
             <p class="font-bold">
-                The page you're looking for is not here.
-                <router-link to="/dashboard" class="base-link">Back home</router-link>.
+                {{ trans('global.phrases.not_found_text') }}
+                <router-link to="/dashboard" class="base-link">{{ trans('global.phrases.not_found_back') }}</router-link>.
             </p>
         </article>
     </div>
 </template>
 
 <script>
-export default {
+
+
+import {defineComponent} from "vue";
+import {trans} from "@/helpers/i18n";
+
+export default defineComponent( {
     name: "NotFound",
-};
+    setup() {
+        return {
+            trans
+        }
+    }
+});
 </script>
