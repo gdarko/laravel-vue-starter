@@ -98,15 +98,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Returns the user messages
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function messages()
-    {
-        return $this->hasMany(Message::class);
-    }
-
-    /**
      * Returns the avatar url attribute
      * @return string|null
      */

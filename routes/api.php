@@ -4,8 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TokenController;
-use App\Http\Controllers\AvatarController;
-use App\Http\Controllers\MessageController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,10 +30,4 @@ Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
      */
     Route::post('/users/auth/avatar', [UserController::class, 'store_avatar']);
     Route::resource('users', UserController::class);
-
-    /**
-     * Messages
-     */
-    Route::post('/messages', [MessageController::class, 'store']);
-    Route::get('/messages', [MessageController::class, 'index']);
 });
