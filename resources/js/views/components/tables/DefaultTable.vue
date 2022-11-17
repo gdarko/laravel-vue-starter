@@ -39,7 +39,7 @@
             </thead>
             <tbody v-if="records && records.length" class="bg-white divide-y divide-gray-200">
             <tr v-for="(record, i) in records">
-                <td v-for="(header, j) in headers" class="px-6 py-4 whitespace-nowrap">
+                <td v-for="(header, j) in headers" class="px-6 py-4 whitespace-nowrap text-sm">
                     <slot :item="record" :name="'content-'+j">{{
                             record && record.hasOwnProperty(j) ? record[j] : ''
                         }}
