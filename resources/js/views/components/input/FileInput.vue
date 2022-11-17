@@ -52,7 +52,7 @@ export default defineComponent({
         },
         modelValue: {
             default: null,
-            type: [Array, Object],
+            type: [Array, Object, String],
         },
         disabled: {
             type: Boolean,

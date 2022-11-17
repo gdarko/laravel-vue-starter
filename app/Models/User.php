@@ -8,9 +8,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail {
+class User extends Authenticatable implements MustVerifyEmail
+{
     use HasApiTokens, HasFactory, Notifiable;
 
     use Searchable;
@@ -59,57 +61,101 @@ class User extends Authenticatable implements MustVerifyEmail {
     ];
 
     /**
+     * Bootstrap the model and its traits.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (self $record) {
+            Log::info('Deleting user...');
+            Log::info(json_encode($record->mediaFiles));
+            Log::info(json_encode($record->mediaFiles()->get()));
+            foreach ($record->mediaFiles()->get() as $entry) {
+                $entry->delete();
+            }
+        });
+    }
+
+    /**
+     * Returns the user avatar
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne|MediaFile
+     */
+    public function avatar()
+    {
+        return $this->hasOne(MediaFile::class, 'id', 'avatar_id');
+    }
+
+    /**
+     * Returns the user files
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function mediaFiles()
+    {
+        return $this->hasMany(MediaFile::class, 'user_id', 'id');
+    }
+
+    /**
      * Returns the user messages
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function messages() {
-        return $this->hasMany( Message::class );
+    public function messages()
+    {
+        return $this->hasMany(Message::class);
     }
 
     /**
      * Returns the avatar url attribute
      * @return string|null
      */
-    public function getAvatarUrlAttribute() {
-        $src = $this->getAttribute( 'avatar' );
-        if ( is_null( $src ) ) {
+    public function getAvatarUrlAttribute()
+    {
+        $src = $this->getAttribute('avatar_id');
+        if (is_null($src)) {
             return null;
         }
-
-        return asset( $src );
+        if (!empty($this->avatar)) {
+            return asset('storage/'.$this->avatar->path);
+        }
+        return null;
     }
 
     /**
      * Returns the full_name attribute
      * @return string
      */
-    public function getFullNameAttribute() {
-       $names = [];
-       foreach(['first_name', 'middle_name', 'last_name'] as $key) {
-           $value = $this->getAttribute($key);
-           if(!empty($value)) {
-               $names[] = $value;
-           }
-       }
-       return implode(' ', $names);
+    public function getFullNameAttribute()
+    {
+        $names = [];
+        foreach (['first_name', 'middle_name', 'last_name'] as $key) {
+            $value = $this->getAttribute($key);
+            if (!empty($value)) {
+                $names[] = $value;
+            }
+        }
+        return implode(' ', $names);
     }
 
     /**
      * Returns the is_admin attribute
      * @return bool
      */
-    public function getIsAdminAttribute() {
-        return UserRole::ADMIN === (int) $this->getAttribute( 'role' );
+    public function getIsAdminAttribute()
+    {
+        return UserRole::ADMIN === (int) $this->getAttribute('role');
     }
 
     /**
      * Return list of roles
      * @return array
      */
-    public static function roles() {
+    public static function roles()
+    {
         return [
-            UserRole::ADMIN   => trans( 'frontend.users.roles.admin' ),
-            UserRole::REGULAR => trans( 'frontend.users.roles.regular' ),
+            UserRole::ADMIN => trans('frontend.users.roles.admin'),
+            UserRole::REGULAR => trans('frontend.users.roles.regular'),
         ];
     }
 }

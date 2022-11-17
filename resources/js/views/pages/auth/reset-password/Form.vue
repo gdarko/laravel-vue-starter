@@ -27,7 +27,7 @@ import {reactive, defineComponent} from "vue";
 import {useRoute} from "vue-router"
 import {trans} from "@/helpers/i18n"
 import {useAlertStore} from "@/stores";
-import apiHelpers from "@/helpers/api";
+import {getResponseError} from "@/helpers/api";
 import Button from "@/views/components/input/Button";
 import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 
@@ -57,7 +57,7 @@ export default defineComponent({
             };
             authService.resetPassword(payload)
                 .then((response) => (alertStore.success(response.data.message)))
-                .catch((error) => (alertStore.error(apiHelpers.getError(error))));
+                .catch((error) => (alertStore.error(getResponseError(error))));
         }
 
         return {

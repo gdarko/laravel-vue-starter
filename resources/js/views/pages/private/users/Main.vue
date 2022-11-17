@@ -36,7 +36,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {watch, computed, onMounted, defineComponent, reactive} from 'vue';
 import {useAlertStore} from "@/stores";
 import alertHelpers from "@/helpers/alert";
-import apiHelpers from "@/helpers/api";
+import {getResponseError} from "@/helpers/api";
 import Page from "@/views/layouts/Page";
 import DefaultTable from "@/views/components/tables/DefaultTable";
 import Avatar from "@/views/components/icons/Avatar";
@@ -146,7 +146,7 @@ export default defineComponent({
                     table.pagination.links = response.data.links;
                 })
                 .catch((error) => {
-                    alertStore.error(apiHelpers.getError(error));
+                    alertStore.error(getResponseError(error));
                 });
         }
 

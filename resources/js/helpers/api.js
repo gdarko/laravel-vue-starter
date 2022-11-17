@@ -1,4 +1,4 @@
-const getError = function (error) {
+export function getResponseError(error) {
     const errorMessage = "API Error, please try again.";
     if (typeof error !== 'object') {
         return errorMessage;
@@ -22,9 +22,4 @@ const getError = function (error) {
     }
 
     return errorMessage;
-}
-
-
-export default {
-    getError
 }

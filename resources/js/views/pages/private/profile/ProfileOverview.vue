@@ -22,7 +22,7 @@
 
 <script>
 import AuthService from "@/services/AuthService";
-import apiHelpers from "@/helpers/api";
+import {getResponseError} from "@/helpers/api";
 import Button from "@/views/components/input/Button";
 
 import {trans} from "@/helpers/i18n";
@@ -47,7 +47,7 @@ export default defineComponent({
         function onVerificationSend() {
             authService.sendVerification({user: user.id})
                 .then((response) => (alertStore.success("Email verification link sent.")))
-                .catch((error) => (alertStore.error(apiHelpers.getError(error))));
+                .catch((error) => (alertStore.error(getResponseError(error))));
         }
 
         return {

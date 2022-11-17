@@ -14,12 +14,12 @@ class UpdateUserRequest extends BaseRequest
     public function rules()
     {
         return [
-            'first_name'  => 'required|string|max:100',
-            'last_name'   => 'required|string|max:100',
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
             'middle_name' => 'nullable|string|max:100',
-            'email'    => 'required|email|max:200|unique:users,email,'.$this->get('id').',id',
-            'role'     => 'required|integer|in:'.implode(',', array_keys(User::roles())),
-            'avatar'   => 'nullable|image',
+            'email' => 'required|email|max:200|unique:users,email,'.$this->get('id').',id',
+            'role' => 'required|integer|in:'.implode(',', array_keys(User::roles())),
+            'avatar' => 'nullable|image',
             'password' => 'nullable|min:6'
         ];
     }

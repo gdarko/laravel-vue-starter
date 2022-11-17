@@ -23,7 +23,7 @@ import AuthService from "@/services/AuthService";
 import {trans} from "@/helpers/i18n";
 import {reactive, defineComponent} from "vue";
 import {useAlertStore} from "@/stores";
-import apiHelpers from "@/helpers/api";
+import {getResponseError} from "@/helpers/api";
 import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 import Button from "@/views/components/input/Button";
 
@@ -50,7 +50,7 @@ export default defineComponent({
             };
             authService.updatePassword(payload)
                 .then((response) => (alertStore.success(trans('global.phrases.password_updated'))))
-                .catch((error) => (alertStore.error(apiHelpers.getError(error))));
+                .catch((error) => (alertStore.error(getResponseError(error))));
         }
 
         return {

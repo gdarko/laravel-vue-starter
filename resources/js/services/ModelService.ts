@@ -1,6 +1,8 @@
 import BaseService from "@/services/BaseService";
 import axios from "@/plugins/axios";
 
+import {useAlertStore} from "@/stores";
+
 export default abstract class ModelService extends BaseService {
 
     constructor() {
@@ -34,7 +36,8 @@ export default abstract class ModelService extends BaseService {
         for (let i in payload) {
             data.append(i, payload[i]);
         }
-        return this.api.put(this.url + `/${id}`, data);
+        data.append('_method', 'patch');
+        return this.api.post(this.url + `/${id}`, data);
     }
 
     public delete(id) {
@@ -52,5 +55,44 @@ export default abstract class ModelService extends BaseService {
 
     public paginate(link) {
         return this.api.get(link);
+    }
+
+    public handleUpdate(model, form, onSuccess, onError) {
+        const alertStore = useAlertStore();
+        if (!model || !model.hasOwnProperty('id')) {
+            return false;
+        }
+        this.update(model.id, form).then((response) => {
+            let answer = response.data;
+            alertStore.success(answer.message);
+            if (onSuccess) {
+                onSuccess(answer);
+            }
+        }).catch((error) => {
+            if (error.response.data.hasOwnProperty('errors')) {
+                alertStore.error(error.response.data.errors);
+            }
+            if (onError) {
+                onError(error);
+            }
+        });
+    }
+
+    public handleCreate(form, onSuccess, onError) {
+        const alertStore = useAlertStore();
+        this.store(form).then((response) => {
+            let answer = response.data;
+            alertStore.success(answer.message);
+            if (onSuccess) {
+                onSuccess(answer);
+            }
+        }).catch((error) => {
+            if (error.response.data.hasOwnProperty('errors')) {
+                alertStore.error(error.response.data.errors);
+            }
+            if (onError) {
+                onError(error);
+            }
+        });
     }
 }

@@ -15,7 +15,7 @@ import {trans} from "@/helpers/i18n";
 import {defineComponent, reactive, computed, onMounted} from "vue";
 import {useAuthStore} from "@/stores/auth";
 import {useAlertStore} from "@/stores";
-import apiHelpers from "@/helpers/api";
+import {getResponseError} from "@/helpers/api";
 import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 import Button from "@/views/components/input/Button";
 import TextInput from "@/views/components/input/TextInput";
@@ -53,7 +53,7 @@ export default defineComponent({
             authService.updateUser(form)
                 .then(() => authStore.getCurrentUser())
                 .then((response) => (alertStore.success(trans('global.phrases.profile_updated'))))
-                .catch((error) => (alertStore.error(apiHelpers.getError(error))));
+                .catch((error) => (alertStore.error(getResponseError(error))));
         }
 
         return {

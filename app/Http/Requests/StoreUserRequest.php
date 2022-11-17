@@ -14,13 +14,13 @@ class StoreUserRequest extends BaseRequest
     public function rules()
     {
         return [
-            'first_name'  => 'required|string|max:100',
-            'last_name'   => 'required|string|max:100',
+            'first_name' => 'required|string|max:100',
+            'last_name' => 'required|string|max:100',
             'middle_name' => 'nullable|string|max:100',
-            'email'       => 'required|email|unique:users',
-            'role'        => 'required|numeric|in:'.implode(',', array_keys(User::roles())),
-            'avatar'      => 'nullable|image',
-            'password'    => 'required|min:6',
+            'email' => 'required|email|unique:users',
+            'role' => 'required|numeric|in:'.implode(',', array_keys(User::roles())),
+            'avatar' => $this->request->has('avatar') ? 'nullable' : 'image',
+            'password' => 'required|min:6',
         ];
     }
 }

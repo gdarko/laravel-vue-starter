@@ -1,6 +1,6 @@
 import {defineStore} from 'pinia'
 import router from "@/router";
-import apiHelpers from "@/helpers/api";
+import {getResponseError} from "@/helpers/api";
 import {useAlertStore} from "@/stores/alert";
 import AuthService from "@/services/AuthService";
 
@@ -25,7 +25,7 @@ export const useAuthStore = defineStore("auth", {
                 await router.push("/dashboard");
                 //window.location.href = "/dashboard";
             } catch (error) {
-                alertStore.error(apiHelpers.getError(error));
+                alertStore.error(getResponseError(error));
             }
         },
         async register(payload) {
@@ -36,7 +36,7 @@ export const useAuthStore = defineStore("auth", {
                 await router.push("/dashboard");
                 alertStore.clear();
             } catch (error) {
-                alertStore.error(apiHelpers.getError(error));
+                alertStore.error(getResponseError(error));
             }
         },
         async logout() {
@@ -50,7 +50,7 @@ export const useAuthStore = defineStore("auth", {
                     await router.push({path: "/login"});
                 }
             } catch (error) {
-                alertStore.error(apiHelpers.getError(error));
+                alertStore.error(getResponseError(error));
             }
         },
         async getCurrentUser() {
@@ -63,7 +63,7 @@ export const useAuthStore = defineStore("auth", {
             } catch (error) {
                 this.loading = false
                 this.user = null;
-                this.error = apiHelpers.getError(error);
+                this.error = getResponseError(error);
             }
             return this.user;
 

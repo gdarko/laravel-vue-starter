@@ -18,6 +18,9 @@
                     <Dropdown :required="true" name="type" v-model="form.role" :label="trans('users.labels.role')" :options="properties.roles"/>
                 </div>
                 <div class="mb-4">
+                    <FileInput name="avatar" v-model="form.avatar" accept="image/*" :label="trans('users.labels.avatar')" @click="form.avatar = ''"></FileInput>
+                </div>
+                <div class="mb-4">
                     <TextInput type="password" :required="true" name="password" v-model="form.password" :label="trans('users.labels.password')"/>
                 </div>
                 <div class="mb-4">
@@ -32,8 +35,6 @@
 import {defineComponent, onBeforeMount, reactive} from "vue";
 import {trans} from "@/helpers/i18n";
 import {useAuthStore} from "@/stores/auth";
-import {useAlertStore} from "@/stores";
-import UserService from "@/services/UserService";
 import Button from "@/views/components/input/Button";
 import TextInput from "@/views/components/input/TextInput";
 import Dropdown from "@/views/components/input/Dropdown";
@@ -41,43 +42,37 @@ import DefaultAlert from "@/views/components/alerts/DefaultAlert";
 import DefaultPanel from "@/views/components/panels/DefaultPanel";
 import Page from "@/views/layouts/Page";
 import FileInput from "@/views/components/input/FileInput";
+import UserService from "@/services/UserService";
+import {fillObject} from "@/helpers/data";
 
 export default defineComponent({
     components: {FileInput, DefaultPanel, DefaultAlert, Dropdown, TextInput, Button, Page},
     setup() {
-        const alertStore = useAlertStore();
         const {user} = useAuthStore();
         const form = reactive({
-            name: null,
-            email: null,
-            role: null,
-            avatar: null,
-            password: null,
+            first_name: '',
+            last_name: '',
+            middle_name: '',
+            email: '',
+            role: '',
+            avatar: '',
+            password: '',
         });
-        let properties = reactive({
+        const properties = reactive({
             roles: [],
         });
-        let service = new UserService();
+        const service = new UserService();
+
         onBeforeMount(() => {
             service.create().then((response) => {
-                for (let i in properties) {
-                    if (response.data.properties.hasOwnProperty(i)) {
-                        properties[i] = response.data.properties[i];
-                    }
-                }
+                fillObject(properties, response.data.properties)
             })
         });
 
         function onSubmit() {
-            service.store(form).then((response) => {
-                let answer = response.data;
-                alertStore.success(answer.message);
-                for (var i in form) {
+            service.handleCreate(form, (data) => {
+                for (let i in form) {
                     form[i] = null;
-                }
-            }).catch((error) => {
-                if (error.response.data.hasOwnProperty('errors')) {
-                    alertStore.error(error.response.data.errors);
                 }
             });
             return false;

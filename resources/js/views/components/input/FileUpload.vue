@@ -13,7 +13,7 @@
 import {reactive, defineComponent} from "vue";
 import {useAlertStore} from "@/stores";
 import {trans} from "@/helpers/i18n";
-import apiHelpers from "@/helpers/api";
+import {getResponseError} from "@/helpers/api";
 import FileService from "@/services/FileService";
 import Button from "@/views/components/input/Button";
 import DefaultAlert from "@/views/components/alerts/DefaultAlert";
@@ -66,7 +66,7 @@ export default defineComponent({
                 alertStore.success(trans('global.phrases.file_uploaded'))
                 emit("done");
             }).catch((error) => {
-                alertStore.error(apiHelpers.getError(error));
+                alertStore.error(getResponseError(error));
             });
         }
 

@@ -2,42 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\DestroyUserRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Http\Resources\UserResource;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
-use Carbon\Carbon;
-use Exception;
+use App\Http\Requests\DestroyUserRequest;
+use App\Services\User\UserService;
 
 class UserController extends Controller
 {
+    /**
+     * The service instance
+     * @var UserService
+     */
+    private UserService $userService;
+
+    /**
+     * Constructor
+     */
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     /**
      * Display a listing of the resource.
      * @return JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index(Request $request)
     {
-        if ($this->getCurrentUser()->is_admin) {
-
-            $query  = User::query();
-            $search = $request->get('search');
-            if ( ! empty($search)) {
-                $query = $query->search($search);
-            }
-            $sort_by = $request->get('sort_by');
-            $sort    = $request->get('sort');
-            if ($sort && $sort_by) {
-                $query = $query->orderBy($sort_by, $sort);
-            }
-
-            return UserResource::collection($query->paginate(10));
-        }
-
-        return response()->json(["message" => "Forbidden"], 403);
+        return $this->userService->index($request->all());
     }
 
     /**
@@ -47,7 +43,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        return response()->json(['properties' => $this->properties()]);
+        return $this->responseDataSuccess(['properties' => $this->properties()]);
     }
 
     /**
@@ -59,52 +55,13 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-
-        $data                      = $request->only(['first_name', 'last_name', 'middle_name', 'email', 'role', 'avatar', 'password']);
-        $data['password']          = bcrypt($data['password']);
-        $data['email_verified_at'] = Carbon::now()->toDateTimeString();
-
-        $record = User::create($data);
-
-        if (is_null($record)) {
-            $response_data = ['message' => trans('frontend.global.phrases.record_not_created')];
-            $response_code = 501;
+        $input = $request->validated();
+        $record = $this->userService->create($input);
+        if (!is_null($record)) {
+            return $this->responseStoreSuccess(['record' => $record]);
         } else {
-            $response_data = ['message' => trans('frontend.global.phrases.record_created'), 'record' => $record];
-            $response_code = 200;
+            return $this->responseStoreFail();
         }
-
-        return response()->json($response_data, $response_code);
-    }
-
-    /**
-     * Stores the Avatar
-     *
-     * @param  Request  $request
-     *
-     * @return UserResource|JsonResponse
-     */
-    public function store_avatar(Request $request)
-    {
-        try {
-            $user         = $request->user();
-            $fileName     = 'avatars/'.$user->id;
-            $filePath     = Storage::putFile($fileName, $request->file, 'public');
-            $user->avatar = $filePath;
-            if ($user->save()) {
-                $response_data = [
-                    'message' => trans('frontend.global.phrases.record_updated'), 'record' => new UserResource($user)
-                ];
-                $response_code = 200;
-            } else {
-                throw new \Exception('Error updating method.');
-            }
-        } catch (Exception $exception) {
-            $response_data = ['message' => trans('frontend.global.phrases.record_not_updated')];
-            $response_code = 409;
-        }
-
-        return response()->json($response_data, $response_code);
     }
 
     /**
@@ -116,11 +73,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        if ($this->getCurrentUser()->is_admin) {
-            return new UserResource($user);
-        }
-
-        return response()->json(["message" => "Forbidden"], 403);
+        $model = $this->userService->get($user);
+        return $this->responseDataSuccess(['model' => $model, 'properties' => $this->properties()]);
     }
 
     /**
@@ -132,7 +86,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        return response()->json(['model' => $user, 'properties' => $this->properties()]);
+        return $this->show($user);
     }
 
     /**
@@ -145,25 +99,12 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $data = $request->only(['first_name', 'last_name', 'middle_name', 'email', 'role']);
-        if ( ! empty($request->get('password'))) {
-            $data['password'] = bcrypt($request->get('password'));
-        }
-        if ( ! empty($request->get('avatar'))) {
-            $data['avatar'] = bcrypt($request->get('avatar'));
-        }
-
-        if ($user->update($data)) {
-            $response_data = [
-                'message' => trans('frontend.global.phrases.record_updated'), 'record' => new UserResource($user)
-            ];
-            $response_code = 200;
+        $data = $request->validated();
+        if ($this->userService->update($user, $data)) {
+            return $this->responseUpdateSuccess(['record' => $user->fresh()]);
         } else {
-            $response_data = ['message' => trans('frontend.global.phrases.record_not_updated')];
-            $response_code = 409;
+            return $this->responseUpdateFail();
         }
-
-        return response()->json($response_data, $response_code);
     }
 
     /**
@@ -175,14 +116,11 @@ class UserController extends Controller
      */
     public function destroy(DestroyUserRequest $request, User $user)
     {
-        $response_data = null;
-        $responde_code = null;
-        if ($user->delete()) {
-            $response_data = ['message' => trans('frontend.global.phrases.record_created'), 'record' => $user];
-            $responde_code = 200;
+        if ($this->userService->delete($user)) {
+            return $this->responseDeleteSuccess(['record' => $user]);
         }
 
-        return response()->json($response_data, $responde_code);
+        return $this->responseDeleteFail();
 
     }
 
