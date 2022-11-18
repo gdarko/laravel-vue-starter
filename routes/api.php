@@ -28,6 +28,6 @@ Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
     /**
      * Users
      */
-    Route::post('/users/auth/avatar', [UserController::class, 'store_avatar']);
+    Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar']);
     Route::resource('users', UserController::class);
 });

@@ -11,7 +11,6 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-    name: "Button",
     props: {
         type: {
             type: String,
@@ -36,7 +35,7 @@ export default defineComponent({
     },
     setup(props, {emit}) {
         function onClick(event) {
-            emit('click', event.target.value);
+            emit('click', event);
         }
 
         return {

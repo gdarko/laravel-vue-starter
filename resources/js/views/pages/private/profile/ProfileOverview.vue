@@ -1,29 +1,38 @@
 <template>
-    <div v-if="user">
-        <transition name="fade">
-            <img v-if="user.avatar_url" :src="user.avatar_url" class="w-16 h-16 rounded-full lg:w-20 lg:h-20" alt=""/>
-            <span v-else class="w-16 h-16 rounded-full lg:w-20 lg:h-20"><Avatar></Avatar></span>
-        </transition>
-        <ul class="mt-2">
-            <li class="mb-1 font-bold">{{ user.full_name }}</li>
-            <li>{{ trans('users.labels.email') }}: {{ user.email }}</li>
-            <li v-if="user.email_verified" class="text-green-500 mt-2">
-                {{ trans('users.status.verified') }}
-            </li>
-        </ul>
-        <div v-if="!user.email_verified" class="mt-4">
-            <DefaultAlert class="mb-4"/>
-            <form @submit.prevent="onVerificationSend">
-                <Button type="submit" :text="trans('users.status.ask_verify')"/>
-            </form>
+    <Panel>
+        <div class="flex">
+            <div class="w-1/5 px-2">
+                <img v-if="user.avatar_url" :src="user.avatar_url" class="w-full rounded-full" :alt="user.full_name"/>
+                <div v-else class="rounded-full">
+                    <Avatar></Avatar>
+                </div>
+            </div>
+            <div class="w-4/5 px-6 pt-2">
+                <div class="items-center">
+                    <ul class="mt-2">
+                        <li class="mb-1 text-2xl font-bold">{{ user.full_name }}
+                            <Badge type="success" class="inline" v-if="user.email_verified">
+                                {{ trans('users.status.verified') }}
+                            </Badge>
+                        </li>
+                        <li class="text-gray-700"><i class="fa fa-envelope"></i> {{ user.email }}</li>
+                        <li class="mt-5 text-gray-500">{{trans('global.phrases.member_since', {date: user.created_at}) }}</li>
+                    </ul>
+                    <div class="mt-4">
+                        <Button @click.prevent="onChangeAvatar" type="success" :text="trans('global.buttons.change_avatar')"/>
+                        <form @submit.prevent="onVerificationSend" class="inline-block ml-3" v-if="!user.email_verified">
+                            <Button type="submit" :text="trans('users.status.ask_verify')"/>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
+    </Panel>
 </template>
 
 <script>
 import AuthService from "@/services/AuthService";
 import {getResponseError} from "@/helpers/api";
-import Button from "@/views/components/input/Button";
 
 import {trans} from "@/helpers/i18n";
 
@@ -31,15 +40,19 @@ import {defineComponent} from 'vue'
 import {useAuthStore} from "@/stores/auth";
 import {useAlertStore} from "@/stores";
 import Avatar from "@/views/components/icons/Avatar";
-import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import Button from "@/views/components/input/Button";
+import Panel from "@/views/components/Panel";
+import Badge from "@/views/components/Badge";
 
 export default defineComponent({
     components: {
-        DefaultAlert,
+        Panel,
+        Badge,
         Avatar,
         Button
     },
-    setup() {
+    emits: ['changeAvatar'],
+    setup(props, {emit}) {
         const authService = new AuthService();
         const alertStore = useAlertStore();
         const {user} = useAuthStore()
@@ -50,10 +63,15 @@ export default defineComponent({
                 .catch((error) => (alertStore.error(getResponseError(error))));
         }
 
+        function onChangeAvatar() {
+            emit('changeAvatar');
+        }
+
         return {
             user,
             onVerificationSend,
-            trans
+            onChangeAvatar,
+            trans,
         }
     }
 });

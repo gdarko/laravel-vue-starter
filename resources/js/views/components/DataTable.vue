@@ -37,7 +37,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody v-if="records && records.length" class="bg-white divide-y divide-gray-200">
+            <tbody v-if="records && records.length && !loading" class="bg-white divide-y divide-gray-200">
             <tr v-for="(record, i) in records">
                 <td v-for="(header, j) in headers" class="px-6 py-4 whitespace-nowrap text-sm">
                     <slot :item="record" :name="'content-'+j">{{
@@ -65,7 +65,14 @@
             </tbody>
             <tbody v-else>
             <tr>
-                <td :colspan="headers.length">{{ trans('global.phrases.no_records') }}</td>
+                <td :colspan="headersLength" class="p-5 text-center">
+                    <template v-if="$props.loading">
+                        <Spinner></Spinner>
+                    </template>
+                    <template v-else>
+                        {{ trans('global.phrases.no_records') }}
+                    </template>
+                </td>
             </tr>
             </tbody>
 
@@ -79,11 +86,11 @@
 <script>
 import {trans} from "@/helpers/i18n";
 import {computed, defineComponent, reactive, ref, useSlots} from "vue";
-import Pager from "@/views/components/tables/Pager";
+import Pager from "@/views/components/Pager";
+import Spinner from "@/views/components/icons/Spinner";
 
 export default defineComponent({
-    name: "DefaultTable",
-    components: {Pager},
+    components: {Spinner, Pager},
     emits: ['pageChanged', 'action', 'search', 'sort'],
     props: {
         title: {
@@ -119,7 +126,11 @@ export default defineComponent({
                 },
                 links: null,
             },
-        }
+        },
+        loading: {
+            type: Boolean,
+            default: false,
+        },
     },
     setup(props, {emit}) {
 
@@ -133,6 +144,17 @@ export default defineComponent({
                 enabled = false;
             }
             return enabled;
+        })
+
+        const headersLength = computed(() => {
+            let total = 0;
+            for (let i in props.headers) {
+                total++;
+            }
+            if(props.actions) {
+                total++;
+            }
+            return total;
         })
 
         function getPaginationMeta(key) {
@@ -227,6 +249,7 @@ export default defineComponent({
             onSortChange,
             inputSearch,
             sortControlClasses,
+            headersLength,
             trans,
             emit
         }

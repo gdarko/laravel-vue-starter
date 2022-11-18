@@ -1,6 +1,6 @@
 <template>
     <Page :title="trans('global.pages.users')" :back-to="'/users'">
-        <DefaultPanel :title="trans('users.labels.new_record')">
+        <Panel :title="trans('users.labels.new_record')">
             <form @submit.prevent="onSubmit">
                 <div class="mb-4">
                     <TextInput type="text" :required="true" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
@@ -27,7 +27,7 @@
                     <Button type="submit" icon="fa fa-floppy-o" :text="trans('global.buttons.submit')"/>
                 </div>
             </form>
-        </DefaultPanel>
+        </Panel>
     </Page>
 </template>
 
@@ -38,15 +38,15 @@ import {useAuthStore} from "@/stores/auth";
 import Button from "@/views/components/input/Button";
 import TextInput from "@/views/components/input/TextInput";
 import Dropdown from "@/views/components/input/Dropdown";
-import DefaultAlert from "@/views/components/alerts/DefaultAlert";
-import DefaultPanel from "@/views/components/panels/DefaultPanel";
+import Alert from "@/views/components/Alert";
+import Panel from "@/views/components/Panel";
 import Page from "@/views/layouts/Page";
 import FileInput from "@/views/components/input/FileInput";
 import UserService from "@/services/UserService";
 import {fillObject} from "@/helpers/data";
 
 export default defineComponent({
-    components: {FileInput, DefaultPanel, DefaultAlert, Dropdown, TextInput, Button, Page},
+    components: {FileInput, Panel, Alert, Dropdown, TextInput, Button, Page},
     setup() {
         const {user} = useAuthStore();
         const form = reactive({

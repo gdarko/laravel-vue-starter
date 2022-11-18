@@ -90,13 +90,16 @@
 </template>
 
 <script>
-import {reactive, ref} from "vue";
+import {onBeforeMount, reactive, ref} from "vue";
 
 import {trans} from '@/helpers/i18n';
 import Menu from "@/views/layouts/Menu";
 import Icon from "@/views/components/icons/Icon";
 import AvatarIcon from "@/views/components/icons/Avatar";
 import {useAuthStore} from "@/stores/auth";
+import {fillObject} from "@/helpers/data";
+import {useRoute} from "vue-router";
+import {useAlertStore} from "@/stores";
 
 export default {
     name: "app",
@@ -107,7 +110,9 @@ export default {
     },
     setup() {
 
+        const alertStore = useAlertStore();
         const authStore = useAuthStore();
+        const route = useRoute();
 
         const state = reactive({
             mainMenu: [
@@ -180,6 +185,12 @@ export default {
                 }
             })
         }
+
+        onBeforeMount(() => {
+            if(route.query.hasOwnProperty('verified') && route.query.verified) {
+                alertStore.success(trans('global.phrases.email_verified'));
+            }
+        });
 
         return {
             state,

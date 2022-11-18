@@ -39,6 +39,9 @@ return [
             "ask_upload_avatar" => "Upload Avatar",
             "new_record" => "New User",
             "edit_record" => "Edit User",
+            "general_settings" => "General Settings",
+            "password_settings" => "Password Settings",
+            "avatar_settings" => "Avatar Settings",
         ]
     ],
     "messages" => [
@@ -56,6 +59,7 @@ return [
             "reset_password" => "Reset Password"
         ],
         "phrases" => [
+            "loading" => "Loading...",
             "sign_out" => "Sign Out",
             'all_records' => 'All Records',
             'add_new' => 'Add New',
@@ -89,7 +93,9 @@ return [
             'not_found_text' => 'The page you\'re looking for is not here.',
             'not_found_back' => 'Go back',
             'input_files_select' => 'Drop files here or click to upload | Drop file here or click to upload',
-            'input_files_selected' => '{count} file selected | {count} files selected'
+            'input_files_selected' => '{count} file selected | {count} files selected',
+            'email_verified' => 'Email verified successfully!',
+            "member_since" => "Member since: {date}",
         ],
         "buttons" => [
             "save" => "Save",
@@ -101,6 +107,9 @@ return [
             "new_record" => "New Record",
             'documentation' => "Documentation",
             "back" => "Back",
+            "upload" => "Upload",
+            "update" => "Update",
+            "change_avatar" => "Change Avatar",
         ],
         "actions" => [
             "name" => "Actions",

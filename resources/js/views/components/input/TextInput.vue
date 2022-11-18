@@ -15,7 +15,7 @@
                @input="onInput"
                :placeholder="placeholder"
                :autocomplete="autocomplete"
-               class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500"/>
+               class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500 text-sm"/>
         <textarea v-else
             :id="name"
             :value="modelValue"
@@ -23,7 +23,7 @@
             @input="onInput"
             :placeholder="placeholder"
             :autocomplete="autocomplete"
-            class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500"></textarea>
+            class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500 text-sm"></textarea>
     </div>
 </template>
 
@@ -32,7 +32,6 @@
 import {defineComponent} from "vue";
 
 export default defineComponent({
-    name: "TextInput",
     inheritAttrs: false,
     props: {
         class: String,

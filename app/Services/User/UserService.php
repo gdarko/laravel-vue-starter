@@ -30,7 +30,8 @@ class UserService
      * @param  User  $user
      * @return UserResource
      */
-    public function get(User $user) {
+    public function get(User $user)
+    {
         return new UserResource($user);
     }
 
@@ -103,13 +104,39 @@ class UserService
             $entry = $this->mediaService->storeAvatar($data['avatar'], $user);
             if ($entry) {
                 $data['avatar_id'] = $entry->id;
-                if ($entry->avatar) {
-                    $entry->avatar->delete(); // Delete old avatar.
+                if ($user->avatar) {
+                    $user->avatar->delete(); // Delete old avatar.
                 }
             }
             unset($data['avatar']);
         }
         return $user->update($data);
+    }
+
+    /**
+     * Update avatar for the specified resource
+     * @param  User  $user
+     * @param  array  $data
+     * @return bool
+     */
+    public function updateAvatar(User $user, array $data)
+    {
+
+        if (isset($data['avatar']) && $data['avatar']) {
+            $entry = $this->mediaService->storeAvatar($data['avatar'], $user);
+            if ($entry) {
+                $data['avatar_id'] = $entry->id;
+                if (!empty($user->avatar)) {
+                    $user->avatar->delete(); // Delete old avatar.
+                }
+            }
+            unset($data['avatar']);
+        }
+        if (!empty($data)) {
+            return $user->update($data);
+        } else {
+            return false;
+        }
     }
 
     /**

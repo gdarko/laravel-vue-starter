@@ -2,7 +2,7 @@
 
     <div class="p-5 mt-4 xl:px-0">
 
-        <DefaultAlert class="mb-4"/>
+        <Alert class="mb-4"/>
 
         <div class="grid grid-cols-2 mb-3" v-if="$props.title || $props.backTo">
             <div v-if="$props.title">
@@ -25,11 +25,11 @@
 import {defineComponent} from "vue";
 import {trans} from "@/helpers/i18n";
 import Button from "@/views/components/input/Button";
-import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import Alert from "@/views/components/Alert";
 
 export default defineComponent({
     name: "Page",
-    components: {DefaultAlert, Button},
+    components: {Alert, Button},
     props: {
         title: {
             type: String,

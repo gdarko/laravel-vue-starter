@@ -28,9 +28,9 @@
 </template>
 
 <script>
-import {computed, ref} from "vue";
+import {computed, defineComponent, ref} from "vue";
 
-export default {
+export default defineComponent( {
     name: 'Pager',
     props: {
         value: {
@@ -243,5 +243,5 @@ export default {
             nextPage
         }
     }
-}
+});
 </script>

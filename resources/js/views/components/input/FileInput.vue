@@ -1,26 +1,28 @@
 <template>
-    <label class="text-sm text-gray-500" :class="{ 'sr-only': !$props.showLabel }" v-if="$props.showLabel && $props.label">
-        {{ $props.label }}<span class="text-red-600" v-if="$props.required">*</span>
-    </label>
-    <div :class="classes" @click="onClick" @mouseover="hover = true" @mouseleave="hover = false" @drop.prevent="onDrop" @dragover.prevent="hover = true" @dragleave.prevent="hover = false">
-        <button class="file-input__clear" type="button" @click.stop="onClear" v-if="canClear">
-            <i class="fa fa-times"></i></button>
-        <div v-if="!files.length">
-            <p class="text-2xl"><i class="fa fa-cloud-upload"></i></p>
-            <p>{{ placeholderMessage }}</p>
+    <div :class="$props.class">
+        <label class="text-sm text-gray-500" :class="{ 'sr-only': !$props.showLabel }" v-if="$props.showLabel && $props.label">
+            {{ $props.label }}<span class="text-red-600" v-if="$props.required">*</span>
+        </label>
+        <div :class="classes" @click="onClick" @mouseover="hover = true" @mouseleave="hover = false" @drop.prevent="onDrop" @dragover.prevent="hover = true" @dragleave.prevent="hover = false">
+            <button class="file-input__clear" type="button" @click.stop="onClear" v-if="canClear">
+                <i class="fa fa-times"></i></button>
+            <div v-if="!files.length">
+                <p class="text-2xl"><i class="fa fa-cloud-upload"></i></p>
+                <p>{{ placeholderMessage }}</p>
+            </div>
+            <div v-else>
+                <template v-if="$props.multiple">
+                    <span>{{ trans('global.phrases.input_files_selected', {count: files.length}) }}</span>
+                    <div v-for="(file, index) in files" :key="index">
+                        <small>{{ file.name }}</small>
+                    </div>
+                </template>
+                <template v-else>
+                    <span>{{ files[0].name }}</span>
+                </template>
+            </div>
+            <input type="file" ref="input" :disabled="disabled" :multiple="multiple" :accept="$props.accept" @input="onChange"/>
         </div>
-        <div v-else>
-            <template v-if="$props.multiple">
-                <span>{{ trans('global.phrases.input_files_selected', {count: files.length}) }}</span>
-                <div v-for="(file, index) in files" :key="index">
-                    <small>{{ file.name }}</small>
-                </div>
-            </template>
-            <template v-else>
-                <span>{{ files[0].name }}</span>
-            </template>
-        </div>
-        <input type="file" ref="input" :disabled="disabled" :multiple="multiple" :accept="$props.accept" @input="onChange"/>
     </div>
 </template>
 

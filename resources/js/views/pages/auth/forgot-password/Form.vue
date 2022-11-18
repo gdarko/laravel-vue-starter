@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DefaultAlert class="mb-4"/>
+        <Alert class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
             <TextInput type="email" :required="true" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
             <div class="text-center">
@@ -18,12 +18,12 @@ import {useAlertStore} from "@/stores";
 import {getResponseError} from "@/helpers/api";
 import Button from "@/views/components/input/Button";
 import TextInput from "@/views/components/input/TextInput";
-import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import Alert from "@/views/components/Alert";
 
 export default defineComponent({
     name: "ForgotPasswordForm",
     components: {
-        DefaultAlert,
+        Alert,
         Button,
         TextInput,
     },

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <DefaultAlert class="mb-4"/>
+        <Alert class="mb-4"/>
         <form @submit.prevent="onFormSubmit">
             <div class="mb-2">
                 <label for="email" class="text-sm text-gray-500">{{ trans('users.labels.email') }}</label>
@@ -29,12 +29,12 @@ import {trans} from "@/helpers/i18n"
 import {useAlertStore} from "@/stores";
 import {getResponseError} from "@/helpers/api";
 import Button from "@/views/components/input/Button";
-import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import Alert from "@/views/components/Alert";
 
 export default defineComponent({
     name: "ResetPasswordForm",
     components: {
-        DefaultAlert,
+        Alert,
         Button,
     },
     setup() {

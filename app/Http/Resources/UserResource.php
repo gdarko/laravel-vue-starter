@@ -25,6 +25,9 @@ class UserResource extends JsonResource
         $data['email_verified'] = !empty($this->email_verified_at);
         $data['created_at'] = !empty($this->resource->created_at) ? $this->resource->created_at->diffForHumans() : null;
         $data['updated_at'] = !empty($this->resource->updated_at) ? $this->resource->updated_at->diffForHumans() : null;
+        if (isset($data['avatar'])) {
+            unset($data['avatar']);
+        }
 
         return $data;
     }

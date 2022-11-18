@@ -23,3 +23,20 @@ export function getResponseError(error) {
 
     return errorMessage;
 }
+
+export function prepareQuery(args) {
+    let page = args.hasOwnProperty('page') ? args.page : null
+    let search = args.hasOwnProperty('search') ? args.search : null;
+    let sort = args.hasOwnProperty('sort') ? args.sort : null;
+    let params = {page: page}
+    if (search) {
+        params.search = search;
+    }
+    if (sort && sort.hasOwnProperty('column') && sort.hasOwnProperty('direction')) {
+        if (sort.column && sort.direction) {
+            params.sort_by = sort.column;
+            params.sort = sort.direction;
+        }
+    }
+    return params;
+}

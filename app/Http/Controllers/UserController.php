@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateAvatarRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -101,6 +102,16 @@ class UserController extends Controller
     {
         $data = $request->validated();
         if ($this->userService->update($user, $data)) {
+            return $this->responseUpdateSuccess(['record' => $user->fresh()]);
+        } else {
+            return $this->responseUpdateFail();
+        }
+    }
+
+    public function updateAvatar(UpdateAvatarRequest $request, User $user)
+    {
+        $data = $request->validated();
+        if ($this->userService->updateAvatar($user, $data)) {
             return $this->responseUpdateSuccess(['record' => $user->fresh()]);
         } else {
             return $this->responseUpdateFail();

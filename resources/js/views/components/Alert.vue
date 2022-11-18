@@ -41,7 +41,6 @@ import Icon from "@/views/components/icons/Icon";
 import {useAlertStore} from "@/stores";
 
 export default defineComponent({
-    name: "DefaultAlert",
     components: {Icon},
     inheritAttrs: true,
     setup(props, {emit}) {

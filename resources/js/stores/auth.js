@@ -3,6 +3,7 @@ import router from "@/router";
 import {getResponseError} from "@/helpers/api";
 import {useAlertStore} from "@/stores/alert";
 import AuthService from "@/services/AuthService";
+import UserService from "@/services/UserService";
 
 export const useAuthStore = defineStore("auth", {
     state: () => {
@@ -37,6 +38,19 @@ export const useAuthStore = defineStore("auth", {
                 alertStore.clear();
             } catch (error) {
                 alertStore.error(getResponseError(error));
+            }
+        },
+        async updateAvatar(id, payload) {
+            const alertStore = useAlertStore();
+            const userService = new UserService();
+            try {
+                const response = await userService.updateAvatar(id, payload);
+                await this.getCurrentUser();
+                alertStore.success(trans('global.phrases.file_uploaded'))
+                return true;
+            } catch (error) {
+                alertStore.error(getResponseError(error));
+                return false;
             }
         },
         async logout() {

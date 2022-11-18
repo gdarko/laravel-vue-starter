@@ -1,5 +1,5 @@
 <template>
-    <DefaultAlert class="mb-4"></DefaultAlert>
+    <Alert class="mb-4"></Alert>
     <form @submit.prevent="onFormSubmit">
         <TextInput type="email" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-2"/>
         <TextInput type="password" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-4"/>
@@ -15,12 +15,12 @@ import {reactive, defineComponent} from "vue";
 import {useAuthStore} from "@/stores/auth";
 import Button from "@/views/components/input/Button";
 import TextInput from "@/views/components/input/TextInput";
-import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import Alert from "@/views/components/Alert";
 
 export default defineComponent({
     name: "LoginForm",
     components: {
-        DefaultAlert,
+        Alert,
         Button,
         TextInput,
     },

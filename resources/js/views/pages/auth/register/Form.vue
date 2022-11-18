@@ -1,6 +1,6 @@
 <template>
     <form @submit.prevent="onFormSubmit">
-        <DefaultAlert class="mb-4"/>
+        <Alert class="mb-4"/>
         <TextInput type="text" :required="true" :label="trans('users.labels.first_name')" name="first_name" v-model="form.first_name" class="mb-2"/>
         <TextInput type="text" :label="trans('users.labels.middle_name')" name="middle_name" v-model="form.middle_name" class="mb-2"/>
         <TextInput type="text" :required="true" :label="trans('users.labels.last_name')" name="last_name" v-model="form.last_name" class="mb-2"/>
@@ -19,12 +19,12 @@ import {trans} from "@/helpers/i18n"
 import {useAuthStore} from "@/stores";
 import TextInput from "@/views/components/input/TextInput";
 import Button from "@/views/components/input/Button";
-import DefaultAlert from "@/views/components/alerts/DefaultAlert";
+import Alert from "@/views/components/Alert";
 
 export default defineComponent({
     name: "RegisterForm",
     components: {
-        DefaultAlert,
+        Alert,
         Button,
         TextInput,
     },
