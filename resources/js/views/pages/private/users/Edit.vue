@@ -1,5 +1,5 @@
 <template>
-    <Page :title="trans('global.pages.users')" :back-to="'/users'">
+    <Page :title="trans('global.pages.users')" :back-to="'/panel/users/list'">
         <Panel :title="trans('users.labels.edit_record')">
             <form @submit.prevent="onSubmit">
                 <div class="mb-4">
@@ -15,7 +15,7 @@
                     <TextInput type="email" :required="true" name="email" v-model="form.email" :label="trans('users.labels.email')"/>
                 </div>
                 <div class="mb-4">
-                    <Dropdown :required="true" name="type" v-model="form.role" :label="trans('users.labels.role')" :options="properties.roles"/>
+                    <Dropdown multiple="multiple" :server="'roles'" :server-per-page="5" :required="true" name="type" v-model="form.role" :label="trans('users.labels.role')"/>
                 </div>
                 <div class="mb-4">
                     <FileInput name="avatar" v-model="form.avatar" accept="image/*" :label="trans('users.labels.avatar')" @click="form.avatar = ''"></FileInput>
@@ -58,7 +58,7 @@ export default defineComponent({
             last_name: '',
             middle_name: '',
             email: '',
-            role: '',
+            role: [],
             avatar: '',
             password: '',
         })

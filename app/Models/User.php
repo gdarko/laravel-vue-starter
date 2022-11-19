@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Enums\UserRole;
 use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,10 +9,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Silber\Bouncer\Database\Role;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
+
+    use HasRolesAndAbilities;
 
     use Searchable;
 
@@ -57,7 +60,6 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $appends = [
         'avatar_url',
         'full_name',
-        'is_admin',
     ];
 
     /**
@@ -135,18 +137,20 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getIsAdminAttribute()
     {
-        return UserRole::ADMIN === (int) $this->getAttribute('role');
+        return $this->isAn('admin');
     }
 
     /**
-     * Return list of roles
-     * @return array
+     * Returns the roles
+     * @return []
      */
-    public static function roles()
+    public static function getRoles()
     {
-        return [
-            UserRole::ADMIN => trans('frontend.users.roles.admin'),
-            UserRole::REGULAR => trans('frontend.users.roles.regular'),
-        ];
+        $roles = Role::all();
+        $results = [];
+        foreach ($roles as $role) {
+            $results[$role->id] = trans('frontend.users.roles.'.$role->name);
+        }
+        return $results;
     }
 }

@@ -36,9 +36,11 @@ export default defineComponent({
         }
 
         function onSubmit() {
-            if (!authStore.updateAvatar(authStore.user.id, {'avatar': form.file})) {
+
+            authStore.updateAvatar(authStore.user.id, {'avatar': form.file}).catch((error) => {
                 emit('error');
-            }
+            });
+
             emit('done');
         }
 

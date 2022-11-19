@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RoleController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
@@ -30,4 +31,9 @@ Route::middleware(['auth:sanctum', 'apply_locale'])->group(function () {
      */
     Route::put('/users/{user}/avatar', [UserController::class, 'updateAvatar']);
     Route::resource('users', UserController::class);
+
+    /**
+     * Roles
+     */
+    Route::get('/roles/search', [RoleController::class, 'search'])->middleware('throttle:400,1');
 });

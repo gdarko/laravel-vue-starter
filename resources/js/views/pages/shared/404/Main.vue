@@ -5,7 +5,7 @@
                 {{ trans('global.phrases.not_found_title') }} </h1>
             <p class="font-bold">
                 {{ trans('global.phrases.not_found_text') }}
-                <router-link to="/dashboard" class="base-link">{{ trans('global.phrases.not_found_back') }}</router-link>.
+                <router-link to="/panel" class="base-link">{{ trans('global.phrases.not_found_back') }}</router-link>.
             </p>
         </article>
     </div>

@@ -18,12 +18,8 @@
                 </div>
             </template>
             <template v-slot:content-status="props">
-                <span v-if="props.item.email_verified" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{
-                        trans('users.status.verified')
-                    }}</span>
-                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{{
-                        trans('users.status.not_verified')
-                    }}</span>
+                <span v-if="props.item.email_verified" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{trans('users.status.verified') }}</span>
+                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{{trans('users.status.not_verified') }}</span>
             </template>
             <template v-slot:content-role="props">
                 {{ props.item.is_admin ? trans('users.roles.admin') : trans('users.roles.regular') }}
@@ -54,7 +50,6 @@ export default defineComponent({
     setup() {
         const route = useRoute();
         const router = useRouter();
-
         const alertStore = useAlertStore();
 
         const currentPage = computed(() => {
@@ -92,7 +87,7 @@ export default defineComponent({
                     name: trans('global.actions.edit'),
                     icon: "fa fa-edit",
                     showName: false,
-                    to: '/users/{id}/edit'
+                    to: '/panel/users/{id}/edit'
                 },
                 delete: {
                     id: 'delete',
@@ -153,7 +148,7 @@ export default defineComponent({
         })
 
         watch(route, (newV, oldV) => {
-            (newV.name === 'users') && fetchPage({page: newV.query.page ? newV.query.page : 1});
+            (newV.name === 'users.list') && fetchPage({page: newV.query.page ? newV.query.page : 1});
         })
 
         watch(tableState, (newTableState) => {

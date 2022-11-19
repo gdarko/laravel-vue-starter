@@ -1,14 +1,14 @@
 <template>
     <ul class="space-y-2">
         <template v-for="item in $props.state.mainMenu">
-            <li v-if="item.hasOwnProperty('subitems') && item.subitems.length > 0 && isEnabled(item, $props.type)">
+            <li v-if="item.hasOwnProperty('children') && item.children.length > 0 && isEnabled(item, $props.type)">
                 <button @click.prevent="state.currentExpandedMenuItem  ? state.currentExpandedMenuItem = null : state.currentExpandedMenuItem = item" type="button" class="transition duration-75 group w-full flex items-center p-2 text-base font-normal text-white font-semibold rounded-lg hover:text-theme-300 hover:bg-theme-800 dark:hover:bg-theme-800" :class="isActive(item) ? 'bg-theme-800' : ''">
                     <Icon :name="item.icon" class="mr-2 text-3xl pl-2 -mt-1"/>
                     <span class="flex-1 text-left" v-html="item.name"></span>
                     <Icon :name="JSON.stringify(state.currentExpandedMenuItem) === JSON.stringify(item) ? 'angle-up' : 'angle-down'" class="mr-2 text-3xl pl-2 -mt-1"/>
                 </button>
                 <ul id="dropdown-example" class="py-2 space-y-2" :class="JSON.stringify(state.currentExpandedMenuItem) === JSON.stringify(item) ? '' : 'hidden'">
-                    <template v-for="subitem in item.subitems">
+                    <template v-for="subitem in item.children">
                         <template v-if="isEnabled(subitem, $props.type)">
                             <li v-if="subitem.hasOwnProperty('onClick')">
                                 <router-link :to="subitem.to ? subitem.to : '#'" @click.prevent="subitem.onClick" class="flex items-center p-2 pl-11 w-full text-base font-normal text-white font-semibold rounded-lg hover:text-theme-300 hover:bg-theme-800 dark:hover:bg-theme-800" :class="isActive(subitem) ? 'bg-theme-800' : ''">
@@ -77,9 +77,9 @@ export default defineComponent({
             let currentPath = router.currentRoute.value.path;
             let isActiveMainItem = obj.to === currentPath;
             let isActiveSubItem = false;
-            if (obj.hasOwnProperty('subitems')) {
-                for (let i in obj.subitems) {
-                    if (obj.subitems[i].to === currentPath) {
+            if (obj.hasOwnProperty('children')) {
+                for (let i in obj.children) {
+                    if (obj.children[i].to === currentPath) {
                         isActiveSubItem = true;
                         break;
                     }
@@ -93,11 +93,13 @@ export default defineComponent({
             if (!obj) {
                 return false;
             }
-            let roleCheck = (false !== obj.showIfRole) ? parseInt(obj.showIfRole) === parseInt(authStore.user.role) : true;
+
+            let hasPermission = obj.hasOwnProperty('requiresAbility') && false !== obj.requiresAbility ? authStore.hasAbilities(obj.requiresAbility) : true;
+
             let totalEnabledSubItems = 0;
-            if (obj.hasOwnProperty('subitems')) {
-                for (let i in obj.subitems) {
-                    if (isEnabled(obj.subitems[i], type)) {
+            if (obj.hasOwnProperty('children')) {
+                for (let i in obj.children) {
+                    if (isEnabled(obj.children[i], type)) {
                         totalEnabledSubItems++;
                     }
                 }
@@ -106,9 +108,9 @@ export default defineComponent({
             }
 
             if (type === 'desktop') {
-                return roleCheck && obj.showDesktop && totalEnabledSubItems > 0;
+                return hasPermission && obj.showDesktop && totalEnabledSubItems > 0;
             } else if (type === 'mobile') {
-                return roleCheck && obj.showMobile && totalEnabledSubItems > 0;
+                return hasPermission && obj.showMobile && totalEnabledSubItems > 0;
             }
             return false;
         }

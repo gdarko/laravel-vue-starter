@@ -1,121 +1,47 @@
 import {createWebHistory, createRouter} from "vue-router";
-import auth from "@/router/middleware/auth";
-import admin from "@/router/middleware/admin";
-import guest from "@/router/middleware/guest";
 
-import {default as PageDashboard} from "@/views/pages/private/dashboard/Main";
-import {default as PageLogin} from "@/views/pages/auth/login/Main";
-import {default as PageRegister} from "@/views/pages/auth/register/Main";
-import {default as PageResetPassword} from "@/views/pages/auth/reset-password/Main";
-import {default as PageForgotPassword} from "@/views/pages/auth/forgot-password/Main";
-import {default as PageNotFound} from "@/views/pages/shared/404/Main";
-import {default as PageProfile} from "@/views/pages/private/profile/Main";
-import {default as PageUsers} from "@/views/pages/private/users/Main";
-import {default as PageUsersCreate} from "@/views/pages/private/users/Create";
-import {default as PageUsersEdit} from "@/views/pages/private/users/Edit";
+import routes from "@/router/routes";
 
 import {useAuthStore} from "@/stores/auth";
 
-const routes = [
-    {
-        path: "/",
-        name: "home",
-        meta: {middleware: [guest]},
-        component: PageLogin,
-    },
-    {
-        path: "/dashboard",
-        name: "dashboard",
-        meta: {middleware: [auth]},
-        component: PageDashboard,
-    },
-    {
-        path: "/profile",
-        name: "profile",
-        meta: {middleware: [auth]},
-        component: PageProfile,
-    },
-    {
-        path: "/users",
-        name: "users",
-        meta: {middleware: [auth, admin]},
-        component: PageUsers,
-    },
-    {
-        path: "/users/create",
-        name: "users.create",
-        meta: {middleware: [auth, admin]},
-        component: PageUsersCreate,
-    },
-    {
-        path: "/users/:id/edit",
-        name: "users.edit",
-        meta: {middleware: [auth, admin]},
-        component: PageUsersEdit,
-    },
-    {
-        path: "/login",
-        name: "login",
-        meta: {middleware: [guest]},
-        component: PageLogin,
-    },
-    {
-        path: "/register",
-        name: "register",
-        meta: {middleware: [guest]},
-        component: PageRegister,
-    },
-    {
-        path: "/reset-password",
-        name: "resetPassword",
-        meta: {middleware: [guest]},
-        component: PageResetPassword,
-    },
-    {
-        path: "/forgot-password",
-        name: "forgotPassword",
-        meta: {middleware: [guest]},
-        component: PageForgotPassword,
-    },
-    {
-        path: "/:catchAll(.*)",
-        name: "notFound",
-        component: PageNotFound,
-    },
-];
-
-function pipeline(context, middleware, index) {
-    const nextMiddleware = middleware[index];
-    if (!nextMiddleware) {
-        return context.next;
-    }
-    return () => {
-        nextMiddleware({
-            ...context,
-            next: pipeline(context, middleware, index + 1),
-        });
-    };
-}
-
 const router = createRouter({
     history: createWebHistory(),
+    linkActiveClass: 'active',
     routes,
-});
+})
 
-router.beforeEach((to, from, next) => {
-
-    const store = useAuthStore();
-
-    const middleware = to.meta.middleware;
-    const context = {to, from, next, store};
-
-    if (!middleware) {
+router.beforeEach(async (to, from, next) => {
+    const authStore = useAuthStore();
+    if (!authStore.user) {
+        await authStore.getCurrentUser();
+    }
+    if(!authStore.user) {
+        authStore.clearBrowserData();
+    }
+    const requiresAbility = to.meta.requiresAbility;
+    const requiresAuth = to.meta.requiresAuth;
+    const belongsToOwnerOnly = to.meta.isOwner;
+    const isAppLoaded = true; // for now...
+    if (!isAppLoaded) {
         return next();
     }
-    middleware[0]({
-        ...context,
-        next: pipeline(context, middleware, 1),
-    });
-});
+    if (requiresAbility && requiresAuth) {
+        if (authStore.hasAbilities(requiresAbility)) {
+            next()
+        } else {
+            next({
+                name: 'profile'
+            })
+        }
+    } else if (belongsToOwnerOnly) {
+        if (authStore.user.is_owner) {
+            next()
+        } else {
+            next({name: 'dashboard'})
+        }
+    } else {
+        next()
+    }
+})
 
 export default router;

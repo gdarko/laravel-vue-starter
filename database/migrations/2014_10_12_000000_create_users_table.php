@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->string('last_name');
             $table->string('middle_name')->nullable();
             $table->string('email')->unique();
-            $table->unsignedSmallInteger('role')->default(UserRole::REGULAR);
             $table->timestamp('email_verified_at')->nullable();
             $table->foreignId('avatar_id')->nullable();
             $table->string('password');

@@ -1,13 +1,13 @@
 <template>
     <Panel>
         <div class="flex">
-            <div class="w-1/5 px-2">
-                <img v-if="user.avatar_url" :src="user.avatar_url" class="w-full rounded-full" :alt="user.full_name"/>
+            <div class="w-1/6 px-2">
+                <img v-if="avatarUrl" :src="avatarUrl" class="w-full rounded-full" :alt="user.full_name"/>
                 <div v-else class="rounded-full">
                     <Avatar></Avatar>
                 </div>
             </div>
-            <div class="w-4/5 px-6 pt-2">
+            <div class="w-5/6 px-6 pt-2">
                 <div class="items-center">
                     <ul class="mt-2">
                         <li class="mb-1 text-2xl font-bold">{{ user.full_name }}
@@ -16,7 +16,10 @@
                             </Badge>
                         </li>
                         <li class="text-gray-700"><i class="fa fa-envelope"></i> {{ user.email }}</li>
-                        <li class="mt-5 text-gray-500">{{trans('global.phrases.member_since', {date: user.created_at}) }}</li>
+                        <li class="mt-5 text-gray-500">{{
+                                trans('global.phrases.member_since', {date: user.created_at})
+                            }}
+                        </li>
                     </ul>
                     <div class="mt-4">
                         <Button @click.prevent="onChangeAvatar" type="success" :text="trans('global.buttons.change_avatar')"/>
@@ -36,7 +39,7 @@ import {getResponseError} from "@/helpers/api";
 
 import {trans} from "@/helpers/i18n";
 
-import {defineComponent} from 'vue'
+import {computed, defineComponent} from 'vue'
 import {useAuthStore} from "@/stores/auth";
 import {useAlertStore} from "@/stores";
 import Avatar from "@/views/components/icons/Avatar";
@@ -57,9 +60,13 @@ export default defineComponent({
         const alertStore = useAlertStore();
         const {user} = useAuthStore()
 
+        const avatarUrl = computed(() => {
+            return user && user.hasOwnProperty('avatar_url') && user.avatar_url;
+        });
+
         function onVerificationSend() {
             authService.sendVerification({user: user.id})
-                .then((response) => (alertStore.success("Email verification link sent.")))
+                .then((response) => (alertStore.success(trans('global.phrases.verification_sent'))))
                 .catch((error) => (alertStore.error(getResponseError(error))));
         }
 
@@ -71,6 +78,7 @@ export default defineComponent({
             user,
             onVerificationSend,
             onChangeAvatar,
+            avatarUrl,
             trans,
         }
     }

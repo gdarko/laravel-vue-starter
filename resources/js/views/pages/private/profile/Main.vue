@@ -1,14 +1,14 @@
 <template>
     <Page>
-        <div class="w-full lg:w-1/2 ml-auto mr-auto">
-            <ProfileOverview class="mb-4" @change-avatar="isAvatarModalShowing = true;"/>
-            <ProfileForm class="mb-4"/>
-            <PasswordForm class="mb-4"/>
+        <div class="w-full xl:w-2/3 ml-auto mr-auto">
+            <Overview class="mb-4" @change-avatar="isAvatarModalShowing = true;"/>
+            <FormGeneral class="mb-4"/>
+            <FormPassword class="mb-4"/>
         </div>
     </Page>
 
     <Modal :showing="isAvatarModalShowing" @close="isAvatarModalShowing = false;">
-        <AvatarForm @error="isAvatarModalShowing = false;" @done="isAvatarModalShowing = false;"/>
+        <FormAvatar @error="isAvatarModalShowing = false;" @done="isAvatarModalShowing = false;"/>
     </Modal>
 
 </template>
@@ -17,10 +17,10 @@
 import {defineComponent, ref} from "vue";
 import {trans} from "@/helpers/i18n";
 import {useAuthStore} from "@/stores/auth";
-import PasswordForm from "@/views/pages/private/profile/PasswordForm";
-import ProfileForm from "@/views/pages/private/profile/ProfileForm";
-import ProfileOverview from "@/views/pages/private/profile/ProfileOverview";
-import AvatarForm from "@/views/pages/private/profile/AvatarForm";
+import FormPassword from "@/views/pages/private/profile/partials/FormPassword";
+import FormGeneral from "@/views/pages/private/profile/partials/FormGeneral";
+import FormAvatar from "@/views/pages/private/profile/partials/FormAvatar";
+import Overview from "@/views/pages/private/profile/partials/Overview";
 import Page from "@/views/layouts/Page";
 import Modal from "@/views/components/Modal";
 import Panel from "@/views/components/Panel";
@@ -32,10 +32,10 @@ export default defineComponent({
         Panel,
         Modal,
         Page,
-        ProfileOverview,
-        ProfileForm,
-        PasswordForm,
-        AvatarForm,
+        Overview,
+        FormGeneral,
+        FormPassword,
+        FormAvatar,
     },
     setup() {
         const store = useAuthStore()

@@ -96,6 +96,7 @@ return [
             'input_files_selected' => '{count} file selected | {count} files selected',
             'email_verified' => 'Email verified successfully!',
             "member_since" => "Member since: {date}",
+            "verification_sent" => "Email verification link sent.",
         ],
         "buttons" => [
             "save" => "Save",

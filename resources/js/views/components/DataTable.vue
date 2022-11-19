@@ -37,7 +37,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody v-if="records && records.length && !loading" class="bg-white divide-y divide-gray-200">
+            <tbody v-if="records && records.length && !$props.loading" class="bg-white divide-y divide-gray-200">
             <tr v-for="(record, i) in records">
                 <td v-for="(header, j) in headers" class="px-6 py-4 whitespace-nowrap text-sm">
                     <slot :item="record" :name="'content-'+j">{{
@@ -75,11 +75,10 @@
                 </td>
             </tr>
             </tbody>
-
         </table>
     </div>
 
-    <Pager v-if="lastPage" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
+    <Pager v-if="lastPage && !$props.loading" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
 
 </template>
 

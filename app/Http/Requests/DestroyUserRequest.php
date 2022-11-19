@@ -2,9 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Enums\UserRole;
-use App\Models\User;
-
 class DestroyUserRequest extends BaseRequest
 {
     /**

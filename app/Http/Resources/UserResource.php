@@ -22,6 +22,8 @@ class UserResource extends JsonResource
 
         $data = $this->resource->toArray();
         $data['is_admin'] = $this->is_admin;
+        $data['is_owner'] = \Auth::check() && \Auth::user()->id === $this->id;
+        $data['abilities'] = $this->getAbilities();
         $data['email_verified'] = !empty($this->email_verified_at);
         $data['created_at'] = !empty($this->resource->created_at) ? $this->resource->created_at->diffForHumans() : null;
         $data['updated_at'] = !empty($this->resource->updated_at) ? $this->resource->updated_at->diffForHumans() : null;

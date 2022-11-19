@@ -19,8 +19,7 @@
             locales: {
                 en: {!! json_encode(\Illuminate\Support\Facades\Lang::get('frontend', [], 'en')) !!},
                 mk: {!! json_encode(\Illuminate\Support\Facades\Lang::get('frontend', [], 'mk')) !!},
-            },
-            roles: {!! json_encode(\App\Enums\UserRole::all()) !!},
+            }
         }
     </script>
 </head>

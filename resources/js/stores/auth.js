@@ -1,15 +1,15 @@
-import {defineStore} from 'pinia'
 import router from "@/router";
+import {defineStore} from 'pinia'
 import {getResponseError} from "@/helpers/api";
 import {useAlertStore} from "@/stores/alert";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
+import {trans} from "@/helpers/i18n";
 
 export const useAuthStore = defineStore("auth", {
     state: () => {
         return {
             user: null,
-            loading: false,
             error: null,
         };
     },
@@ -23,8 +23,7 @@ export const useAuthStore = defineStore("auth", {
                 this.setBrowserData();
                 alertStore.clear();
                 await this.getCurrentUser();
-                await router.push("/dashboard");
-                //window.location.href = "/dashboard";
+                await router.push("/panel/dashboard");
             } catch (error) {
                 alertStore.error(getResponseError(error));
             }
@@ -34,35 +33,8 @@ export const useAuthStore = defineStore("auth", {
             const authService = new AuthService();
             try {
                 const response = await authService.registerUser(payload);
-                await router.push("/dashboard");
+                await router.push("/panel/dashboard");
                 alertStore.clear();
-            } catch (error) {
-                alertStore.error(getResponseError(error));
-            }
-        },
-        async updateAvatar(id, payload) {
-            const alertStore = useAlertStore();
-            const userService = new UserService();
-            try {
-                const response = await userService.updateAvatar(id, payload);
-                await this.getCurrentUser();
-                alertStore.success(trans('global.phrases.file_uploaded'))
-                return true;
-            } catch (error) {
-                alertStore.error(getResponseError(error));
-                return false;
-            }
-        },
-        async logout() {
-            const alertStore = useAlertStore();
-            const authService = new AuthService();
-            try {
-                await authService.logout();
-                this.user = null;
-                this.clearBrowserData()
-                if (router.currentRoute.name !== "login") {
-                    await router.push({path: "/login"});
-                }
             } catch (error) {
                 alertStore.error(getResponseError(error));
             }
@@ -80,7 +52,44 @@ export const useAuthStore = defineStore("auth", {
                 this.error = getResponseError(error);
             }
             return this.user;
-
+        },
+        updateAvatar(id, payload) {
+            const alertStore = useAlertStore();
+            const userService = new UserService();
+            return new Promise((resolve, reject) => {
+                userService
+                    .updateAvatar(id, payload)
+                    .then((response) => {
+                        this.getCurrentUser().then(() => {
+                            alertStore.success(trans('global.phrases.file_uploaded'));
+                            resolve(response)
+                        });
+                    })
+                    .catch((err) => {
+                        alertStore.error(getResponseError(err));
+                        reject(err)
+                    })
+            })
+        },
+        logout() {
+            return new Promise((resolve, reject) => {
+                const alertStore = useAlertStore();
+                const authService = new AuthService();
+                authService
+                    .logout()
+                    .then((response) => {
+                        this.clearBrowserData();
+                        if (router.currentRoute.name !== "login") {
+                            router.push({path: "/login"});
+                        }
+                        this.user = null;
+                        resolve(response)
+                    })
+                    .catch((err) => {
+                        alertStore.error(getResponseError(err));
+                        reject(err)
+                    })
+            });
         },
         hasBrowserData() {
             let data = window.localStorage.getItem('currentUser');
@@ -91,7 +100,34 @@ export const useAuthStore = defineStore("auth", {
         },
         clearBrowserData() {
             window.localStorage.removeItem('currentUser');
-        }
+        },
+        hasAbilities(abilities) {
+            return this.user.hasOwnProperty('abilities') && !!this.user.abilities.find((ab) => {
+                if (ab.name === '*') return true
+                if (typeof abilities === 'string') {
+                    return ab.name === abilities
+                }
+                return !!abilities.find((p) => {
+                    return ab.name === p
+                })
+            })
+        },
+
+        hasAllAbilities(abilities) {
+            let isAvailable = true
+            if (this.user.hasOwnProperty('abilities')) {
+                this.user.abilities.filter((ab) => {
+                    let hasContain = !!abilities.find((p) => {
+                        return ab.name === p
+                    })
+                    if (!hasContain) {
+                        isAvailable = false
+                    }
+                })
+            }
+
+            return isAvailable
+        },
     },
     getters: {
         isAdmin: (state) => {

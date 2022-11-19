@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateAvatarRequest;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -31,9 +32,12 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      * @return JsonResponse|\Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @throws AuthorizationException
      */
     public function index(Request $request)
     {
+        $this->authorize('list', User::class);
+
         return $this->userService->index($request->all());
     }
 
@@ -41,9 +45,12 @@ class UserController extends Controller
      * Show the form for creating a new resource.
      *
      * @return JsonResponse|\Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function create()
     {
+        $this->authorize('create', User::class);
+
         return $this->responseDataSuccess(['properties' => $this->properties()]);
     }
 
@@ -53,9 +60,12 @@ class UserController extends Controller
      * @param  StoreUserRequest  $request
      *
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function store(StoreUserRequest $request)
     {
+        $this->authorize('create', User::class);
+
         $input = $request->validated();
         $record = $this->userService->create($input);
         if (!is_null($record)) {
@@ -71,9 +81,12 @@ class UserController extends Controller
      * @param  User  $user
      *
      * @return UserResource|JsonResponse
+     * @throws AuthorizationException
      */
     public function show(User $user)
     {
+        $this->authorize('view', User::class);
+
         $model = $this->userService->get($user);
         return $this->responseDataSuccess(['model' => $model, 'properties' => $this->properties()]);
     }
@@ -84,9 +97,12 @@ class UserController extends Controller
      * @param  User  $user
      *
      * @return JsonResponse|\Illuminate\Http\Response
+     * @throws AuthorizationException
      */
     public function edit(User $user)
     {
+        $this->authorize('edit', User::class);
+
         return $this->show($user);
     }
 
@@ -97,9 +113,12 @@ class UserController extends Controller
      * @param  User  $user
      *
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function update(UpdateUserRequest $request, User $user)
     {
+        $this->authorize('edit', User::class);
+
         $data = $request->validated();
         if ($this->userService->update($user, $data)) {
             return $this->responseUpdateSuccess(['record' => $user->fresh()]);
@@ -108,8 +127,17 @@ class UserController extends Controller
         }
     }
 
+    /**
+     * Update avatar in for specified user
+     * @param  UpdateAvatarRequest  $request
+     * @param  User  $user
+     * @return JsonResponse
+     * @throws AuthorizationException
+     */
     public function updateAvatar(UpdateAvatarRequest $request, User $user)
     {
+        $this->authorize('edit-profile', User::class);
+
         $data = $request->validated();
         if ($this->userService->updateAvatar($user, $data)) {
             return $this->responseUpdateSuccess(['record' => $user->fresh()]);
@@ -124,9 +152,12 @@ class UserController extends Controller
      * @param  int  $id
      *
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(DestroyUserRequest $request, User $user)
     {
+        $this->authorize('delete', User::class);
+
         if ($this->userService->delete($user)) {
             return $this->responseDeleteSuccess(['record' => $user]);
         }
@@ -142,7 +173,7 @@ class UserController extends Controller
     public function properties()
     {
         return [
-            'roles' => User::roles()
+            'roles' => User::getRoles()
         ];
     }
 }

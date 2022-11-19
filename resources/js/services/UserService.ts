@@ -11,7 +11,7 @@ export default class UserService extends ModelService {
         const formData = new FormData();
         formData.append("avatar", payload.avatar);
         formData.append('_method', 'put');
-        return this.api.post(`/users/${id}/avatar`, formData)
+        return this.api.post(`/users/${id}/avatar`, formData);
     }
 
 }

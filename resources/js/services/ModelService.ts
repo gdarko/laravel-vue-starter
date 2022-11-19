@@ -2,6 +2,7 @@ import BaseService from "@/services/BaseService";
 import axios from "@/plugins/axios";
 
 import {useAlertStore} from "@/stores";
+import {getResponseError} from "@/helpers/api";
 
 export default abstract class ModelService extends BaseService {
 
@@ -69,9 +70,7 @@ export default abstract class ModelService extends BaseService {
                 onSuccess(answer);
             }
         }).catch((error) => {
-            if (error.response.data.hasOwnProperty('errors')) {
-                alertStore.error(error.response.data.errors);
-            }
+            alertStore.error(getResponseError(error));
             if (onError) {
                 onError(error);
             }
@@ -87,9 +86,7 @@ export default abstract class ModelService extends BaseService {
                 onSuccess(answer);
             }
         }).catch((error) => {
-            if (error.response.data.hasOwnProperty('errors')) {
-                alertStore.error(error.response.data.errors);
-            }
+            alertStore.error(getResponseError(error));
             if (onError) {
                 onError(error);
             }
