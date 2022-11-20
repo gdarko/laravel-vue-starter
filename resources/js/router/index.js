@@ -15,16 +15,12 @@ router.beforeEach(async (to, from, next) => {
     if (!authStore.user) {
         await authStore.getCurrentUser();
     }
-    if(!authStore.user) {
+    if (!authStore.user) {
         authStore.clearBrowserData();
     }
     const requiresAbility = to.meta.requiresAbility;
     const requiresAuth = to.meta.requiresAuth;
     const belongsToOwnerOnly = to.meta.isOwner;
-    const isAppLoaded = true; // for now...
-    if (!isAppLoaded) {
-        return next();
-    }
     if (requiresAbility && requiresAuth) {
         if (authStore.hasAbilities(requiresAbility)) {
             next()

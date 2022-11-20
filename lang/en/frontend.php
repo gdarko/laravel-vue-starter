@@ -31,6 +31,7 @@ return [
             "avatar" => "Avatar",
             "email" => "Email",
             "role" => "Role",
+            "roles" => "Roles",
             "status" => "Status",
             "current_password" => "Current Password",
             "password" => "Password",
@@ -51,6 +52,8 @@ return [
         "pages" => [
             "home" => "Dashboard",
             "users" => "Users",
+            "users_create" => "New User",
+            "users_edit" => "Edit User",
             "profile" => "Profile",
             "register" => "Register",
             "login" => "Login",
@@ -62,7 +65,6 @@ return [
             "loading" => "Loading...",
             "sign_out" => "Sign Out",
             'all_records' => 'All Records',
-            'add_new' => 'Add New',
             "argh" => "Argh!",
             "success" => "Success!",
             "fix_errors" => "Please fix the following errors:",
@@ -99,6 +101,8 @@ return [
             "verification_sent" => "Email verification link sent.",
         ],
         "buttons" => [
+            'add_new' => 'Add New',
+            'filters' => 'Filters',
             "save" => "Save",
             "send" => "Send",
             "submit" => "Submit",

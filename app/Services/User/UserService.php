@@ -3,8 +3,11 @@
 namespace App\Services\User;
 
 use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Models\User;
 use App\Services\Media\MediaService;
+use App\Utilities\Data;
+use Bouncer;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
@@ -64,19 +67,24 @@ class UserService
         if (isset($data['password'])) {
             $data['password'] = bcrypt($data['password']);
         }
+
         $data['email_verified_at'] = Carbon::now()->toDateTimeString();
-        $avatar = null;
-        if (isset($data['avatar'])) {
-            $avatar = $data['avatar'];
-            unset($data['avatar']);
-        }
+        $roles = Data::take($data, 'roles');
+        $avatar = Data::take($data, 'avatar');
+
         $record = User::query()->create($data);
         if (!empty($record)) {
+            // Set avatar
             if (!empty($avatar)) {
                 $entry = $this->mediaService->storeAvatar($avatar, $record);
                 if (!empty($entry)) {
                     $record->update(['avatar_id' => $entry->id]);
                 }
+            }
+            // Set roles
+            if (!empty($roles)) {
+                $roles = array_map('intval', $roles);
+                Bouncer::sync($record)->roles($roles);
             }
             return $record->fresh();
         } else {
@@ -100,6 +108,8 @@ class UserService
             $data['password'] = bcrypt($data['password']);
         }
 
+        $roles = Data::take($data, 'roles');
+
         if (isset($data['avatar']) && $data['avatar']) {
             $entry = $this->mediaService->storeAvatar($data['avatar'], $user);
             if ($entry) {
@@ -110,6 +120,10 @@ class UserService
             }
             unset($data['avatar']);
         }
+        if (!empty($roles)) {
+            Bouncer::sync($user)->roles($roles);
+        }
+
         return $user->update($data);
     }
 

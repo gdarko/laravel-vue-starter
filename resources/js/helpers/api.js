@@ -8,6 +8,9 @@ export function getResponseError(error, response) {
         return error.message;
     }
 
+    if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data') && error.response.data.hasOwnProperty('errors')) {
+        return error.response.data.errors;
+    }
 
     if (error.hasOwnProperty('response') && error.response.hasOwnProperty('data') && error.response.data.hasOwnProperty('message')) {
         return error.response.data.message;
@@ -25,9 +28,6 @@ export function getResponseError(error, response) {
         console.error(error.response.data);
         console.error(error.response.status);
         console.error(error.response.headers);
-    }
-    if (error.response.data && error.response.data.errors) {
-        return error.response.data.errors;
     }
 
     return errorMessage;

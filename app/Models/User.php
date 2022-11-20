@@ -10,7 +10,6 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
-use Silber\Bouncer\Database\Role;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -138,19 +137,5 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsAdminAttribute()
     {
         return $this->isAn('admin');
-    }
-
-    /**
-     * Returns the roles
-     * @return []
-     */
-    public static function getRoles()
-    {
-        $roles = Role::all();
-        $results = [];
-        foreach ($roles as $role) {
-            $results[$role->id] = trans('frontend.users.roles.'.$role->name);
-        }
-        return $results;
     }
 }

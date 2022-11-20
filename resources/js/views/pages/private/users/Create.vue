@@ -1,38 +1,21 @@
 <template>
-    <Page :title="trans('global.pages.users')" :back-to="'/panel/users/list'">
-        <Panel :title="trans('users.labels.new_record')">
-            <form @submit.prevent="onSubmit">
-                <div class="mb-4">
-                    <TextInput type="text" :required="true" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
-                </div>
-                <div class="mb-4">
-                    <TextInput type="text" :required="true" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
-                </div>
-                <div class="mb-4">
-                    <TextInput type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
-                </div>
-                <div class="mb-4">
-                    <TextInput type="email" :required="true" name="email" v-model="form.email" :label="trans('users.labels.email')"/>
-                </div>
-                <div class="mb-4">
-                    <Dropdown multiple="multiple" :server="'roles'" :server-per-page="5" :required="true" name="type" v-model="form.role" :label="trans('users.labels.role')"/>
-                </div>
-                <div class="mb-4">
-                    <FileInput name="avatar" v-model="form.avatar" accept="image/*" :label="trans('users.labels.avatar')" @click="form.avatar = ''"></FileInput>
-                </div>
-                <div class="mb-4">
-                    <TextInput type="password" :required="true" name="password" v-model="form.password" :label="trans('users.labels.password')"/>
-                </div>
-                <div class="mb-4">
-                    <Button type="submit" icon="fa fa-floppy-o" :text="trans('global.buttons.submit')"/>
-                </div>
-            </form>
-        </Panel>
-    </Page>
+    <form @submit.prevent="onSubmit">
+        <Page :id="page.id" :title="page.title" :breadcrumbs="page.breadcrumbs" :actions="page.actions">
+            <Panel :id="page.id + '-panel'">
+                <TextInput class="mb-4" type="text" :required="true" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
+                <TextInput class="mb-4" type="text" :required="true" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
+                <TextInput class="mb-4" type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
+                <TextInput class="mb-4" type="email" :required="true" name="email" v-model="form.email" :label="trans('users.labels.email')"/>
+                <Dropdown class="mb-4" multiple="multiple" :server="'roles'" :server-per-page="15" :required="true" name="type" v-model="form.roles" :label="trans('users.labels.roles')"/>
+                <FileInput class="mb-4" name="avatar" v-model="form.avatar" accept="image/*" :label="trans('users.labels.avatar')" @click="form.avatar = ''"></FileInput>
+                <TextInput class="mb-4" type="password" :required="true" name="password" v-model="form.password" :label="trans('users.labels.password')"/>
+            </Panel>
+        </Page>
+    </form>
 </template>
 
 <script>
-import {defineComponent, onBeforeMount, reactive} from "vue";
+import {defineComponent, reactive} from "vue";
 import {trans} from "@/helpers/i18n";
 import {useAuthStore} from "@/stores/auth";
 import Button from "@/views/components/input/Button";
@@ -43,7 +26,8 @@ import Panel from "@/views/components/Panel";
 import Page from "@/views/layouts/Page";
 import FileInput from "@/views/components/input/FileInput";
 import UserService from "@/services/UserService";
-import {fillObject} from "@/helpers/data";
+import {clearObject, reduceProperties} from "@/helpers/data";
+import {toUrl} from "@/helpers/routing";
 
 export default defineComponent({
     components: {FileInput, Panel, Alert, Dropdown, TextInput, Button, Page},
@@ -54,27 +38,49 @@ export default defineComponent({
             last_name: '',
             middle_name: '',
             email: '',
-            role: '',
+            roles: [],
             avatar: '',
             password: '',
         });
-        const properties = reactive({
-            roles: [],
+
+        const page = reactive({
+            id: 'create_users',
+            title: trans('global.pages.users_create'),
+            filters: false,
+            breadcrumbs: [
+                {
+                    name: trans('global.pages.users'),
+                    to: toUrl('/users/list'),
+
+                },
+                {
+                    name: trans('global.pages.users_create'),
+                    active: true,
+                }
+            ],
+            actions: [
+                {
+                    id: 'back',
+                    name: trans('global.buttons.back'),
+                    icon: "fa fa-angle-left",
+                    to: toUrl('/users/list'),
+                    theme: 'outline',
+                },
+                {
+                    id: 'submit',
+                    name: trans('global.buttons.save'),
+                    icon: "fa fa-save",
+                    type: 'submit'
+                }
+            ]
         });
+
         const service = new UserService();
 
-        onBeforeMount(() => {
-            service.create().then((response) => {
-                fillObject(properties, response.data.properties)
-            })
-        });
-
         function onSubmit() {
-            service.handleCreate(form, (data) => {
-                for (let i in form) {
-                    form[i] = null;
-                }
-            });
+            service.handleCreate(reduceProperties(form, 'roles', 'id'), page.id + '-panel').finally(() => {
+                clearObject(form)
+            })
             return false;
         }
 
@@ -82,7 +88,7 @@ export default defineComponent({
             trans,
             user,
             form,
-            properties,
+            page,
             onSubmit,
         }
     }
