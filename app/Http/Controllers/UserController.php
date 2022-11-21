@@ -172,8 +172,6 @@ class UserController extends Controller
      */
     public function properties()
     {
-        return [
-            'roles' => User::getRoles()
-        ];
+        return [];
     }
 }

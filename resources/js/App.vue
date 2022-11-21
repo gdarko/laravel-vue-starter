@@ -103,8 +103,7 @@ import AvatarIcon from "@/views/components/icons/Avatar";
 import {useAuthStore} from "@/stores/auth";
 import {useRoute} from "vue-router";
 import {useAlertStore} from "@/stores";
-import abilities from "@/stub/abilities";
-import getAbilitiesForRoute from "@/helpers/routing";
+import {getAbilitiesForRoute} from "@/helpers/routing";
 
 export default {
     name: "app",
@@ -146,7 +145,7 @@ export default {
                             to: '/panel/users/list',
                         },
                         {
-                            name: trans('global.phrases.add_new'),
+                            name: trans('global.buttons.add_new'),
                             icon: '',
                             showDesktop: true,
                             showMobile: true,

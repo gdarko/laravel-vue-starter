@@ -8,7 +8,7 @@ import {computed, defineComponent} from "vue";
 
 export default defineComponent({
     props: {
-        type: {
+        theme: {
             type: String,
             default: "success",
         },
@@ -19,7 +19,7 @@ export default defineComponent({
             if (props.hasOwnProperty('class')) {
                 value += props.class;
             }
-            switch (props.type) {
+            switch (props.theme) {
                 case 'success':
                     value = 'bg-green-100 text-green-800 dark:bg-green-200 dark:text-green-900';
                     break;
@@ -32,6 +32,9 @@ export default defineComponent({
                 case 'danger':
                 case 'alert':
                     value = 'bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900';
+                    break;
+                default:
+                    value = 'bg-theme-100 text-theme-800 dark:bg-theme-200 dark:text-theme-900';
                     break;
             }
             return value;

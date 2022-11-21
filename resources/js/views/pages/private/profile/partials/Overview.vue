@@ -11,7 +11,7 @@
                 <div class="items-center">
                     <ul class="mt-2">
                         <li class="mb-1 text-2xl font-bold">{{ user.full_name }}
-                            <Badge type="success" class="inline" v-if="user.email_verified">
+                            <Badge theme="success" class="inline" v-if="user.email_verified_at">
                                 {{ trans('users.status.verified') }}
                             </Badge>
                         </li>
@@ -23,7 +23,7 @@
                     </ul>
                     <div class="mt-4">
                         <Button @click.prevent="onChangeAvatar" type="success" :text="trans('global.buttons.change_avatar')"/>
-                        <form @submit.prevent="onVerificationSend" class="inline-block ml-3" v-if="!user.email_verified">
+                        <form @submit.prevent="onVerificationSend" class="inline-block ml-3" v-if="!user.email_verified_at">
                             <Button type="submit" :text="trans('users.status.ask_verify')"/>
                         </form>
                     </div>

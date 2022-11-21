@@ -11,85 +11,82 @@ export default abstract class ModelService extends BaseService {
         this.setupAPI(axios.defaults.baseURL + '/api');
     }
 
-    public create() {
-        return this.api.get(this.url + `/create`);
+    public create(id = null) {
+        return this.get(this.url + `/create`, {}, id);
     }
 
-    public find(id) {
-        return this.api.get(this.url + `/${id}`);
+    public find(object_id, id = null) {
+        return this.get(this.url + `/${object_id}`, {}, id);
     }
 
-    public edit(id) {
-        return this.api.get(this.url + `/${id}/edit`);
+    public edit(object_id, id = null) {
+        return this.get(this.url + `/${object_id}/edit`, {}, id);
     }
 
-    public store(payload) {
-
-        let data = new FormData();
-        for (let i in payload) {
-            data.append(i, payload[i]);
-        }
-        return this.api.post(this.url, data);
+    public store(payload, id = null) {
+        let data = this.transformPayloadForSubmission(payload);
+        return this.post(this.url, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+        },id)
     }
 
-    public update(id, payload) {
-        let data = new FormData();
-        for (let i in payload) {
-            data.append(i, payload[i]);
-        }
+    public update(object_id, payload, id = null) {
+        let data = this.transformPayloadForSubmission(payload);
         data.append('_method', 'patch');
-        return this.api.post(this.url + `/${id}`, data);
+        return this.post(this.url + `/${object_id}`, data, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            },
+        }, id);
     }
 
-    public delete(id) {
-        return this.api.delete(this.url + `/${id}`);
+    public delete(object_id, id = null) {
+        return super.delete(this.url + `/${id}`, {}, id);
     }
 
-    public index(params = {}) {
+    public index(params = {}, id = null) {
         let path = this.url;
         let query = new URLSearchParams(params).toString();
         if (query) {
             path += '?' + query
         }
-        return this.api.get(path);
+        return this.get(path, {}, id);
     }
 
-    public paginate(link) {
-        return this.api.get(link);
-    }
-
-    public handleUpdate(model, form, onSuccess, onError) {
+    public handleUpdate(object_id, form, id = null) {
         const alertStore = useAlertStore();
-        if (!model || !model.hasOwnProperty('id')) {
-            return false;
+        return this.update(object_id, form, id).then((response) => {
+            let answer = response.data;
+            alertStore.success(answer.message);
+        }).catch((error) => {
+            alertStore.error(getResponseError(error));
+        });
+    }
+
+    public handleCreate(form, id = null) {
+        const alertStore = useAlertStore();
+        return this.store(form, id).then((response) => {
+            let answer = response.data;
+            alertStore.success(answer.message);
+        }).catch((error) => {
+            alertStore.error(getResponseError(error));
+        });
+    }
+
+    public transformPayloadForSubmission(payload) {
+        let data = new FormData();
+        for (let key in payload) {
+            let val = payload[key];
+            if (Array.isArray(val)) {
+                for (let index in val) {
+                    data.append(key + '[]', val[index]);
+                }
+            } else {
+                data.append(key, val);
+            }
         }
-        this.update(model.id, form).then((response) => {
-            let answer = response.data;
-            alertStore.success(answer.message);
-            if (onSuccess) {
-                onSuccess(answer);
-            }
-        }).catch((error) => {
-            alertStore.error(getResponseError(error));
-            if (onError) {
-                onError(error);
-            }
-        });
-    }
-
-    public handleCreate(form, onSuccess, onError) {
-        const alertStore = useAlertStore();
-        this.store(form).then((response) => {
-            let answer = response.data;
-            alertStore.success(answer.message);
-            if (onSuccess) {
-                onSuccess(answer);
-            }
-        }).catch((error) => {
-            alertStore.error(getResponseError(error));
-            if (onError) {
-                onError(error);
-            }
-        });
+        return data;
     }
 }

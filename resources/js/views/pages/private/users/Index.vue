@@ -1,30 +1,41 @@
 <template>
-    <Page>
-        <DataTable v-if="table" :title="trans('global.pages.users')" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" :loading="table.isLoading" @page-changed="goToPage" @action="onAction" @search="onSearch" @sort="onSort">
-            <template v-slot:content-id="props">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0 h-10 w-10">
-                        <img v-if="props.item.avatar_url" :src="props.item.avatar_url" class="h-10 w-10 rounded-full" alt=""/>
-                        <Avatar v-else class="w-10 h-10 text-gray-400 rounded-full"/>
-                    </div>
-                    <div class="ml-4">
-                        <div class="text-sm font-medium text-gray-900">
-                            {{ props.item.full_name }}
+    <Page :title="page.title" :breadcrumbs="page.breadcrumbs" :actions="page.actions" @action="onPageAction">
+
+        <template #filters v-if="filters">
+
+        </template>
+
+        <template #default>
+            <DataTable :id="page.id" v-if="table" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="onTablePageChange" @action="onTableAction" @sort="onTableSort">
+                <template v-slot:content-id="props">
+                    <div class="flex items-center">
+                        <div class="flex-shrink-0 h-10 w-10">
+                            <img v-if="props.item.avatar_url" :src="props.item.avatar_url" class="h-10 w-10 rounded-full" alt=""/>
+                            <Avatar v-else class="w-10 h-10 text-gray-400 rounded-full"/>
                         </div>
-                        <div class="text-sm text-gray-500">
-                            {{ trans('users.labels.id') + ': ' + props.item.id }}
+                        <div class="ml-4">
+                            <div class="text-sm font-medium text-gray-900">
+                                {{ props.item.full_name }}
+                            </div>
+                            <div class="text-sm text-gray-500">
+                                {{ trans('users.labels.id') + ': ' + props.item.id }}
+                            </div>
                         </div>
                     </div>
-                </div>
-            </template>
-            <template v-slot:content-status="props">
-                <span v-if="props.item.email_verified" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">{{trans('users.status.verified') }}</span>
-                <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">{{trans('users.status.not_verified') }}</span>
-            </template>
-            <template v-slot:content-role="props">
-                {{ props.item.is_admin ? trans('users.roles.admin') : trans('users.roles.regular') }}
-            </template>
-        </DataTable>
+                </template>
+                <template v-slot:content-status="props">
+                    <span v-if="props.item.email_verified_at" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800" v-html="trans('users.status.verified')"></span>
+                    <span v-else class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800" v-html="trans('users.status.not_verified')"></span>
+                </template>
+                <template v-slot:content-role="props">
+                    {{
+                        props.item.roles.map((entry) => {
+                            return entry.title
+                        }).join(', ')
+                    }}
+                </template>
+            </DataTable>
+        </template>
     </Page>
 </template>
 
@@ -32,14 +43,14 @@
 
 import {trans} from "@/helpers/i18n";
 import UserService from "@/services/UserService";
-import {useRoute, useRouter} from 'vue-router'
-import {watch, computed, onMounted, defineComponent, reactive} from 'vue';
+import {watch, onMounted, defineComponent, reactive, ref} from 'vue';
 import {useAlertStore} from "@/stores";
 import alertHelpers from "@/helpers/alert";
 import {getResponseError, prepareQuery} from "@/helpers/api";
 import Page from "@/views/layouts/Page";
 import DataTable from "@/views/components/DataTable";
 import Avatar from "@/views/components/icons/Avatar";
+import {toUrl} from "@/helpers/routing";
 
 export default defineComponent({
     components: {
@@ -48,21 +59,41 @@ export default defineComponent({
         Avatar
     },
     setup() {
-        const route = useRoute();
-        const router = useRouter();
         const alertStore = useAlertStore();
-
-        const currentPage = computed(() => {
-            let page = route.query.page;
-            return page ? page : 1;
-        });
-
-        const tableState = reactive({
+        const mainQuery = reactive({
+            page: 1,
             search: '',
             sort: '',
         });
 
-        const service = new UserService();
+        let filters = ref(false);
+
+        const page = reactive({
+            id: 'list_users',
+            title: trans('global.pages.users'),
+            filters: false,
+            breadcrumbs: [
+                {
+                    name: trans('global.pages.users'),
+                    to: toUrl('/users'),
+                    active: true,
+                }
+            ],
+            actions: [
+                {
+                    id: 'filters',
+                    name: trans('global.buttons.filters'),
+                    icon: "fa fa-filter",
+                    theme: 'outline',
+                },
+                {
+                    id: 'new',
+                    name: trans('global.buttons.add_new'),
+                    icon: "fa fa-plus",
+                    to: toUrl('/users/create')
+                }
+            ]
+        });
 
         const table = reactive({
             headers: {
@@ -87,7 +118,7 @@ export default defineComponent({
                     name: trans('global.actions.edit'),
                     icon: "fa fa-edit",
                     showName: false,
-                    to: '/panel/users/{id}/edit'
+                    to: toUrl('/users/{id}/edit')
                 },
                 delete: {
                     id: 'delete',
@@ -97,71 +128,70 @@ export default defineComponent({
                     danger: true,
                 }
             },
-            records: null,
-            isLoading: false,
+            records: null
         })
 
-        function onSort(params) {
-            tableState.sort = params;
+        const service = new UserService();
+
+        function onTableSort(params) {
+            mainQuery.sort = params;
         }
 
-        function onSearch(value) {
-            tableState.search = value;
+        function onTablePageChange(page) {
+            mainQuery.page = page;
         }
 
-        function onAction(params) {
+        function onTableAction(params) {
             switch (params.action.id) {
                 case 'delete':
                     alertHelpers.confirmDanger(function () {
                         service.delete(params.item.id).then(function (response) {
-                            fetchPage({page: currentPage.value});
+                            fetchPage(mainQuery);
                         });
                     })
                     break;
             }
         }
 
-        function goToPage(page) {
-            const query = {...route.query, page: page};
-            router.replace({query});
+        function onPageAction(params) {
+            switch (params.action.id) {
+                case 'filters':
+                    filters.value = !filters.value;
+                    break;
+            }
         }
 
         function fetchPage(params) {
             table.records = [];
-            table.isLoading = true;
             service
-                .index(prepareQuery(params))
+                .index(prepareQuery(params), page.id)
                 .then((response) => {
                     table.records = response.data.data;
                     table.pagination.meta = response.data.meta;
                     table.pagination.links = response.data.links;
-                    setTimeout(() => { table.isLoading = false; }, 200);
                 })
                 .catch((error) => {
                     alertStore.error(getResponseError(error));
-                    setTimeout(() => { table.isLoading = false; }, 200);
                 });
         }
 
+        watch(mainQuery, (newTableState) => {
+            fetchPage(mainQuery);
+        });
+
         onMounted(() => {
-            fetchPage({page: route.query.page ? route.query.page : 1})
-        })
-
-        watch(route, (newV, oldV) => {
-            (newV.name === 'users.list') && fetchPage({page: newV.query.page ? newV.query.page : 1});
-        })
-
-        watch(tableState, (newTableState) => {
-            fetchPage({page: 1, search: newTableState.search, sort: newTableState.sort});
+            fetchPage(mainQuery);
         });
 
         return {
-            table,
-            goToPage,
             trans,
-            onAction,
-            onSearch,
-            onSort
+            page,
+            table,
+            filters,
+            onTablePageChange,
+            onTableAction,
+            onTableSort,
+            onPageAction
         }
 
     },
