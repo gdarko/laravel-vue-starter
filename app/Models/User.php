@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Filterable;
 use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +18,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     use HasRolesAndAbilities;
 
-    use Searchable;
+    use Searchable, Filterable;
 
     /**
      * ALlowed search fields

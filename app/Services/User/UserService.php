@@ -3,12 +3,14 @@
 namespace App\Services\User;
 
 use App\Http\Resources\UserResource;
-use App\Models\Role;
 use App\Models\User;
 use App\Services\Media\MediaService;
+use App\Traits\Filterable;
 use App\Utilities\Data;
 use Bouncer;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
 
 class UserService
@@ -49,16 +51,22 @@ class UserService
         if (!empty($data['search'])) {
             $query = $query->search($data['search']);
         }
+        if (!empty($data['filters'])) {
+            $this->filter($query, $data['filters']);
+        }
         if (!empty($data['sort_by']) && !empty($data['sort'])) {
             $query = $query->orderBy($data['sort_by'], $data['sort']);
         }
+
+//         dd(vsprintf(str_replace('?', '%s', str_replace('?', "'?'", $query->toSql())), $query->getBindings()));
+
         return UserResource::collection($query->paginate(10));
     }
 
     /**
      * Creates resource in the database
      * @param  array  $data
-     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|null
+     * @return Builder|\Illuminate\Database\Eloquent\Model|null
      */
     public function create(array $data)
     {
@@ -176,5 +184,26 @@ class UserService
             }
         }
         return $data;
+    }
+
+    /**
+     * Filter resources
+     * @return void
+     */
+    private function filter(Builder &$query, $filters)
+    {
+        $query->filter(Arr::except($filters, ['role']));
+
+        if (!empty($filters['role'])) {
+            $roleFilter = Filterable::parseFilter($filters['role']);
+            if (!empty($roleFilter)) {
+                if (is_array($roleFilter[2])) {
+                    $query->whereIs(...$roleFilter[2]);
+                } else {
+                    $query->whereIs($roleFilter[2]);
+                }
+            }
+        }
+
     }
 }

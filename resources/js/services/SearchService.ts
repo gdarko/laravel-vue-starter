@@ -7,11 +7,10 @@ export default class SearchService extends BaseService {
         super();
         this.url = '/api/' + entity;
         this.setupAPI(axios.defaults.baseURL);
-        console.log(this.url);
     }
 
     public begin(phrase, page, perPage) {
-        return this.api.get(this.url + `/search?search=${phrase}&per_page=${perPage}&page=${page}`)
+        return this.api.get(this.url + `/?search=${phrase}&per_page=${perPage}&page=${page}`)
     }
 
 }

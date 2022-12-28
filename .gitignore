@@ -18,6 +18,7 @@ yarn-error.log
 /public/css/*
 /public/js/*
 composer.lock
+composer.phar
 
 .phpstorm.meta.php
 _ide_helper.php

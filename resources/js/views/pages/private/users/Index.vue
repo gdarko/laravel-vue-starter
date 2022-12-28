@@ -1,8 +1,23 @@
 <template>
     <Page :title="page.title" :breadcrumbs="page.breadcrumbs" :actions="page.actions" @action="onPageAction">
 
-        <template #filters v-if="filters">
-
+        <template #filters v-if="page.toggleFilters">
+            <Filters @clear="onFiltersClear">
+                <FiltersRow>
+                    <FiltersCol>
+                        <TextInput name="first_name" :label="trans('users.labels.first_name')" v-model="mainQuery.filters.first_name.value"></TextInput>
+                    </FiltersCol>
+                    <FiltersCol>
+                        <TextInput name="last_name" :label="trans('users.labels.last_name')" v-model="mainQuery.filters.last_name.value"></TextInput>
+                    </FiltersCol>
+                    <FiltersCol>
+                        <TextInput name="email" type="email" :label="trans('users.labels.email')" v-model="mainQuery.filters.email.value"></TextInput>
+                    </FiltersCol>
+                    <FiltersCol>
+                        <Dropdown name="role" server="roles/search" :multiple="true" :label="trans('users.labels.role')" v-model="mainQuery.filters.role.value"></Dropdown>
+                    </FiltersCol>
+                </FiltersRow>
+            </Filters>
         </template>
 
         <template #default>
@@ -44,34 +59,60 @@
 import {trans} from "@/helpers/i18n";
 import UserService from "@/services/UserService";
 import {watch, onMounted, defineComponent, reactive, ref} from 'vue';
+import {getResponseError, prepareQuery} from "@/helpers/api";
+import {toUrl} from "@/helpers/routing";
 import {useAlertStore} from "@/stores";
 import alertHelpers from "@/helpers/alert";
-import {getResponseError, prepareQuery} from "@/helpers/api";
 import Page from "@/views/layouts/Page";
 import DataTable from "@/views/components/DataTable";
 import Avatar from "@/views/components/icons/Avatar";
-import {toUrl} from "@/helpers/routing";
+import Filters from "@/views/components/filters/Filters";
+import FiltersRow from "@/views/components/filters/FiltersRow";
+import FiltersCol from "@/views/components/filters/FiltersCol";
+import TextInput from "@/views/components/input/TextInput";
+import Dropdown from "@/views/components/input/Dropdown";
 
 export default defineComponent({
     components: {
+        Dropdown,
+        TextInput,
+        FiltersCol,
+        FiltersRow,
+        Filters,
         Page,
         DataTable,
         Avatar
     },
     setup() {
+        const service = new UserService();
         const alertStore = useAlertStore();
         const mainQuery = reactive({
             page: 1,
             search: '',
             sort: '',
+            filters: {
+                first_name: {
+                    value: '',
+                    comparison: '='
+                },
+                last_name: {
+                    value: '',
+                    comparison: '='
+                },
+                role: {
+                    value: '',
+                    comparison: '='
+                },
+                email: {
+                    value: '',
+                    comparison: '='
+                }
+            }
         });
-
-        let filters = ref(false);
 
         const page = reactive({
             id: 'list_users',
             title: trans('global.pages.users'),
-            filters: false,
             breadcrumbs: [
                 {
                     name: trans('global.pages.users'),
@@ -92,7 +133,8 @@ export default defineComponent({
                     icon: "fa fa-plus",
                     to: toUrl('/users/create')
                 }
-            ]
+            ],
+            toggleFilters: false,
         });
 
         const table = reactive({
@@ -131,8 +173,6 @@ export default defineComponent({
             records: null
         })
 
-        const service = new UserService();
-
         function onTableSort(params) {
             mainQuery.sort = params;
         }
@@ -156,15 +196,24 @@ export default defineComponent({
         function onPageAction(params) {
             switch (params.action.id) {
                 case 'filters':
-                    filters.value = !filters.value;
+                    page.toggleFilters = !page.toggleFilters;
                     break;
             }
         }
 
+        function onFiltersClear() {
+            let clonedFilters = mainQuery.filters;
+            for(let key in clonedFilters) {
+                clonedFilters[key].value = '';
+            }
+            mainQuery.filters = clonedFilters;
+        }
+
         function fetchPage(params) {
             table.records = [];
+            let query = prepareQuery(params);
             service
-                .index(prepareQuery(params), page.id)
+                .index(query, page.id)
                 .then((response) => {
                     table.records = response.data.data;
                     table.pagination.meta = response.data.meta;
@@ -187,11 +236,12 @@ export default defineComponent({
             trans,
             page,
             table,
-            filters,
             onTablePageChange,
             onTableAction,
             onTableSort,
-            onPageAction
+            onPageAction,
+            onFiltersClear,
+            mainQuery
         }
 
     },

@@ -37,6 +37,7 @@ export function prepareQuery(args) {
     let page = args.hasOwnProperty('page') ? args.page : null
     let search = args.hasOwnProperty('search') ? args.search : null;
     let sort = args.hasOwnProperty('sort') ? args.sort : null;
+    let filters = args.hasOwnProperty('filters') ? args.filters : null;
     let params = {page: page}
     if (search) {
         params.search = search;
@@ -47,5 +48,28 @@ export function prepareQuery(args) {
             params.sort = sort.direction;
         }
     }
+    if (filters) {
+        for (let key in filters) {
+            if (!filters[key] || (filters[key].hasOwnProperty('value') && !filters[key].value)) {
+                continue;
+            }
+            let comparison = filters[key].hasOwnProperty('comparison') ? filters[key].comparison : '=';
+            let values = Array.isArray(filters[key].value) ? filters[key].value : [filters[key].value];
+            let cleanValues = [];
+            for(let i in values) {
+                if('object' === (typeof values[i])) {
+                    if(values[i].hasOwnProperty('id')) {
+                        cleanValues.push(values[i].id);
+                    }
+                } else {
+                    cleanValues.push(values[i]);
+                }
+            }
+            if(cleanValues.length > 0) {
+                params['filters[' + key + ']'] = key + ';' + comparison + ';' + cleanValues.join('|');
+            }
+        }
+    }
+
     return params;
 }

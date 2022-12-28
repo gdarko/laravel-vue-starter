@@ -62,6 +62,7 @@ return [
             "reset_password" => "Reset Password"
         ],
         "phrases" => [
+            'clear_filters' => 'Clear all',
             "loading" => "Loading...",
             "sign_out" => "Sign Out",
             'all_records' => 'All Records',
