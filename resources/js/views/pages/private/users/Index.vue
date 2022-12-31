@@ -21,7 +21,7 @@
         </template>
 
         <template #default>
-            <DataTable :id="page.id" v-if="table" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" @page-changed="onTablePageChange" @action="onTableAction" @sort="onTableSort">
+            <DataTable :id="page.id" v-if="table" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" :is-loading="table.loading" @page-changed="onTablePageChange" @action="onTableAction" @sort="onTableSort">
                 <template v-slot:content-id="props">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 h-10 w-10">
@@ -170,6 +170,7 @@ export default defineComponent({
                     danger: true,
                 }
             },
+            loading: false,
             records: null
         })
 
@@ -211,16 +212,19 @@ export default defineComponent({
 
         function fetchPage(params) {
             table.records = [];
+            table.loading = true;
             let query = prepareQuery(params);
             service
-                .index(query, page.id)
+                .index(query)
                 .then((response) => {
                     table.records = response.data.data;
                     table.pagination.meta = response.data.meta;
                     table.pagination.links = response.data.links;
+                    table.loading = false;
                 })
                 .catch((error) => {
                     alertStore.error(getResponseError(error));
+                    table.loading = false;
                 });
         }
 

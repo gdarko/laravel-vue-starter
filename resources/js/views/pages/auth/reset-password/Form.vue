@@ -1,7 +1,7 @@
 <template>
     <div>
         <Alert class="mb-4"/>
-        <form @submit.prevent="onFormSubmit">
+        <Form id="reset-password-form" @submit.prevent="onFormSubmit">
             <div class="mb-2">
                 <label for="email" class="text-sm text-gray-500">{{ trans('users.labels.email') }}</label>
                 <input type="email" id="email" v-model="form.email" class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-blue-500 focus:border-blue-500"/>
@@ -17,7 +17,7 @@
             <div class="text-center">
                 <Button type="submit" :text="trans('global.buttons.submit')"/>
             </div>
-        </form>
+        </Form>
     </div>
 </template>
 
@@ -30,10 +30,12 @@ import {useAlertStore} from "@/stores";
 import {getResponseError} from "@/helpers/api";
 import Button from "@/views/components/input/Button";
 import Alert from "@/views/components/Alert";
+import Form from "@/views/components/Form";
 
 export default defineComponent({
     name: "ResetPasswordForm",
     components: {
+        Form,
         Alert,
         Button,
     },

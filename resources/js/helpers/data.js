@@ -48,16 +48,13 @@ export const clearObject = (object) => {
  * @returns {*}
  */
 export const reduceProperties = (data, properties, singleProperty) => {
-
     let obj = {};
     for (let i in data) {
         obj[i] = data[i];
     }
-
     if (!Array.isArray(properties)) {
         properties = [properties];
     }
-
     for (let i in properties) {
         if (obj.hasOwnProperty(properties[i])) {
             let value = obj[properties[i]];
@@ -67,7 +64,6 @@ export const reduceProperties = (data, properties, singleProperty) => {
                 for (let j in value) {
                     newVal[j] = value[j] && value[j].hasOwnProperty(singleProperty) ? value[j][singleProperty] : newVal;
                 }
-                console.log(newVal);
             } else if (typeof value === 'object') {
                 newVal = value && value.hasOwnProperty(singleProperty) ? singleProperty[singleProperty] : newVal;
             } else {

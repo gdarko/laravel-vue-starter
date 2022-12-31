@@ -5,7 +5,7 @@
                 {{ $props.title }}
             </div>
             <div class="whitespace-nowrap bg-white" :class="$props.bodyPadding ? 'px-6 py-4' : ''">
-                <template v-if="isLoading">
+                <template v-if="isElementLoading">
                     <div class="pt-10 pb-6 text-center">
                         <Spinner/>
                     </div>
@@ -15,10 +15,12 @@
         </div>
     </div>
 </template>
+
 <script>
-import {defineComponent, computed} from "vue";
+import {computed, defineComponent} from "vue";
 import Spinner from "@/views/components/icons/Spinner";
 import {useGlobalStateStore} from "@/stores";
+import {storeToRefs} from "pinia";
 
 export default defineComponent({
     components: {Spinner},
@@ -31,7 +33,7 @@ export default defineComponent({
             type: String,
             default: "",
         },
-        disableLoading: {
+        isLoading: {
             type: Boolean,
             default: false,
         },
@@ -41,12 +43,13 @@ export default defineComponent({
         }
     },
     setup(props) {
-        const globalStateStore = useGlobalStateStore();
-        const isLoading = computed(() => {
-            return !props.disableLoading && globalStateStore.loading[props.id];
-        })
+
+        const isElementLoading = computed(() => {
+            return useGlobalStateStore().loadingElements[props.id] || props.isLoading;
+        });
+
         return {
-            isLoading
+            isElementLoading
         }
     }
 })

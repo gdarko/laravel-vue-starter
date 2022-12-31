@@ -94,13 +94,14 @@
 </template>
 
 <script>
-import {onBeforeMount, reactive} from "vue";
+import {computed, onBeforeMount, reactive} from "vue";
 
 import {trans} from '@/helpers/i18n';
 import Menu from "@/views/layouts/Menu";
 import Icon from "@/views/components/icons/Icon";
 import AvatarIcon from "@/views/components/icons/Avatar";
 import {useAuthStore} from "@/stores/auth";
+import {useGlobalStateStore} from "@/stores";
 import {useRoute} from "vue-router";
 import {useAlertStore} from "@/stores";
 import {getAbilitiesForRoute} from "@/helpers/routing";
@@ -116,7 +117,19 @@ export default {
 
         const alertStore = useAlertStore();
         const authStore = useAuthStore();
+        const globalStateStore = useGlobalStateStore();
         const route = useRoute();
+
+        const isLoading = computed(() => {
+            var value = false;
+            for(var i in globalStateStore.loadingElements) {
+                if(globalStateStore.loadingElements[i]){
+                    value = true;
+                    break;
+                }
+            }
+            return value || globalStateStore.isUILoading;
+        })
 
         const state = reactive({
             mainMenu: [
@@ -183,11 +196,7 @@ export default {
         });
 
         function onLogout() {
-            authStore.logout().then(() => {
-                if (!authStore.user) {
-                    window.location.href = '/login'
-                }
-            })
+            authStore.logout()
         }
 
         onBeforeMount(() => {
@@ -199,8 +208,10 @@ export default {
         return {
             state,
             authStore,
+            globalStateStore,
             trans,
             onLogout,
+            isLoading,
         }
     }
 };

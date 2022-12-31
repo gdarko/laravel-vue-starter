@@ -1,7 +1,7 @@
 <template>
-    <form @submit.prevent="onSubmit">
-        <Page :id="page.id" :title="page.title" :breadcrumbs="page.breadcrumbs" :actions="page.actions">
-            <Panel :id="page.id + '-panel'">
+    <Page :title="page.title" :breadcrumbs="page.breadcrumbs" :actions="page.actions" @action="onAction">
+        <Panel>
+            <Form id="create-user" @submit.prevent="onSubmit">
                 <TextInput class="mb-4" type="text" :required="true" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
                 <TextInput class="mb-4" type="text" :required="true" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
                 <TextInput class="mb-4" type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
@@ -9,9 +9,9 @@
                 <Dropdown class="mb-4" multiple="multiple" :server="'roles/search'" :server-per-page="15" :required="true" name="type" v-model="form.roles" :label="trans('users.labels.roles')"/>
                 <FileInput class="mb-4" name="avatar" v-model="form.avatar" accept="image/*" :label="trans('users.labels.avatar')" @click="form.avatar = ''"></FileInput>
                 <TextInput class="mb-4" type="password" :required="true" name="password" v-model="form.password" :label="trans('users.labels.password')"/>
-            </Panel>
-        </Page>
-    </form>
+            </Form>
+        </Panel>
+    </Page>
 </template>
 
 <script>
@@ -28,9 +28,10 @@ import FileInput from "@/views/components/input/FileInput";
 import UserService from "@/services/UserService";
 import {clearObject, reduceProperties} from "@/helpers/data";
 import {toUrl} from "@/helpers/routing";
+import Form from "@/views/components/Form";
 
 export default defineComponent({
-    components: {FileInput, Panel, Alert, Dropdown, TextInput, Button, Page},
+    components: {Form, FileInput, Panel, Alert, Dropdown, TextInput, Button, Page},
     setup() {
         const {user} = useAuthStore();
         const form = reactive({
@@ -70,15 +71,23 @@ export default defineComponent({
                     id: 'submit',
                     name: trans('global.buttons.save'),
                     icon: "fa fa-save",
-                    type: 'submit'
+                    type: 'submit',
                 }
             ]
         });
 
         const service = new UserService();
 
+        function onAction(data) {
+            switch(data.action.id) {
+                case 'submit':
+                    onSubmit();
+                    break;
+            }
+        }
+
         function onSubmit() {
-            service.handleCreate(reduceProperties(form, 'roles', 'id'), page.id + '-panel').finally(() => {
+            service.handleCreate('create-user', reduceProperties(form, 'roles', 'id')).then(() => {
                 clearObject(form)
             })
             return false;
@@ -90,6 +99,7 @@ export default defineComponent({
             form,
             page,
             onSubmit,
+            onAction,
         }
     }
 })

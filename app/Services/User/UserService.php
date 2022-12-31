@@ -91,7 +91,6 @@ class UserService
             }
             // Set roles
             if (!empty($roles)) {
-                $roles = array_map('intval', $roles);
                 Bouncer::sync($record)->roles($roles);
             }
             return $record->fresh();

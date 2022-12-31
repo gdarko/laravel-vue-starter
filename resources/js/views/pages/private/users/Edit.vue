@@ -1,7 +1,7 @@
 <template>
-    <form @submit.prevent="onSubmit">
-        <Page :id="page.id" :title="page.title" :breadcrumbs="page.breadcrumbs" :actions="page.actions">
-            <Panel :id="page.id + '-panel'">
+    <Page :title="page.title" :breadcrumbs="page.breadcrumbs" :actions="page.actions" @action="onAction" :is-loading="page.loading">
+        <Panel>
+            <Form id="edit-user" @submit.prevent="onSubmit">
                 <TextInput class="mb-4" type="text" :required="true" name="first_name" v-model="form.first_name" :label="trans('users.labels.first_name')"/>
                 <TextInput class="mb-4" type="text" :required="true" name="last_name" v-model="form.last_name" :label="trans('users.labels.last_name')"/>
                 <TextInput class="mb-4" type="text" name="middle_name" v-model="form.middle_name" :label="trans('users.labels.middle_name')"/>
@@ -9,9 +9,9 @@
                 <Dropdown class="mb-4" multiple="multiple" :server="'roles/search'" :server-per-page="15" :required="true" name="type" v-model="form.roles" :label="trans('users.labels.role')"/>
                 <FileInput class="mb-4" name="avatar" v-model="form.avatar" accept="image/*" :label="trans('users.labels.avatar')" @click="form.avatar = ''"></FileInput>
                 <TextInput class="mb-4" type="password" name="password" v-model="form.password" :label="trans('users.labels.password')"/>
-            </Panel>
-        </Page>
-    </form>
+            </Form>
+        </Panel>
+    </Page>
 </template>
 
 <script>
@@ -29,9 +29,11 @@ import Alert from "@/views/components/Alert";
 import Panel from "@/views/components/Panel";
 import Page from "@/views/layouts/Page";
 import FileInput from "@/views/components/input/FileInput";
+import Form from "@/views/components/Form";
 
 export default defineComponent({
     components: {
+        Form,
         FileInput,
         Panel,
         Alert,
@@ -41,7 +43,6 @@ export default defineComponent({
         Page
     },
     setup() {
-        let id = null;
         const {user} = useAuthStore();
         const route = useRoute();
         const form = reactive({
@@ -53,8 +54,6 @@ export default defineComponent({
             avatar: '',
             password: '',
         });
-
-        const isLoading = ref(true);
 
         const page = reactive({
             id: 'edit_user',
@@ -91,14 +90,22 @@ export default defineComponent({
         const service = new UserService();
 
         onBeforeMount(() => {
-            service.edit(route.params.id, page.id + '-panel').then((response) => {
-                id = response.data.model.id;
+            service.edit(route.params.id).then((response) => {
                 fillObject(form, response.data.model);
+                page.loading = false;
             })
         });
 
+        function onAction(data) {
+            switch(data.action.id) {
+                case 'submit':
+                    onSubmit();
+                    break;
+            }
+        }
+
         function onSubmit() {
-            service.handleUpdate(id, reduceProperties(form, 'roles', 'id'), page.id + '-panel');
+            service.handleUpdate('edit-user', user.id, reduceProperties(form, 'roles', 'id'));
             return false;
         }
 
@@ -107,6 +114,7 @@ export default defineComponent({
             user,
             form,
             onSubmit,
+            onAction,
             page
         }
     }

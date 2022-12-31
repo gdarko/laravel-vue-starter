@@ -1,5 +1,5 @@
 <template>
-    <form @submit.prevent="onFormSubmit">
+    <Form id="register-form" @submit.prevent="onFormSubmit">
         <Alert class="mb-4"/>
         <TextInput type="text" :required="true" :label="trans('users.labels.first_name')" name="first_name" v-model="form.first_name" class="mb-2"/>
         <TextInput type="text" :label="trans('users.labels.middle_name')" name="middle_name" v-model="form.middle_name" class="mb-2"/>
@@ -10,7 +10,7 @@
         <div class="text-center">
             <Button type="submit" :text="trans('global.buttons.register')"/>
         </div>
-    </form>
+    </Form>
 </template>
 
 <script>
@@ -20,10 +20,12 @@ import {useAuthStore} from "@/stores";
 import TextInput from "@/views/components/input/TextInput";
 import Button from "@/views/components/input/Button";
 import Alert from "@/views/components/Alert";
+import Form from "@/views/components/Form";
 
 export default defineComponent({
     name: "RegisterForm",
     components: {
+        Form,
         Alert,
         Button,
         TextInput,

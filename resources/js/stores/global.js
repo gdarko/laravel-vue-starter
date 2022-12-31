@@ -2,19 +2,25 @@ import {defineStore} from 'pinia';
 
 export const useGlobalStateStore = defineStore({
     id: 'global_state',
-    state: () => ({
-        loading: {},
-    }),
+    state: () => {
+        return {
+            loadingElements: {},
+            isUILoading: false,
+        }
+    },
     actions: {
-        setLoading(element, isLoading) {
-            if(!element || !element.length) {
+        setUILoading(isLoading) {
+            this.isUILoading = isLoading;
+        },
+        isUILoading() {
+            return this.isUILoading;
+        },
+        setElementLoading(element, isLoading) {
+            if (!element || !element.length) {
                 return;
             }
-            this.loading[element] = isLoading;
-        },
-        isLoading(element) {
-            return this.loading.hasOwnProperty(element) && this.loading[element];
+            this.loadingElements[element] = isLoading;
+            this.setUILoading(isLoading);
         }
-
     }
 });

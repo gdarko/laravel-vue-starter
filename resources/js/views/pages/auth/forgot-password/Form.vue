@@ -1,12 +1,12 @@
 <template>
     <div>
         <Alert class="mb-4"/>
-        <form @submit.prevent="onFormSubmit">
+        <Form id="forgot-password-form" @submit.prevent="onFormSubmit">
             <TextInput type="email" :required="true" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
             <div class="text-center">
                 <Button type="submit" :text="trans('global.buttons.send')"/>
             </div>
-        </form>
+        </Form>
     </div>
 </template>
 
@@ -19,10 +19,12 @@ import {getResponseError} from "@/helpers/api";
 import Button from "@/views/components/input/Button";
 import TextInput from "@/views/components/input/TextInput";
 import Alert from "@/views/components/Alert";
+import Form from "@/views/components/Form";
 
 export default defineComponent({
     name: "ForgotPasswordForm",
     components: {
+        Form,
         Alert,
         Button,
         TextInput,

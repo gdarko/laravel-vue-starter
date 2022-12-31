@@ -15,22 +15,22 @@ export const useAuthStore = defineStore("auth", {
     },
     actions: {
         async login(payload) {
-            const alertStore = useAlertStore();
             const authService = new AuthService();
+            const alertStore = useAlertStore();
             try {
                 const response = await authService.login(payload);
                 this.user = response.data.user;
                 this.setBrowserData();
                 alertStore.clear();
-                await this.getCurrentUser();
                 await router.push("/panel/dashboard");
+                await this.getCurrentUser();
             } catch (error) {
                 alertStore.error(getResponseError(error));
             }
         },
         async register(payload) {
-            const alertStore = useAlertStore();
             const authService = new AuthService();
+            const alertStore = useAlertStore();
             try {
                 const response = await authService.registerUser(payload);
                 await router.push("/panel/dashboard");
@@ -57,7 +57,7 @@ export const useAuthStore = defineStore("auth", {
             const alertStore = useAlertStore();
             const userService = new UserService();
             return new Promise((resolve, reject) => {
-                userService
+                return userService
                     .updateAvatar(id, payload)
                     .then((response) => {
                         this.getCurrentUser().then(() => {
@@ -75,14 +75,15 @@ export const useAuthStore = defineStore("auth", {
             return new Promise((resolve, reject) => {
                 const alertStore = useAlertStore();
                 const authService = new AuthService();
-                authService
+                return authService
                     .logout()
                     .then((response) => {
                         this.clearBrowserData();
+                        this.user = null;
                         if (router.currentRoute.name !== "login") {
                             router.push({path: "/login"});
+                            console.log('logout...');
                         }
-                        this.user = null;
                         resolve(response)
                     })
                     .catch((err) => {
@@ -103,7 +104,9 @@ export const useAuthStore = defineStore("auth", {
         },
         hasAbilities(abilities) {
             return this.user.hasOwnProperty('abilities') && !!this.user.abilities.find((ab) => {
-                if (ab.name === '*') return true
+                if (ab.name === '*') {
+                    return true
+                }
                 if (typeof abilities === 'string') {
                     return ab.name === abilities
                 }

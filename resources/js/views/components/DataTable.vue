@@ -17,7 +17,7 @@
                 </th>
             </tr>
             </thead>
-            <tbody v-if="records && records.length && !isLoading" class="bg-white divide-y divide-gray-200">
+            <tbody v-if="records && records.length && !$props.isLoading" class="bg-white divide-y divide-gray-200">
             <tr v-for="(record, i) in records">
                 <td v-for="(header, j) in headers" class="px-6 py-4 whitespace-nowrap text-sm">
                     <slot :item="record" :name="'content-'+j">
@@ -41,7 +41,7 @@
             <tbody v-else>
             <tr>
                 <td :colspan="headersLength" class="pt-10 pb-6 text-center">
-                    <template v-if="isLoading">
+                    <template v-if="$props.isLoading">
                         <Spinner :text-new-line="true"></Spinner>
                     </template>
                     <template v-else>
@@ -53,7 +53,7 @@
         </table>
     </div>
 
-    <Pager v-if="lastPage && !isLoading" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
+    <Pager v-if="lastPage && !$props.isLoading" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
 
 </template>
 
@@ -62,7 +62,6 @@ import {trans} from "@/helpers/i18n";
 import {computed, defineComponent, reactive} from "vue";
 import Pager from "@/views/components/Pager";
 import Spinner from "@/views/components/icons/Spinner";
-import {useGlobalStateStore} from "@/stores";
 
 export default defineComponent({
     components: {Spinner, Pager},
@@ -102,18 +101,12 @@ export default defineComponent({
                 links: null,
             },
         },
-        disableLoading: {
+        isLoading: {
             type: Boolean,
             default: false,
         },
     },
     setup(props, {emit}) {
-
-        const globalStateStore = useGlobalStateStore();
-
-        const isLoading = computed(() => {
-            return !props.disableLoading && globalStateStore.loading[props.id];
-        })
 
         const currentSort = reactive({column: null, direction: 'ASC'});
 
@@ -213,7 +206,6 @@ export default defineComponent({
             onSortChange,
             sortControlClasses,
             headersLength,
-            isLoading,
             trans,
         }
     }
