@@ -39,7 +39,21 @@ export default abstract class BaseService {
     }
 
     protected put(url, data, config = {}) {
-        return this.api.put(url, data, config);
+        if(data instanceof FormData) {
+            data.append('_method', 'PUT');
+        } else {
+            data._method = 'PUT';
+        }
+        return this.api.post(url, data, config);
+    }
+
+    protected patch(url, data, config = {}) {
+        if(data instanceof FormData) {
+            data.append('_method', 'PATCH');
+        } else {
+            data._method = 'PATCH';
+        }
+        return this.api.post(url, data, config);
     }
 
     protected get(url, config = {}) {

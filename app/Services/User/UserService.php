@@ -117,6 +117,8 @@ class UserService
 
         $roles = Data::take($data, 'roles');
 
+        unset($data['email']);
+
         if (isset($data['avatar']) && $data['avatar']) {
             $entry = $this->mediaService->storeAvatar($data['avatar'], $user);
             if ($entry) {

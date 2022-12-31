@@ -36,8 +36,7 @@ export default abstract class ModelService extends BaseService {
 
     public update(object_id, payload) {
         let data = this.transformPayloadForSubmission(payload);
-        data.append('_method', 'patch');
-        return this.post(this.url + `/${object_id}`, data, {
+        return this.patch(this.url + `/${object_id}`, data, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             },
