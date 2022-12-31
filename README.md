@@ -68,8 +68,7 @@ The project ships with two examples as follows:
 - views/pages/private/users - Shows paginated list of system users along with crud screens.
 
 You will probably remove the examples once you start developing your app on top of this project.
-
-<p><img width="100%" src="https://user-images.githubusercontent.com/5760249/132946970-2e74e2d5-bb13-4190-953d-14e8a7d9b7d7.gif"/></p>
+<p><img width="100%" src="https://user-images.githubusercontent.com/5760249/210152137-a3241e4e-20d9-4309-9788-e5fe704e084f.webm"/></p>
 
 ## ⚡️ Contributions
 
