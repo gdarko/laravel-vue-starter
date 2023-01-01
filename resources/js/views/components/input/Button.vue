@@ -1,7 +1,7 @@
 <template>
     <router-link v-if="$props.to" :class="classes" :to="$props.to">
         <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
-        {{ $props.text }}
+        {{ $props.label }}
     </router-link>
     <button v-else :type="type" :class="classes" @click="onClick" :disabled="disabled">
         <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
