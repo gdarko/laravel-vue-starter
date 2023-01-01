@@ -8,7 +8,7 @@
         <TextInput type="password" :required="true" :label="trans('users.labels.password')" name="password" v-model="form.password" class="mb-2"/>
         <TextInput type="password" :required="true" :label="trans('users.labels.confirm_password')" name="password-confirm" v-model="form.passwordConfirm" class="mb-4"/>
         <div class="text-center">
-            <Button type="submit" :text="trans('global.buttons.register')"/>
+            <Button type="submit" :label="trans('global.buttons.register')"/>
         </div>
     </Form>
 </template>

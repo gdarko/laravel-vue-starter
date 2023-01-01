@@ -21,7 +21,7 @@
         </template>
 
         <template #default>
-            <DataTable :id="page.id" v-if="table" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" :is-loading="table.loading" @page-changed="onTablePageChange" @action="onTableAction" @sort="onTableSort">
+            <Table :id="page.id" v-if="table" :headers="table.headers" :sorting="table.sorting" :actions="table.actions" :records="table.records" :pagination="table.pagination" :is-loading="table.loading" @page-changed="onTablePageChange" @action="onTableAction" @sort="onTableSort">
                 <template v-slot:content-id="props">
                     <div class="flex items-center">
                         <div class="flex-shrink-0 h-10 w-10">
@@ -49,7 +49,7 @@
                         }).join(', ')
                     }}
                 </template>
-            </DataTable>
+            </Table>
         </template>
     </Page>
 </template>
@@ -64,7 +64,7 @@ import {toUrl} from "@/helpers/routing";
 import {useAlertStore} from "@/stores";
 import alertHelpers from "@/helpers/alert";
 import Page from "@/views/layouts/Page";
-import DataTable from "@/views/components/DataTable";
+import Table from "@/views/components/Table";
 import Avatar from "@/views/components/icons/Avatar";
 import Filters from "@/views/components/filters/Filters";
 import FiltersRow from "@/views/components/filters/FiltersRow";
@@ -80,7 +80,7 @@ export default defineComponent({
         FiltersRow,
         Filters,
         Page,
-        DataTable,
+        Table,
         Avatar
     },
     setup() {

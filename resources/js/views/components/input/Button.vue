@@ -3,7 +3,7 @@
         <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
         {{ $props.text }}
     </router-link>
-    <button v-else :type="type" :class="classes" @click="onClick">
+    <button v-else :type="type" :class="classes" @click="onClick" :disabled="disabled">
         <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
         {{ text }}
     </button>
@@ -15,13 +15,13 @@ import {computed, defineComponent} from "vue";
 
 export default defineComponent({
     props: {
+        label: {
+            type: String,
+            default: "Submit",
+        },
         type: {
             type: String,
             default: "submit",
-        },
-        text: {
-            type: String,
-            default: "Submit",
         },
         icon: {
             type: String,
@@ -30,6 +30,10 @@ export default defineComponent({
         class: {
             type: String,
             default: "",
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
         },
         theme: {
             type: String,
