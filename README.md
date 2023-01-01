@@ -60,7 +60,12 @@ The project ships with complete authentication boilerplate including:
 - Forget Password
 - Reset Password
 
-### ➡️ Users crud 
+### ➡️ Authorization
+
+The project is configured to use [Bouncer](https://github.com/JosephSilber/bouncer) package for managing authorization across your routes. Authorization is important security subject, so please consult bouncer's package documentation.
+
+
+### ➡️ Users CRUD 
 
 For your convenience the project comes with complete `users` crud that includes examples of:
 
