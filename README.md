@@ -64,6 +64,9 @@ The project ships with complete authentication boilerplate including:
 
 The project is configured to use [Bouncer](https://github.com/JosephSilber/bouncer) package for managing authorization across your routes. Authorization is important security subject, so please consult bouncer's package documentation.
 
+### ➡️ Localization / i18n
+
+The project supports localization / i18n, to translate the front-end use `lang/{code}/frontend.php` file.
 
 ### ➡️ Users CRUD 
 
