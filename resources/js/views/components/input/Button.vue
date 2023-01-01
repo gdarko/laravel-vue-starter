@@ -5,7 +5,7 @@
     </router-link>
     <button v-else :type="type" :class="classes" @click="onClick" :disabled="disabled">
         <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
-        {{ text }}
+        {{ $props.label }}
     </button>
 </template>
 
