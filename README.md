@@ -120,6 +120,28 @@ From here, you are on your own. Develop new pages, models, components, use profe
 
 <p><img width="100%" src="https://user-images.githubusercontent.com/5760249/210167222-e04312ac-46ef-4dcd-a4d5-00c3a207bf32.gif"/></p>
 
+### ➡️ CORS
+
+Please make sure you have APP_URL, SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN set correctly in [.env](https://github.com/gdarko/laravel-vue-starter/blob/master/.env.example) file as follows:
+
+#### Normal domain
+
+```
+APP_URL=http://mywebsite.com
+
+SANCTUM_STATEFUL_DOMAINS=mywebsite.com
+SESSION_DOMAIN=mywebsite.com
+```
+
+#### Localhost with port
+
+```
+APP_URL=http://localhost:8000
+
+SANCTUM_STATEFUL_DOMAINS=localhost:8000
+SESSION_DOMAIN=localhost
+```
+
 ## ⚡️ Contributions
 
 Pull requests are welcome, feel free to contribute to this project.
