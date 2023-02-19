@@ -1,11 +1,11 @@
 <template>
     <router-link v-if="$props.to" :class="classes" :to="$props.to">
         <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
-        {{ $props.text }}
+        {{ $props.label }}
     </router-link>
-    <button v-else :type="type" :class="classes" @click="onClick">
+    <button v-else :type="type" :class="classes" @click="onClick" :disabled="disabled">
         <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
-        {{ text }}
+        {{ $props.label }}
     </button>
 </template>
 
@@ -15,13 +15,13 @@ import {computed, defineComponent} from "vue";
 
 export default defineComponent({
     props: {
+        label: {
+            type: String,
+            default: "Submit",
+        },
         type: {
             type: String,
             default: "submit",
-        },
-        text: {
-            type: String,
-            default: "Submit",
         },
         icon: {
             type: String,
@@ -30,6 +30,10 @@ export default defineComponent({
         class: {
             type: String,
             default: "",
+        },
+        disabled: {
+            type: Boolean,
+            default: false,
         },
         theme: {
             type: String,

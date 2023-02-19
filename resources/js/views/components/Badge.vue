@@ -31,6 +31,7 @@ export default defineComponent({
                     break;
                 case 'danger':
                 case 'alert':
+                case 'error':
                     value = 'bg-red-100 text-red-800 dark:bg-red-200 dark:text-red-900';
                     break;
                 default:

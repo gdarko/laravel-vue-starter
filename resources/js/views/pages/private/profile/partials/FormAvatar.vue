@@ -2,7 +2,7 @@
     <Panel :title="trans('users.labels.avatar_settings')">
         <form @submit.prevent="onSubmit">
             <FileInput name="file" :label="trans('users.labels.avatar')" v-model="form.file" @clear="form.file = ''" accept="image/*" class="mb-4"></FileInput>
-            <Button :text="trans('global.buttons.upload')"/>
+            <Button :label="trans('global.buttons.upload')"/>
         </form>
     </Panel>
 </template>

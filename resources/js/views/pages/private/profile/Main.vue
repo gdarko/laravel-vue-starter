@@ -7,7 +7,7 @@
         </div>
     </Page>
 
-    <Modal :showing="isAvatarModalShowing" @close="isAvatarModalShowing = false;">
+    <Modal :is-showing="isAvatarModalShowing" @close="isAvatarModalShowing = false;">
         <FormAvatar @error="isAvatarModalShowing = false;" @done="isAvatarModalShowing = false;"/>
     </Modal>
 

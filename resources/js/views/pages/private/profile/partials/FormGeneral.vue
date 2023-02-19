@@ -5,7 +5,7 @@
             <TextInput type="text" :required="true" :label="trans('users.labels.last_name')" name="last_name" v-model="form.last_name" class="mb-2"/>
             <TextInput type="text" :label="trans('users.labels.middle_name')" name="middle_name" v-model="form.middle_name" class="mb-2"/>
             <TextInput type="email" :required="true" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
-            <Button type="submit" :text="trans('global.buttons.update')"/>
+            <Button type="submit" :label="trans('global.buttons.update')"/>
         </form>
     </Panel>
 </template>

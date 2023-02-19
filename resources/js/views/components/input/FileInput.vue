@@ -56,15 +56,15 @@ export default defineComponent({
             default: null,
             type: [Array, Object, String],
         },
-        disabled: {
-            type: Boolean,
-            default: false,
-        },
         multiple: {
             type: [Boolean, String],
             default: false,
         },
         required: {
+            type: Boolean,
+            default: false,
+        },
+        disabled: {
             type: Boolean,
             default: false,
         },

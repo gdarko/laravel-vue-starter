@@ -4,7 +4,7 @@
         <Form id="forgot-password-form" @submit.prevent="onFormSubmit">
             <TextInput type="email" :required="true" :label="trans('users.labels.email')" name="email" v-model="form.email" autocomplete="email" class="mb-4"/>
             <div class="text-center">
-                <Button type="submit" :text="trans('global.buttons.send')"/>
+                <Button type="submit" :label="trans('global.buttons.send')"/>
             </div>
         </Form>
     </div>

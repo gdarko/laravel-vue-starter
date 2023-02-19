@@ -65,7 +65,7 @@ import Spinner from "@/views/components/icons/Spinner";
 
 export default defineComponent({
     components: {Spinner, Pager},
-    emits: ['pageChanged', 'action', 'search', 'sort'],
+    emits: ['pageChanged', 'action', 'sort'],
     props: {
         id: {
             type: String,
@@ -82,10 +82,6 @@ export default defineComponent({
         actions: {
             type: [Array, Object],
             default: [],
-        },
-        search: {
-            type: [Array, Object],
-            default: null,
         },
         sorting: {
             type: [Object],

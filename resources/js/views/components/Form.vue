@@ -13,7 +13,6 @@
 import {useGlobalStateStore} from "@/stores";
 import Spinner from "@/views/components/icons/Spinner";
 import {computed, defineComponent, watch} from "vue";
-import {storeToRefs} from "pinia";
 
 export default defineComponent({
     components: {Spinner},
@@ -29,10 +28,6 @@ export default defineComponent({
         isLoading: {
             type: Boolean,
             default: false,
-        },
-        bodyPadding: {
-            type: Boolean,
-            default: true,
         }
     },
     setup(props) {
