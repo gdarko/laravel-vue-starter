@@ -14,12 +14,14 @@ class Data
      * @param $label
      * @return Collection
      */
-    public static function formatCollectionForSelect(Collection $collection, $value = 'id', $label = 'title')
+    public static function formatCollectionForSelect(Collection $collection, $value = 'id', $label = 'trans')
     {
         return $collection->map(function ($entry) use ($value, $label) {
+            $id = $entry->$value ?? null;
+            $label = $label === 'trans' ? trans('frontend.users.roles.'.$id) : ( $entry->$label ?? $entry->$id );
             return [
-                'id' => isset($entry->$value) ? $entry->$value : null,
-                'title' => isset($entry->$label) ? $entry->$label : null,
+                'id' => $id,
+                'title' => $label,
             ];
         });
     }
