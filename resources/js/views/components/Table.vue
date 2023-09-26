@@ -3,7 +3,7 @@
         <table class="w-full divide-y divide-gray-200 table-auto">
             <thead class="bg-gray-50">
             <tr>
-                <th v-for="(item, i) in headers" scope="col" class="align-middle px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th v-for="(item, i) in headers" scope="col" class="align-middle px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">
                     <slot :name="'header-'+i">
                         <div class="leading-loose inline-block">{{ item }}</div>
                         <div class="sort-arrows inline-block text-center absolute" v-if="sorting.hasOwnProperty(i) && sorting[i]">
