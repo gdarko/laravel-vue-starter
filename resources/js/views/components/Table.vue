@@ -53,7 +53,7 @@
         </table>
     </div>
 
-    <Pager v-if="lastPage && !$props.isLoading" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
+    <Pager v-if="lastPage && lastPage > 1 && !$props.isLoading" :page-count="lastPage" :value="currentPage" @input="onPagerInput"/>
 
 </template>
 
