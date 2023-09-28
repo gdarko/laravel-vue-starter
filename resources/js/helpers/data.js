@@ -65,7 +65,7 @@ export const reduceProperties = (data, properties, singleProperty) => {
                     newVal[j] = value[j] && value[j].hasOwnProperty(singleProperty) ? value[j][singleProperty] : newVal;
                 }
             } else if (typeof value === 'object') {
-                newVal = value && value.hasOwnProperty(singleProperty) ? singleProperty[singleProperty] : newVal;
+                newVal = value && value.hasOwnProperty(singleProperty) ? value[singleProperty] : newVal;
             } else {
                 newVal = value;
             }
