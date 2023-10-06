@@ -90,18 +90,22 @@ export default abstract class ModelService extends BaseService {
         for (let propertyName in model) {
             if (!model.hasOwnProperty(propertyName) || !model[propertyName]) continue;
             let formKey = namespace ? `${namespace}[${propertyName}]` : propertyName;
-            if (model[propertyName] instanceof Date)
+            if (model[propertyName] instanceof Date) {
                 formData.append(formKey, model[propertyName].toISOString());
-            else if (model[propertyName] instanceof Array) {
+            } else if (model[propertyName] instanceof Array) {
                 model[propertyName].forEach((element, index) => {
                     const tempFormKey = `${formKey}[${index}]`;
-                    this.transformPayloadForSubmission(element, formData, tempFormKey);
+                    if(element instanceof Array) {
+                        this.transformPayloadForSubmission(element, formData, tempFormKey);
+                    } else {
+                        formData.append(tempFormKey, element.toString());
+                    }
                 });
-            }
-            else if (typeof model[propertyName] === 'object' && !(model[propertyName] instanceof File))
+            } else if (typeof model[propertyName] === 'object' && !(model[propertyName] instanceof File)) {
                 this.transformPayloadForSubmission(model[propertyName], formData, formKey);
-            else
+            } else {
                 formData.append(formKey, model[propertyName].toString());
+            }
         }
         return formData;
     };
