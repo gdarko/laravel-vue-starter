@@ -18,6 +18,12 @@ router.beforeEach(async (to, from, next) => {
     if (!authStore.user) {
         authStore.clearBrowserData();
     }
+
+    if(to?.meta?.isPublicAuthPage && authStore.user) {
+        next({name: 'dashboard'})
+        return;
+    }
+
     const requiresAbility = to.meta.requiresAbility;
     const requiresAuth = to.meta.requiresAuth;
     const belongsToOwnerOnly = to.meta.isOwner;
