@@ -103,7 +103,7 @@ export const useAuthStore = defineStore("auth", {
             window.localStorage.removeItem('currentUser');
         },
         hasAbilities(abilities) {
-            return this.user.hasOwnProperty('abilities') && !!this.user.abilities.find((ab) => {
+            return this.user && this.user.hasOwnProperty('abilities') && !!this.user.abilities.find((ab) => {
                 if (ab.name === '*') {
                     return true
                 }
@@ -118,7 +118,7 @@ export const useAuthStore = defineStore("auth", {
 
         hasAllAbilities(abilities) {
             let isAvailable = true
-            if (this.user.hasOwnProperty('abilities')) {
+            if (this.user && this.user.hasOwnProperty('abilities')) {
                 this.user.abilities.filter((ab) => {
                     let hasContain = !!abilities.find((p) => {
                         return ab.name === p

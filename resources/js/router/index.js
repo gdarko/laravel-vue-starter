@@ -12,11 +12,18 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore();
+    const requiresAbility = to?.meta?.requiresAbility;
+    const requiresAuth = to?.meta?.requiresAuth;
+    const belongsToOwnerOnly = to?.meta?.isOwner;
+
     if (!authStore.user) {
         await authStore.getCurrentUser();
     }
     if (!authStore.user) {
         authStore.clearBrowserData();
+        if(requiresAuth) {
+            next({name: 'login'})
+        }
     }
 
     if(to?.meta?.isPublicAuthPage && authStore.user) {
@@ -24,9 +31,6 @@ router.beforeEach(async (to, from, next) => {
         return;
     }
 
-    const requiresAbility = to.meta.requiresAbility;
-    const requiresAuth = to.meta.requiresAuth;
-    const belongsToOwnerOnly = to.meta.isOwner;
     if (requiresAbility && requiresAuth) {
         if (authStore.hasAbilities(requiresAbility)) {
             next()
