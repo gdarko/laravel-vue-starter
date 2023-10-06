@@ -105,7 +105,7 @@ export default defineComponent({
         }
 
         function onSubmit() {
-            service.handleUpdate('edit-user', route.params.id, reduceProperties(form, 'roles', 'id'));
+            service.handleUpdate('edit-user', route.params.id, reduceProperties(form, ['roles'], 'id'));
             return false;
         }
 
