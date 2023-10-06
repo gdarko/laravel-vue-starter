@@ -1,3 +1,17 @@
+export function getFirstErrorFromResponse(error) {
+    let errorFormatted = getResponseError(error)
+    let errorMessage = '';
+    if (typeof errorFormatted === 'object') {
+        for (let i in errorFormatted) {
+            errorMessage = Array.isArray(errorFormatted[i]) ? errorFormatted[i][0] : 'Error';
+            break;
+        }
+    } else if(typeof errorFormatted === 'string') {
+        errorMessage = errorFormatted;
+    }
+    return errorMessage;
+}
+
 export function getResponseError(error, response) {
     const errorMessage = "API Error, please try again.";
     if (typeof error !== 'object') {
