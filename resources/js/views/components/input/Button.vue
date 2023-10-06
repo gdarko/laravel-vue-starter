@@ -52,26 +52,26 @@ export default defineComponent({
         }
 
         const classes = computed(() => {
-            let value = 'px-4 py-2 border border-transparent text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 text-center transition ';
+            let value = 'px-4 py-2 border text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 text-center transition ';
             switch (props.theme) {
                 case 'success':
-                    value += 'text-white bg-green-600 hover:bg-green-800 focus:bg-green-800 focus:ring-green-800';
+                    value += 'text-white border-green-600 border-2 bg-green-600 hover:bg-green-800 focus:bg-green-800 focus:ring-green-800';
                     break;
                 case 'info':
-                    value += 'text-white bg-blue-600 hover:bg-blue-800 focus:bg-blue-800 focus:ring-blue-800';
+                    value += 'text-white border-blue-600 border-2 bg-blue-600 hover:bg-blue-800 focus:bg-blue-800 focus:ring-blue-800';
                     break;
                 case 'warning':
-                    value += 'text-white bg-orange-600 hover:bg-orange-800 focus:bg-orange-800 focus:ring-orange-800';
+                    value += 'text-white border-orange-600 border-2 bg-orange-600 hover:bg-orange-800 focus:bg-orange-800 focus:ring-orange-800';
                     break;
                 case 'danger':
                 case 'error':
-                    value += 'text-white bg-red-600 hover:bg-red-800 focus:bg-red-800 focus:ring-red-800';
+                    value += 'text-white border-red-600 border-2 bg-red-600 hover:bg-red-800 focus:bg-red-800 focus:ring-red-800';
                     break;
                 case 'outline':
-                    value += 'text-theme-600 border-2 border-theme-500 border-solid hover:bg-theme-800 hover:text-white hover:border-transparent'
+                    value += 'text-theme-600 border-theme-600 border-solid border-2 hover:bg-theme-800 hover:text-white hover:border-transparent'
                     break;
                 default:
-                    value += 'text-white bg-theme-600 hover:bg-theme-800 focus:bg-theme-800 focus:ring-theme-800';
+                    value += 'text-white border-theme-600 border-2 bg-theme-600 hover:bg-theme-800 focus:bg-theme-800 focus:ring-theme-800';
                     break;
             }
 
