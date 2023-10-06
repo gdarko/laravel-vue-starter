@@ -84,18 +84,25 @@ export default abstract class ModelService extends BaseService {
         })
     }
 
-    public transformPayloadForSubmission(payload) {
-        let data = new FormData();
-        for (let key in payload) {
-            let val = payload[key];
-            if (Array.isArray(val)) {
-                for (let index in val) {
-                    data.append(key + '[]', val[index]);
-                }
-            } else {
-                data.append(key, val);
+    public transformPayloadForSubmission(model: any, form: FormData = null, namespace = ''): FormData {
+        let formData = form || new FormData();
+        let formKey;
+        for (let propertyName in model) {
+            if (!model.hasOwnProperty(propertyName) || !model[propertyName]) continue;
+            let formKey = namespace ? `${namespace}[${propertyName}]` : propertyName;
+            if (model[propertyName] instanceof Date)
+                formData.append(formKey, model[propertyName].toISOString());
+            else if (model[propertyName] instanceof Array) {
+                model[propertyName].forEach((element, index) => {
+                    const tempFormKey = `${formKey}[${index}]`;
+                    this.transformPayloadForSubmission(element, formData, tempFormKey);
+                });
             }
+            else if (typeof model[propertyName] === 'object' && !(model[propertyName] instanceof File))
+                this.transformPayloadForSubmission(model[propertyName], formData, formKey);
+            else
+                formData.append(formKey, model[propertyName].toString());
         }
-        return data;
-    }
+        return formData;
+    };
 }
