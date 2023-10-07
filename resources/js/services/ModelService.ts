@@ -101,8 +101,12 @@ export default abstract class ModelService extends BaseService {
                         formData.append(tempFormKey, element.toString());
                     }
                 });
-            } else if (typeof model[propertyName] === 'object' && !(model[propertyName] instanceof File)) {
-                this.transformPayloadForSubmission(model[propertyName], formData, formKey);
+            } else if (typeof model[propertyName] === 'object') {
+                if(model[propertyName] instanceof File) {
+                    formData.append(formKey, model[propertyName]);
+                } else {
+                    this.transformPayloadForSubmission(model[propertyName], formData, formKey);
+                }
             } else {
                 formData.append(formKey, model[propertyName].toString());
             }
