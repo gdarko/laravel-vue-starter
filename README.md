@@ -18,6 +18,8 @@ The project is built with the following components:
 - Laravel Fortify
 - Tailwind
 - ForkAwesome
+- Media Library (by Spatie)
+- Bouncer (by JosephSilber)
 
 ## ⚡️ How to install
 

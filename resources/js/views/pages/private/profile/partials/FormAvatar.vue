@@ -16,7 +16,7 @@ import FileInput from "@/views/components/input/FileInput";
 import Panel from "@/views/components/Panel";
 
 export default defineComponent({
-    emits: ['done', 'error'],
+    emits: ['done', 'error', 'success'],
     components: {
         Panel,
         FileInput,
@@ -36,11 +36,11 @@ export default defineComponent({
         }
 
         function onSubmit() {
-
-            authStore.updateAvatar(authStore.user.id, {'avatar': form.file}).catch((error) => {
+            authStore.updateAvatar(authStore.user.id, {'avatar': form.file}).then((response) => {
+                emit('success', response?.data?.record);
+            }).catch((error) => {
                 emit('error');
             });
-
             emit('done');
         }
 
@@ -48,7 +48,7 @@ export default defineComponent({
             onSubmit,
             onChange,
             form,
-            trans
+            trans,
         }
     }
 });

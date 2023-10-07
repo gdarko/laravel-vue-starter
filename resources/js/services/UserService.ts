@@ -10,8 +10,7 @@ export default class UserService extends ModelService {
     public updateAvatar(id, payload) {
         const formData = new FormData();
         formData.append("avatar", payload.avatar);
-        formData.append('_method', 'put');
-        return this.post(`/users/${id}/avatar`, formData);
+        return this.put(`/users/${id}/avatar`, formData);
     }
 
 }

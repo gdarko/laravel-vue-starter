@@ -51,7 +51,7 @@ export default defineComponent({
             middle_name: '',
             email: '',
             roles: [],
-            avatar: '',
+            avatar: null,
             password: '',
         });
 

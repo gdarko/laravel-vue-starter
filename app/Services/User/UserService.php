@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Carbon;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
 
 class UserService
 {
@@ -32,7 +34,9 @@ class UserService
 
     /**
      * Get a single resource from the database
+     *
      * @param  User  $user
+     *
      * @return UserResource
      */
     public function get(User $user)
@@ -42,7 +46,9 @@ class UserService
 
     /**
      * Get resource index from the database
+     *
      * @param $query
+     *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index($data)
@@ -58,15 +64,17 @@ class UserService
             $query = $query->orderBy($data['sort_by'], $data['sort']);
         }
 
-//         dd(vsprintf(str_replace('?', '%s', str_replace('?', "'?'", $query->toSql())), $query->getBindings()));
-
         return UserResource::collection($query->paginate(10));
     }
 
     /**
      * Creates resource in the database
+     *
      * @param  array  $data
-     * @return Builder|\Illuminate\Database\Eloquent\Model|null
+     *
+     * @return Builder|Model|null
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
      */
     public function create(array $data)
     {
@@ -84,15 +92,13 @@ class UserService
         if (!empty($record)) {
             // Set avatar
             if (!empty($avatar)) {
-                $entry = $this->mediaService->storeAvatar($avatar, $record);
-                if (!empty($entry)) {
-                    $record->update(['avatar_id' => $entry->id]);
-                }
+                $this->mediaService->replace($avatar, $record, 'avatars');
             }
             // Set roles
             if (!empty($roles)) {
                 Bouncer::sync($record)->roles($roles);
             }
+
             return $record->fresh();
         } else {
             return null;
@@ -101,9 +107,13 @@ class UserService
 
     /**
      * Updates resource in the database
-     * @param  User|Model  $user
+     *
+     * @param  User  $user
      * @param  array  $data
+     *
      * @return bool
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
      */
     public function update(User $user, array $data)
     {
@@ -120,15 +130,9 @@ class UserService
         unset($data['email']);
 
         if (isset($data['avatar']) && $data['avatar']) {
-            $entry = $this->mediaService->storeAvatar($data['avatar'], $user);
-            if ($entry) {
-                $data['avatar_id'] = $entry->id;
-                if ($user->avatar) {
-                    $user->avatar->delete(); // Delete old avatar.
-                }
-            }
-            unset($data['avatar']);
+            $this->mediaService->replace($data['avatar'], $user, 'avatars');
         }
+
         if (!empty($roles)) {
             Bouncer::sync($user)->roles($roles);
         }
@@ -138,22 +142,16 @@ class UserService
 
     /**
      * Update avatar for the specified resource
+     *
      * @param  User  $user
      * @param  array  $data
+     *
      * @return bool
      */
     public function updateAvatar(User $user, array $data)
     {
-
         if (isset($data['avatar']) && $data['avatar']) {
-            $entry = $this->mediaService->storeAvatar($data['avatar'], $user);
-            if ($entry) {
-                $data['avatar_id'] = $entry->id;
-                if (!empty($user->avatar)) {
-                    $user->avatar->delete(); // Delete old avatar.
-                }
-            }
-            unset($data['avatar']);
+            $this->mediaService->replace($data['avatar'], $user, 'avatars');
         }
         if (!empty($data)) {
             return $user->update($data);
@@ -164,7 +162,9 @@ class UserService
 
     /**
      * Deletes resource in the database
+     *
      * @param  User|Model  $user
+     *
      * @return bool
      */
     public function delete(User $user)
@@ -174,7 +174,9 @@ class UserService
 
     /**
      * Clean the data
+     *
      * @param  array  $data
+     *
      * @return array
      */
     private function clean(array $data)
@@ -184,6 +186,7 @@ class UserService
                 $data[$i] = null;
             }
         }
+
         return $data;
     }
 
