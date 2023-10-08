@@ -34,12 +34,23 @@ export default abstract class BaseService {
         )
     }
 
+
     protected post(url, data, config = {}) {
+        if(!config) {
+            config = {};
+        }
+        if(data instanceof FormData) {
+            config = this.setHeaders(config);
+        }
         return this.api.post(url, data, config);
     }
 
     protected put(url, data, config = {}) {
+        if(!config) {
+            config = {};
+        }
         if(data instanceof FormData) {
+            config = this.setHeaders(config);
             data.append('_method', 'PUT');
         } else {
             data._method = 'PUT';
@@ -48,7 +59,11 @@ export default abstract class BaseService {
     }
 
     protected patch(url, data, config = {}) {
+        if(!config) {
+            config = {};
+        }
         if(data instanceof FormData) {
+            config = this.setHeaders(config);
             data.append('_method', 'PATCH');
         } else {
             data._method = 'PATCH';
@@ -62,6 +77,17 @@ export default abstract class BaseService {
 
     protected delete(url, config = {}) {
         return this.api.delete(url, config);
+    }
+
+    protected setHeaders(config) {
+        if(!config) {
+            config = {};
+        }
+        if(!config?.headers) {
+            config.headers = {};
+        }
+        config.headers['Content-Type'] = 'multipart/form-data';
+        return config;
     }
 }
 

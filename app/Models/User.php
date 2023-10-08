@@ -6,19 +6,27 @@ use App\Traits\Filterable;
 use App\Traits\Searchable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Foundation\Testing\Concerns\InteractsWithAuthentication;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Log;
 use Laravel\Sanctum\HasApiTokens;
 use Silber\Bouncer\Database\HasRolesAndAbilities;
+use Spatie\Image\Manipulations;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, HasMedia
 {
     use HasApiTokens, HasFactory, Notifiable;
 
     use HasRolesAndAbilities;
 
     use Searchable, Filterable;
+
+    use InteractsWithMedia;
 
     /**
      * ALlowed search fields
@@ -59,6 +67,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'avatar_url',
+        'avatar_thumb_url',
         'full_name',
     ];
 
@@ -70,33 +79,14 @@ class User extends Authenticatable implements MustVerifyEmail
     public static function boot()
     {
         parent::boot();
-
-        static::deleting(function (self $record) {
-            Log::info('Deleting user...');
-            Log::info(json_encode($record->mediaFiles));
-            Log::info(json_encode($record->mediaFiles()->get()));
-            foreach ($record->mediaFiles()->get() as $entry) {
-                $entry->delete();
-            }
-        });
     }
 
     /**
-     * Returns the user avatar
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne|MediaFile
+     * @return \Closure|mixed|null|Media
      */
     public function avatar()
     {
-        return $this->hasOne(MediaFile::class, 'id', 'avatar_id');
-    }
-
-    /**
-     * Returns the user files
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function mediaFiles()
-    {
-        return $this->hasMany(MediaFile::class, 'user_id', 'id');
+        return $this->getMedia('avatars')->first();
     }
 
     /**
@@ -105,13 +95,25 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function getAvatarUrlAttribute()
     {
-        $src = $this->getAttribute('avatar_id');
-        if (is_null($src)) {
-            return null;
+        $avatar = $this->avatar();
+        if ($avatar) {
+            return $avatar->getFullUrl();
         }
-        if (!empty($this->avatar)) {
-            return asset('storage/'.$this->avatar->path);
+
+        return null;
+    }
+
+    /**
+     * Returns the avatar url attribute
+     * @return string|null
+     */
+    public function getAvatarThumbUrlAttribute()
+    {
+        $avatar = $this->avatar();
+        if ($avatar) {
+            return $avatar->getAvailableFullUrl(['small_thumb']);
         }
+
         return null;
     }
 
@@ -124,10 +126,11 @@ class User extends Authenticatable implements MustVerifyEmail
         $names = [];
         foreach (['first_name', 'middle_name', 'last_name'] as $key) {
             $value = $this->getAttribute($key);
-            if (!empty($value)) {
+            if ( ! empty($value)) {
                 $names[] = $value;
             }
         }
+
         return implode(' ', $names);
     }
 
@@ -138,5 +141,26 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsAdminAttribute()
     {
         return $this->isAn('admin');
+    }
+
+    /**
+     * Register the conversions
+     *
+     * @param  Media|null  $media
+     *
+     * @return void
+     * @throws \Spatie\Image\Exceptions\InvalidManipulation
+     */
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('small_thumb')
+             ->fit(Manipulations::FIT_CROP, 300, 300)
+             ->nonQueued();
+        $this->addMediaConversion('medium_thumb')
+             ->fit(Manipulations::FIT_CROP, 600, 600)
+             ->nonQueued();
+        $this->addMediaConversion('large_thumb')
+             ->fit(Manipulations::FIT_CROP, 1200, 1200)
+             ->nonQueued();
     }
 }

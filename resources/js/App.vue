@@ -43,7 +43,7 @@
                     <a class="flex cursor-pointer focus:outline-none align-middle" @click="state.isAccountDropdownOpen = !state.isAccountDropdownOpen">
                         <span class="relative pt-3 mr-2">{{ authStore.user.full_name }} <Icon :name="state.isAccountDropdownOpen ? 'angle-up' : 'angle-down'"/></span>
                         <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
-                            <img :alt="authStore.user.full_name" v-if="authStore.user.avatar_url" :src="authStore.user.avatar_url">
+                            <img :alt="authStore.user.full_name" v-if="authStore.user.avatar_thumb_url" :src="authStore.user.avatar_thumb_url">
                             <AvatarIcon v-else/>
                         </button>
                     </a>

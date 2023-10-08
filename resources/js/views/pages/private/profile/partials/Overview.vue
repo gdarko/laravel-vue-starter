@@ -2,7 +2,7 @@
     <Panel>
         <div class="flex">
             <div class="w-1/6 px-2">
-                <img v-if="avatarUrl" :src="avatarUrl" class="w-full rounded-full" :alt="user.full_name"/>
+                <img v-if="authStore?.user?.avatar_thumb_url" :src="authStore?.user?.avatar_thumb_url" class="w-full rounded-full" :alt="authStore.user.full_name"/>
                 <div v-else class="rounded-full">
                     <Avatar></Avatar>
                 </div>
@@ -10,20 +10,20 @@
             <div class="w-5/6 px-6 pt-2">
                 <div class="items-center">
                     <ul class="mt-2">
-                        <li class="mb-1 text-2xl font-bold">{{ user.full_name }}
-                            <Badge theme="success" class="inline" v-if="user.email_verified_at">
+                        <li class="mb-1 text-2xl font-bold">{{ authStore.user.full_name }}
+                            <Badge theme="success" class="inline" v-if="authStore.user.email_verified_at">
                                 {{ trans('users.status.verified') }}
                             </Badge>
                         </li>
-                        <li class="text-gray-700"><i class="fa fa-envelope"></i> {{ user.email }}</li>
+                        <li class="text-gray-700"><i class="fa fa-envelope"></i> {{ authStore.user.email }}</li>
                         <li class="mt-5 text-gray-500">{{
-                                trans('global.phrases.member_since', {date: user.created_at})
+                                trans('global.phrases.member_since', {date: authStore.user.created_at})
                             }}
                         </li>
                     </ul>
                     <div class="mt-4">
                         <Button @click.prevent="onChangeAvatar" type="success" :label="trans('global.buttons.change_avatar')"/>
-                        <form @submit.prevent="onVerificationSend" class="inline-block ml-3" v-if="!user.email_verified_at">
+                        <form @submit.prevent="onVerificationSend" class="inline-block ml-3" v-if="!authStore.user.email_verified_at">
                             <Button type="submit" :label="trans('users.status.ask_verify')"/>
                         </form>
                     </div>
@@ -54,31 +54,26 @@ export default defineComponent({
         Avatar,
         Button
     },
-    emits: ['changeAvatar'],
+    emits: ['change-avatar-started'],
     setup(props, {emit}) {
         const authService = new AuthService();
         const alertStore = useAlertStore();
-        const {user} = useAuthStore()
-
-        const avatarUrl = computed(() => {
-            return user && user.hasOwnProperty('avatar_url') && user.avatar_url;
-        });
+        const authStore = useAuthStore()
 
         function onVerificationSend() {
-            authService.sendVerification({user: user.id})
+            authService.sendVerification({user: authStore.user.id})
                 .then((response) => (alertStore.success(trans('global.phrases.verification_sent'))))
                 .catch((error) => (alertStore.error(getResponseError(error))));
         }
 
         function onChangeAvatar() {
-            emit('changeAvatar');
+            emit('change-avatar-started');
         }
 
         return {
-            user,
+            authStore,
             onVerificationSend,
             onChangeAvatar,
-            avatarUrl,
             trans,
         }
     }
