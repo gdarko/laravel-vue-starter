@@ -1,7 +1,7 @@
 import BaseService from "@/services/BaseService";
 import axios from "@/plugins/axios";
 
-import {useAlertStore} from "@/stores";
+import {useToastStore} from "@/stores/toast";
 import {getResponseError} from "@/helpers/api";
 
 import {useGlobalStateStore} from "@/stores";
@@ -57,28 +57,28 @@ export default abstract class ModelService extends BaseService {
     }
 
     public handleUpdate(ui_element_id, object_id, data) {
-        const alertStore = useAlertStore();
+        const toastStore = useToastStore();
         const globalUserState = useGlobalStateStore();
         globalUserState.loadingElements[ui_element_id] = true;
         return this.update(object_id, data).then((response) => {
             let answer = response.data;
-            alertStore.success(answer.message);
+            toastStore.success(answer.message);
         }).catch((error) => {
-            alertStore.error(getResponseError(error));
+            toastStore.error(getResponseError(error));
         }).finally(() => {
             globalUserState.loadingElements[ui_element_id] = false;
         })
     }
 
     public handleCreate(ui_element_id, data) {
-        const alertStore = useAlertStore();
+        const toastStore = useToastStore();
         const globalUserState = useGlobalStateStore();
         globalUserState.setElementLoading(ui_element_id, true);
         return this.store(data).then((response) => {
             let answer = response.data;
-            alertStore.success(answer.message);
+            toastStore.success(answer.message);
         }).catch((error) => {
-            alertStore.error(getResponseError(error));
+            toastStore.error(getResponseError(error));
         }).finally(() => {
             globalUserState.setElementLoading(ui_element_id, false);
         })

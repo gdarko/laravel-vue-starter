@@ -1,7 +1,6 @@
 import {defineStore} from 'pinia';
 
-export const useAlertStore = defineStore({
-    id: 'alert',
+export const useAlertStore = defineStore('alert', {
     state: () => {
         return {
             messages: [],

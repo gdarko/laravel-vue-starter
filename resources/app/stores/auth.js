@@ -1,7 +1,7 @@
 import router from "@/router";
 import {defineStore} from 'pinia'
 import {getResponseError} from "@/helpers/api";
-import {useAlertStore} from "@/stores/alert";
+import {useToastStore} from "@/stores/toast";
 import AuthService from "@/services/AuthService";
 import UserService from "@/services/UserService";
 import {trans} from "@/helpers/i18n";
@@ -16,27 +16,27 @@ export const useAuthStore = defineStore("auth", {
     actions: {
         async login(payload) {
             const authService = new AuthService();
-            const alertStore = useAlertStore();
+            const toastStore = useToastStore();
             try {
                 const response = await authService.login(payload);
                 this.user = response.data.user;
                 this.setBrowserData();
-                alertStore.clear();
+
                 await router.push("/panel/dashboard");
                 await this.getCurrentUser();
             } catch (error) {
-                alertStore.error(getResponseError(error));
+                toastStore.error(getResponseError(error));
             }
         },
         async register(payload) {
             const authService = new AuthService();
-            const alertStore = useAlertStore();
+            const toastStore = useToastStore();
             try {
                 const response = await authService.registerUser(payload);
                 await router.push("/panel/dashboard");
-                alertStore.clear();
+
             } catch (error) {
-                alertStore.error(getResponseError(error));
+                toastStore.error(getResponseError(error));
             }
         },
         async getCurrentUser() {
@@ -54,26 +54,26 @@ export const useAuthStore = defineStore("auth", {
             return this.user;
         },
         updateAvatar(id, payload) {
-            const alertStore = useAlertStore();
+            const toastStore = useToastStore();
             const userService = new UserService();
             return new Promise((resolve, reject) => {
                 return userService
                     .updateAvatar(id, payload)
                     .then((response) => {
                         this.getCurrentUser().then(() => {
-                            alertStore.success(trans('global.phrases.file_uploaded'));
+                            toastStore.success(trans('global.phrases.file_uploaded'));
                             resolve(response)
                         });
                     })
                     .catch((err) => {
-                        alertStore.error(getResponseError(err));
+                        toastStore.error(getResponseError(err));
                         reject(err)
                     })
             })
         },
         logout() {
             return new Promise((resolve, reject) => {
-                const alertStore = useAlertStore();
+                const toastStore = useToastStore();
                 const authService = new AuthService();
                 return authService
                     .logout()
@@ -87,7 +87,7 @@ export const useAuthStore = defineStore("auth", {
                         resolve(response)
                     })
                     .catch((err) => {
-                        alertStore.error(getResponseError(err));
+                        toastStore.error(getResponseError(err));
                         reject(err)
                     })
             });
