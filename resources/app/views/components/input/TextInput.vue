@@ -1,11 +1,7 @@
 <template>
     <div :style="style" :class="$props.class">
-        <label
-            :for="name"
-            class="text-sm text-gray-500"
-            :class="{ 'sr-only': !showLabel }"
-            v-if="label">
-            {{ label }}<span class="text-red-600" v-if="$props.required">*</span>
+        <label :for="name" class="label" :class="{ 'sr-only': !showLabel }" v-if="label">
+            <span class="label-text">{{ label }}<span class="text-error" v-if="$props.required">*</span></span>
         </label>
         <input v-if="type !== 'textarea'"
                :id="name"
@@ -16,7 +12,7 @@
                @input="onInput"
                :placeholder="placeholder"
                :autocomplete="autocomplete"
-               class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500 text-sm"/>
+               class="input input-bordered w-full"/>
         <textarea v-else
             :id="name"
             :value="modelValue"
@@ -25,7 +21,7 @@
             @input="onInput"
             :placeholder="placeholder"
             :autocomplete="autocomplete"
-            class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 rounded-md shadow-sm appearance-none focus:outline-none focus:ring-theme-500 focus:border-theme-500 text-sm"></textarea>
+            class="textarea textarea-bordered w-full"></textarea>
     </div>
 </template>
 

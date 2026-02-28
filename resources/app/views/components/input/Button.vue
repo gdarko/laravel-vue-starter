@@ -1,10 +1,10 @@
 <template>
     <router-link v-if="$props.to" :class="classes" :to="$props.to">
-        <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
+        <template v-if="$props.icon"><Icon :name="$props.icon" class="mr-1 h-4 w-4"/></template>
         {{ $props.label }}
     </router-link>
     <button v-else :type="type" :class="classes" @click="onClick" :disabled="disabled">
-        <template v-if="$props.icon"><i class="mr-1" :class="$props.icon"></i></template>
+        <template v-if="$props.icon"><Icon :name="$props.icon" class="mr-1 h-4 w-4"/></template>
         {{ $props.label }}
     </button>
 </template>
@@ -12,8 +12,10 @@
 <script>
 
 import {computed, defineComponent} from "vue";
+import Icon from "@/views/components/icons/Icon";
 
 export default defineComponent({
+    components: {Icon},
     props: {
         label: {
             type: String,
@@ -52,26 +54,26 @@ export default defineComponent({
         }
 
         const classes = computed(() => {
-            let value = 'px-4 py-2 border text-sm rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 text-center transition ';
+            let value = 'btn btn-sm';
             switch (props.theme) {
                 case 'success':
-                    value += 'text-white border-green-600 border-2 bg-green-600 hover:bg-green-800 focus:bg-green-800 focus:ring-green-800';
+                    value += ' btn-success';
                     break;
                 case 'info':
-                    value += 'text-white border-blue-600 border-2 bg-blue-600 hover:bg-blue-800 focus:bg-blue-800 focus:ring-blue-800';
+                    value += ' btn-info';
                     break;
                 case 'warning':
-                    value += 'text-white border-orange-600 border-2 bg-orange-600 hover:bg-orange-800 focus:bg-orange-800 focus:ring-orange-800';
+                    value += ' btn-warning';
                     break;
                 case 'danger':
                 case 'error':
-                    value += 'text-white border-red-600 border-2 bg-red-600 hover:bg-red-800 focus:bg-red-800 focus:ring-red-800';
+                    value += ' btn-error';
                     break;
                 case 'outline':
-                    value += 'text-theme-600 border-theme-600 border-solid border-2 hover:bg-theme-800 hover:text-white hover:border-transparent'
+                    value += ' btn-outline btn-primary';
                     break;
                 default:
-                    value += 'text-white border-theme-600 border-2 bg-theme-600 hover:bg-theme-800 focus:bg-theme-800 focus:ring-theme-800';
+                    value += ' btn-primary';
                     break;
             }
 

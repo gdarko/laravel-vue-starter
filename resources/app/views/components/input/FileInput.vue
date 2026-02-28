@@ -5,9 +5,9 @@
         </label>
         <div :class="classes" @click="onClick" @mouseover="hover = true" @mouseleave="hover = false" @drop.prevent="onDrop" @dragover.prevent="hover = true" @dragleave.prevent="hover = false">
             <button class="file-input__clear" type="button" @click.stop="onClear" v-if="canClear">
-                <i class="fa fa-times"></i></button>
+                <Icon name="times" class="h-4 w-4"/></button>
             <div v-if="!files.length">
-                <p class="text-2xl"><i class="fa fa-cloud-upload"></i></p>
+                <p class="text-2xl"><Icon name="cloud-upload" class="h-8 w-8 mx-auto"/></p>
                 <p>{{ placeholderMessage }}</p>
             </div>
             <div v-else>
@@ -30,9 +30,10 @@
 import {computed, defineComponent, ref, watch} from "vue";
 
 import {trans} from "@/helpers/i18n";
-
+import Icon from "@/views/components/icons/Icon";
 
 export default defineComponent({
+    components: {Icon},
     props: {
         class: String,
         style: [String, Object],
@@ -223,7 +224,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .file-input {
     padding: 1em 2em;
     width: 100%;
@@ -236,24 +237,21 @@ export default defineComponent({
     text-align: center;
     min-height: 6em;
     position: relative;
-
-    &__clear {
-        position: absolute;
-        right: 8px;
-        top: 4px;
-        background: none;
-        border: none;
-        color: inherit;
-        font-size: 1em;
-        cursor: pointer;
-
-        &:focus {
-            outline: none;
-        }
-    }
-
-    input {
-        display: none;
-    }
+}
+.file-input__clear {
+    position: absolute;
+    right: 8px;
+    top: 4px;
+    background: none;
+    border: none;
+    color: inherit;
+    font-size: 1em;
+    cursor: pointer;
+}
+.file-input__clear:focus {
+    outline: none;
+}
+.file-input input {
+    display: none;
 }
 </style>

@@ -128,7 +128,7 @@ export default defineComponent({
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
-<style lang="scss">
+<style>
 .multiselect__input {
     max-width: 300px !important;
     border: 0 !important;
