@@ -1,17 +1,13 @@
 <template>
-    <div class="shadow overflow-hidden border-b border-gray-200 mb-8 sm:rounded-lg">
-        <div class="min-w-full divide-y divide-gray-200">
-            <div v-if="$props.title" class="bg-gray-50 px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                {{ $props.title }}
-            </div>
-            <div class="whitespace-nowrap bg-white" :class="$props.bodyPadding ? 'px-6 py-4' : ''">
-                <template v-if="isElementLoading">
-                    <div class="pt-10 pb-6 text-center">
-                        <Spinner/>
-                    </div>
-                </template>
-                <slot v-else></slot>
-            </div>
+    <div class="card bg-base-100 shadow border border-base-300/50 mb-8">
+        <div class="card-body" :class="$props.bodyPadding ? '' : 'p-0'">
+            <h3 v-if="$props.title" class="card-title text-xs uppercase tracking-wider text-base-content/60">{{ $props.title }}</h3>
+            <template v-if="isElementLoading">
+                <div class="py-10 text-center">
+                    <Spinner/>
+                </div>
+            </template>
+            <slot v-else></slot>
         </div>
     </div>
 </template>
@@ -20,7 +16,6 @@
 import {computed, defineComponent} from "vue";
 import Spinner from "@/views/components/icons/Spinner";
 import {useGlobalStateStore} from "@/stores";
-import {storeToRefs} from "pinia";
 
 export default defineComponent({
     components: {Spinner},

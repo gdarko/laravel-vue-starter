@@ -1,52 +1,59 @@
 <template>
-    <div class="w-full shadow border-b border-gray-200 mb-8 sm:rounded-lg overflow-auto">
-        <table class="w-full divide-y divide-gray-200 table-auto">
-            <thead class="bg-gray-50">
+    <div class="card bg-base-100 shadow-sm border border-base-300/50 overflow-x-auto mb-8">
+        <table class="table">
+            <thead>
             <tr>
-                <th v-for="(item, i) in headers" scope="col" class="align-middle px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider relative">
+                <th v-for="(item, i) in headers">
                     <slot :name="'header-'+i">
-                        <div class="leading-loose inline-block">{{ item }}</div>
-                        <div class="sort-arrows inline-block text-center absolute" v-if="sorting.hasOwnProperty(i) && sorting[i]">
-                            <span @click.prevent="onSortChange(i, 'asc')" :class="sortControlClasses(i, 'asc')" class="w-full block cursor-pointer font-normal hover:font-bold focus:font-bold hover:text-theme-600 focus:text-theme-600 dark:hover:text-theme-500 dark:focus:text-theme-500"><i class="fa fa-caret-up"></i></span>
-                            <span @click.prevent="onSortChange(i, 'desc')" :class="sortControlClasses(i, 'desc')" class="w-full block cursor-pointer font-normal hover:font-bold focus:font-bold hover:text-theme-600 focus:text-theme-600 dark:hover:text-theme-500 dark:focus:text-theme-500"><i class="fa fa-caret-down"></i></span>
-                        </div>
+                        <span class="inline-flex items-center gap-1">
+                            {{ item }}
+                            <span v-if="sorting.hasOwnProperty(i) && sorting[i]" class="inline-flex flex-col gap-0.5 ml-0.5">
+                                <button @click.prevent="onSortChange(i, 'asc')" :class="sortControlClasses(i, 'asc')" class="cursor-pointer hover:text-primary sort-arrow-up"></button>
+                                <button @click.prevent="onSortChange(i, 'desc')" :class="sortControlClasses(i, 'desc')" class="cursor-pointer hover:text-primary sort-arrow-down"></button>
+                            </span>
+                        </span>
                     </slot>
                 </th>
-                <th v-if="actions" scope="col" class="align-middle px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th v-if="actions" class="text-right">
                     <slot name="actions">{{ trans('global.actions.name') }}</slot>
                 </th>
             </tr>
             </thead>
-            <tbody v-if="records && records.length && !$props.isLoading" class="bg-white divide-y divide-gray-200">
-            <tr v-for="(record, i) in records">
-                <td v-for="(header, j) in headers" class="px-6 py-4 whitespace-nowrap text-sm">
+            <tbody v-if="records && records.length && !$props.isLoading">
+            <tr v-for="(record, i) in records" class="hover">
+                <td v-for="(header, j) in headers">
                     <slot :item="record" :name="'content-'+j">
                         {{ record && record.hasOwnProperty(j) ? record[j] : '' }}
                     </slot>
                 </td>
-                <td v-if="actions" class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                <td v-if="actions" class="text-right">
                     <slot :name="'actions-'+j" v-for="(action, j) in actions">
                         <router-link v-if="action.hasOwnProperty('to') && action.to" :to="getActionPage(action, record)" :class="getActionClass(action)" :title="action.name">
-                            <i v-if="action.icon" :class="action.icon"></i>
+                            <Icon v-if="action.icon" :name="action.icon" class="h-5 w-5 inline-block"/>
                             <span v-if="(!action.hasOwnProperty('showName') || action.showName)" v-html="action.name"></span>
                         </router-link>
                         <a v-else :class="getActionClass(action)" @click="onActionClick({action: action, item: record})" :title="action.name">
-                            <i v-if="action.icon" :class="action.icon"></i>
+                            <Icon v-if="action.icon" :name="action.icon" class="h-5 w-5 inline-block"/>
                             <span v-if="(!action.hasOwnProperty('showName') || action.showName)" v-html="action.name"></span>
                         </a>
                     </slot>
                 </td>
             </tr>
             </tbody>
+            <tbody v-else-if="$props.isLoading">
+            <tr v-for="row in 5" :key="'skeleton-'+row">
+                <td v-for="(header, j) in headers" :key="'skeleton-cell-'+row+'-'+j">
+                    <div class="skeleton h-4 rounded" :class="j === 0 ? 'w-32' : 'w-24'"></div>
+                </td>
+                <td v-if="actions" class="text-right">
+                    <div class="skeleton h-4 w-12 rounded inline-block"></div>
+                </td>
+            </tr>
+            </tbody>
             <tbody v-else>
             <tr>
-                <td :colspan="headersLength" class="pt-10 pb-6 text-center">
-                    <template v-if="$props.isLoading">
-                        <Spinner :text-new-line="true"></Spinner>
-                    </template>
-                    <template v-else>
-                        {{ trans('global.phrases.no_records') }}
-                    </template>
+                <td :colspan="headersLength" class="text-center py-10 text-base-content/40">
+                    {{ trans('global.phrases.no_records') }}
                 </td>
             </tr>
             </tbody>
@@ -62,9 +69,10 @@ import {trans} from "@/helpers/i18n";
 import {computed, defineComponent, reactive} from "vue";
 import Pager from "@/views/components/Pager";
 import Spinner from "@/views/components/icons/Spinner";
+import Icon from "@/views/components/icons/Icon";
 
 export default defineComponent({
-    components: {Spinner, Pager},
+    components: {Spinner, Pager, Icon},
     emits: ['pageChanged', 'action', 'sort'],
     props: {
         id: {
@@ -142,16 +150,10 @@ export default defineComponent({
         }
 
         function getActionClass(action) {
-
-            let classes = 'uppercase cursor-pointer text-lg';
-            if (Object.keys(props.actions).length > 1) {
-                classes += ' mr-3';
-            }
-
+            let classes = 'btn btn-ghost btn-sm';
             if (action.hasOwnProperty('danger') && action.danger) {
-                classes += ' text-danger-400'
+                classes += ' text-error'
             }
-
             return classes;
         }
 
@@ -175,7 +177,7 @@ export default defineComponent({
 
         function sortControlClasses(column, direction) {
             if (currentSort.column === column && currentSort.direction === direction) {
-                return 'text-theme-500'
+                return 'text-primary'
             }
             return '';
         }
@@ -207,18 +209,25 @@ export default defineComponent({
     }
 });
 </script>
-<style>
-.sort-arrows {
-    font-size: 1.2em;
-    line-height: 0.7;
-    width: 30px;
+<style scoped>
+.sort-arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid currentColor;
+    opacity: 0.4;
 }
-
-.sort-arrows i.fa {
-    line-height: 0.1;
+.sort-arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid currentColor;
+    opacity: 0.4;
 }
-
-.sort-arrows .fa {
-    font-size: 15px;
+.sort-arrow-up.text-primary,
+.sort-arrow-down.text-primary {
+    opacity: 1;
 }
 </style>
