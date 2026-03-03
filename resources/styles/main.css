@@ -1,0 +1,79 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+    themes: light --default, dark;
+}
+@plugin "@tailwindcss/typography";
+
+@source "../app/**/*.vue";
+@source "../app/**/*.js";
+@source "../app/**/*.ts";
+
+/* Custom light theme — teal primary */
+[data-theme="light"] {
+    --color-base-100: oklch(1 0 0);
+    --color-base-200: oklch(0.968 0.007 247.858);
+    --color-base-300: oklch(0.916 0.014 264.053);
+    --color-base-content: oklch(0.129 0.042 264.695);
+    --color-primary: oklch(0.6 0.118 184.714);
+    --color-primary-content: oklch(1 0 0);
+    --color-secondary: oklch(0.541 0.232 276.966);
+    --color-secondary-content: oklch(1 0 0);
+    --color-accent: oklch(0.769 0.171 70.08);
+    --color-accent-content: oklch(1 0 0);
+    --color-neutral: oklch(0.129 0.042 264.695);
+    --color-neutral-content: oklch(0.704 0.04 256.788);
+    --color-error: oklch(0.577 0.245 27.325);
+    --color-error-content: oklch(1 0 0);
+    --color-success: oklch(0.648 0.15 160);
+    --color-success-content: oklch(1 0 0);
+    --color-warning: oklch(0.769 0.171 70.08);
+    --color-warning-content: oklch(1 0 0);
+    --color-info: oklch(0.546 0.245 262.881);
+    --color-info-content: oklch(1 0 0);
+    --color-sidebar: oklch(0.27 0.02 260);
+    --color-sidebar-content: oklch(0.85 0.02 260);
+}
+
+/* Custom dark theme — same teal primary */
+[data-theme="dark"] {
+    --color-primary: oklch(0.65 0.118 184.714);
+    --color-primary-content: oklch(0.13 0.03 184);
+    --color-secondary: oklch(0.55 0.2 276.966);
+    --color-secondary-content: oklch(1 0 0);
+    --color-accent: oklch(0.75 0.15 70.08);
+    --color-accent-content: oklch(0.15 0.05 70);
+    --color-error: oklch(0.62 0.22 27.325);
+    --color-error-content: oklch(1 0 0);
+    --color-success: oklch(0.68 0.15 160);
+    --color-success-content: oklch(0.13 0.03 160);
+    --color-warning: oklch(0.75 0.15 70.08);
+    --color-warning-content: oklch(0.15 0.05 70);
+    --color-info: oklch(0.6 0.22 262.881);
+    --color-info-content: oklch(1 0 0);
+    --color-sidebar: oklch(0.17 0.014 253);
+    --color-sidebar-content: oklch(0.75 0.02 260);
+}
+
+@theme {
+    --color-sidebar: oklch(0.27 0.02 260);
+    --color-sidebar-content: oklch(0.85 0.02 260);
+    --color-theme-50: #f0fdfa;
+    --color-theme-100: #ccfbf1;
+    --color-theme-200: #99f6e4;
+    --color-theme-300: #5eead4;
+    --color-theme-400: #2dd4bf;
+    --color-theme-500: #14b8a6;
+    --color-theme-600: #0d9488;
+    --color-theme-700: #0f766e;
+    --color-theme-800: #115e59;
+    --color-theme-900: #134e4a;
+    --color-theme-950: #042f2e;
+    --color-danger-400: #f87171;
+    --color-danger-600: #dc2626;
+}
+
+@layer base {
+    .base-link {
+        @apply link link-primary;
+    }
+}

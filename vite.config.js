@@ -1,6 +1,7 @@
 import laravel from 'laravel-vite-plugin'
 import {defineConfig} from 'vite'
 import vue from '@vitejs/plugin-vue';
+import tailwindcss from '@tailwindcss/vite';
 import path from 'path'
 
 export default defineConfig({
@@ -12,11 +13,12 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/styles/main.scss',
+                'resources/styles/main.css',
                 'resources/app/main.js',
             ],
             refresh: true,
         }),
+        tailwindcss(),
         vue({
             template: {
                 transformAssetUrls: {
