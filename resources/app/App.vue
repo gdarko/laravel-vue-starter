@@ -1,109 +1,111 @@
 <template>
-    <div class="bg-gray-100 flex" v-if="authStore.user && authStore.user.hasOwnProperty('id')">
-        <aside class="relative bg-theme-600 h-screen w-64 hidden sm:block shadow-xl">
-            <div class="p-6 border-b border-theme-600">
-                <router-link class="text-white text-3xl font-semibold uppercase hover:text-gray-300" to="/panel/dashboard">
-                    <template v-if="state.app.logo">
-                        <img :src="state.app.logo" :alt="state.app.name"/>
-                    </template>
-                    <template v-else>
-                        {{ state.app.name }}
-                    </template>
-                </router-link>
-                <template v-if="state.headerLeftLink">
-                    <a v-if="state.headerLeftLink.href" :href="state.headerLeftLink.href" class="w-full bg-white cta-btn font-semibold py-2 mt-5 rounded-br-lg rounded-bl-lg rounded-tr-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center">
-                        <Icon :name="state.headerLeftLink.icon" class="mr-3"/>
-                        {{ state.headerLeftLink.name }}
-                    </a>
-                    <router-link v-else :to="state.headerLeftLink.to" class="w-full bg-white cta-btn font-semibold py-2 mt-5 rounded-br-lg rounded-bl-lg rounded-tr-lg shadow-lg hover:shadow-xl hover:bg-gray-300 flex items-center justify-center">
-                        <Icon :name="state.headerLeftLink.icon" class="mr-3"/>
-                        {{ state.headerLeftLink.name }}
-                    </router-link>
-                </template>
-            </div>
-            <nav class="text-white text-base py-4 px-3 rounded">
-                <Menu :state="state" :type="'desktop'"/>
-            </nav>
-            <template v-if="state.footerLeftLink">
-                <a v-if="state.footerLeftLink.href" :href="state.footerLeftLink.href" class="absolute w-full bottom-0 bg-theme-800 text-white flex items-center justify-center py-4">
-                    <Icon :name="state.footerLeftLink.icon" class="mr-3"/>
-                    {{ state.footerLeftLink.name }}
-                </a>
-                <router-link v-else :to="state.footerLeftLink.to">
-                    <Icon :name="state.footerLeftLink.icon" class="mr-3"/>
-                    {{ state.footerLeftLink.name }}
-                </router-link>
-            </template>
-        </aside>
-        <div class="relative w-full flex flex-col h-screen overflow-y-hidden">
-            <!-- Desktop Header -->
-            <header class="w-full items-center bg-white py-2 px-6 hidden sm:flex">
-                <div class="w-1/2"></div>
-                <div class="relative w-1/2 flex justify-end">
-                    <a class="flex cursor-pointer focus:outline-none align-middle" @click="state.isAccountDropdownOpen = !state.isAccountDropdownOpen">
-                        <span class="relative pt-3 mr-2">{{ authStore.user.full_name }} <Icon :name="state.isAccountDropdownOpen ? 'angle-up' : 'angle-down'"/></span>
-                        <button class="relative z-10 w-12 h-12 rounded-full overflow-hidden border-4 border-gray-400 hover:border-gray-300 focus:border-gray-300 focus:outline-none">
-                            <img :alt="authStore.user.full_name" v-if="authStore.user.avatar_thumb_url" :src="authStore.user.avatar_thumb_url">
-                            <AvatarIcon v-else/>
-                        </button>
-                    </a>
-                    <button v-if="state.isAccountDropdownOpen" @click="state.isAccountDropdownOpen = false" class="h-full w-full fixed inset-0 cursor-pointer"></button>
-                    <div v-if="state.isAccountDropdownOpen" class="absolute w-32 bg-white rounded-lg shadow-lg py-2 mt-16 z-50">
-                        <router-link to="/panel/profile" class="block px-4 py-2 hover:bg-theme-800 hover:text-white hover:opacity-80">
-                            {{ trans('global.pages.profile') }}
-                        </router-link>
-                        <a href="#" @click.prevent="onLogout" class="block px-4 py-2 hover:bg-theme-800 hover:text-white hover:opacity-80">{{
-                                trans('global.phrases.sign_out')
-                            }}</a>
+    <div v-if="authStore.user && authStore.user.hasOwnProperty('id')" class="drawer lg:drawer-open">
+        <input id="main-drawer" type="checkbox" class="drawer-toggle" v-model="state.isMobileMenuOpen"/>
+
+        <div class="drawer-content flex flex-col min-h-screen bg-base-200">
+            <!-- Top navbar -->
+            <div class="navbar bg-base-100 border-b border-base-300/50 sticky top-0 z-10 px-6 min-h-[3.5rem] h-14">
+                <div class="flex-none lg:hidden">
+                    <label for="main-drawer" class="btn btn-ghost btn-sm btn-square">
+                        <Icon name="bars" class="h-5 w-5"/>
+                    </label>
+                </div>
+                <div class="flex-1"></div>
+                <div class="flex-none flex items-center gap-2">
+                    <button class="btn btn-ghost btn-sm btn-circle" @click="toggleTheme" :title="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+                        <Icon :name="isDark ? 'sun' : 'moon'" class="h-[18px] w-[18px]"/>
+                    </button>
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="flex items-center gap-3 cursor-pointer select-none hover:opacity-80 transition-opacity py-1 px-2 rounded-xl hover:bg-base-200">
+                            <div class="w-9 h-9 rounded-full shrink-0 flex items-center justify-center bg-gradient-to-br from-primary to-teal-400 text-white overflow-hidden" v-if="!authStore.user.avatar_thumb_url">
+                                <span class="text-xs font-bold leading-none">{{ authStore.user.first_name?.charAt(0) }}{{ authStore.user.last_name?.charAt(0) }}</span>
+                            </div>
+                            <div class="w-9 h-9 rounded-full shrink-0 overflow-hidden" v-else>
+                                <img class="w-full h-full object-cover" :src="authStore.user.avatar_thumb_url" :alt="authStore.user.full_name">
+                            </div>
+                            <div class="hidden sm:block text-left">
+                                <p class="text-sm font-semibold leading-tight">{{ authStore.user.full_name }}</p>
+                                <p class="text-[11px] text-base-content/40">{{ authStore.user.email }}</p>
+                            </div>
+                            <Icon name="angle-down" class="h-3 w-3 text-base-content/30 hidden sm:block"/>
+                        </div>
+                        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-xl z-50 w-56 p-2 shadow-xl border border-base-300/50 mt-2">
+                            <li class="menu-title text-xs px-1 pt-1 pb-2">
+                                <span class="font-normal text-base-content/50">{{ authStore.user.email }}</span>
+                            </li>
+                            <li>
+                                <router-link to="/panel/profile" class="rounded-lg">
+                                    <Icon name="users" class="h-4 w-4 opacity-50"/>
+                                    {{ trans('global.pages.profile') }}
+                                </router-link>
+                            </li>
+                            <div class="divider my-1 h-0"></div>
+                            <li>
+                                <a href="#" @click.prevent="onLogout" class="rounded-lg text-error hover:bg-error/10">
+                                    <Icon name="sign-out" class="h-4 w-4"/>
+                                    {{ trans('global.phrases.sign_out') }}
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </header>
-
-            <!-- Mobile Header & Nav -->
-            <header class="w-full bg-theme-600 py-5 px-6 sm:hidden">
-                <div class="flex items-center justify-between">
-                    <router-link class="text-white text-3xl font-semibold uppercase hover:text-gray-300" to="/panel/dashboard">
-                        {{ state.app.name }}
-                    </router-link>
-                    <button @click="state.isMobileMenuOpen = !state.isMobileMenuOpen" class="text-white text-3xl focus:outline-none">
-                        <i v-if="!state.isMobileMenuOpen" class="fa fa-bars"></i>
-                        <i v-else class="fa fa-times"></i>
-                    </button>
-                </div>
-                <nav :class="state.isMobileMenuOpen ? 'flex': 'hidden'" class="flex flex-col pt-4 text-base text-white">
-                    <Menu :state="state" :type="'mobile'"/>
-                    <button class="w-full bg-theme-800 text-white font-semibold py-2 mt-3 rounded-lg shadow-lg hover:shadow-xl hover:text-theme-800 hover:bg-gray-300 flex items-center justify-center">
-                        <Icon name="paperclip" class="mr-3"/>
-                        {{ trans('global.buttons.documentation') }}
-                    </button>
-                </nav>
-            </header>
-
-            <div class="w-full h-screen overflow-x-hidden border-t flex flex-col">
-                <main class="w-full flex-grow p-6">
-                    <router-view/>
-                </main>
-                <footer class="w-full bg-white text-center text-sm p-4" v-html="trans('global.phrases.copyright')"></footer>
             </div>
 
+            <main class="flex-grow p-4 lg:p-8">
+                <router-view/>
+            </main>
+
+            <footer class="py-4 px-6 text-center text-xs text-base-content/30 border-t border-base-300/30" v-html="trans('global.phrases.copyright')"></footer>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="drawer-side z-20">
+            <label for="main-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+            <aside class="min-h-full flex flex-col bg-sidebar text-sidebar-content border-r border-sidebar-content/10 transition-all duration-200"
+                   :class="sidebarCollapsed ? 'w-16 overflow-visible' : 'w-64'">
+                <!-- Logo area -->
+                <div class="h-14 flex items-center border-b border-sidebar-content/10"
+                     :class="sidebarCollapsed ? 'justify-center px-2' : 'px-6'">
+                    <router-link class="flex items-center gap-2 hover:opacity-90 transition-opacity" to="/panel/dashboard">
+                        <div class="w-8 h-8 rounded-lg bg-primary flex items-center justify-center shrink-0">
+                            <span class="text-primary-content font-bold text-sm">{{ state.app.name?.charAt(0) }}</span>
+                        </div>
+                        <span v-if="!sidebarCollapsed" class="text-sidebar-content font-semibold text-base tracking-tight">{{ state.app.name }}</span>
+                    </router-link>
+                </div>
+
+                <!-- Navigation -->
+                <nav class="flex-grow pt-6 pb-4" :class="[sidebarCollapsed ? 'px-2 overflow-visible' : 'px-3 overflow-y-auto']">
+                    <p v-if="!sidebarCollapsed" class="px-3 mb-3 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-sidebar-content/25">Menu</p>
+                    <Menu :state="state" :type="'desktop'" :collapsed="sidebarCollapsed"/>
+                </nav>
+
+                <!-- Collapse toggle -->
+                <button @click="toggleSidebar"
+                        class="hidden lg:flex items-center justify-center h-10 border-t border-sidebar-content/10 text-sidebar-content/40 hover:text-sidebar-content/80 hover:bg-sidebar-content/5 transition-all">
+                    <Icon :name="sidebarCollapsed ? 'angle-right' : 'angle-left'" class="h-4 w-4"/>
+                </button>
+            </aside>
         </div>
     </div>
     <template v-else>
         <router-view/>
     </template>
+    <Toast/>
 </template>
 
 <script>
-import {computed, onBeforeMount, reactive} from "vue";
+import {computed, onBeforeMount, onMounted, reactive, ref} from "vue";
 
 import {trans} from '@/helpers/i18n';
 import Menu from "@/views/layouts/Menu";
 import Icon from "@/views/components/icons/Icon";
 import AvatarIcon from "@/views/components/icons/Avatar";
+import Toast from "@/views/components/Toast";
 import {useAuthStore} from "@/stores/auth";
 import {useGlobalStateStore} from "@/stores";
 import {useRoute} from "vue-router";
-import {useAlertStore} from "@/stores";
+import {useToastStore} from "@/stores/toast";
 import {getAbilitiesForRoute} from "@/helpers/routing";
 
 export default {
@@ -111,14 +113,38 @@ export default {
     components: {
         AvatarIcon,
         Menu,
-        Icon
+        Icon,
+        Toast,
     },
     setup() {
 
-        const alertStore = useAlertStore();
+        const toastStore = useToastStore();
         const authStore = useAuthStore();
         const globalStateStore = useGlobalStateStore();
         const route = useRoute();
+
+        // Dark mode
+        const isDark = ref(localStorage.getItem('theme') === 'dark');
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', isDark.value ? 'dark' : 'light');
+        }
+
+        function toggleTheme() {
+            isDark.value = !isDark.value;
+            localStorage.setItem('theme', isDark.value ? 'dark' : 'light');
+            applyTheme();
+        }
+
+        applyTheme();
+
+        // Sidebar collapse
+        const sidebarCollapsed = ref(localStorage.getItem('sidebarCollapsed') === 'true');
+
+        function toggleSidebar() {
+            sidebarCollapsed.value = !sidebarCollapsed.value;
+            localStorage.setItem('sidebarCollapsed', sidebarCollapsed.value);
+        }
 
         const isLoading = computed(() => {
             var value = false;
@@ -146,26 +172,8 @@ export default {
                     icon: 'users',
                     showDesktop: true,
                     showMobile: true,
-                    requiresAbility: getAbilitiesForRoute(['users.list', 'users.create', 'users.edit']),
+                    requiresAbility: getAbilitiesForRoute(['users.list']),
                     to: '/panel/users/list',
-                    children: [
-                        {
-                            name: trans('global.phrases.all_records'),
-                            icon: '',
-                            showDesktop: true,
-                            showMobile: true,
-                            requiresAbility: getAbilitiesForRoute('users.list'),
-                            to: '/panel/users/list',
-                        },
-                        {
-                            name: trans('global.buttons.add_new'),
-                            icon: '',
-                            showDesktop: true,
-                            showMobile: true,
-                            requiresAbility: getAbilitiesForRoute('users.create'),
-                            to: '/panel/users/create',
-                        }
-                    ]
                 },
                 {
                     name: trans('global.phrases.sign_out'),
@@ -177,18 +185,8 @@ export default {
                     to: '',
                 }
             ],
-            headerLeftLink: {
-                name: trans('global.buttons.new_record'),
-                icon: 'plus',
-                to: '',
-                href: '#',
-            },
-            footerLeftLink: {
-                name: trans('global.buttons.documentation'),
-                icon: 'paperclip',
-                to: '',
-                href: '#',
-            },
+            headerLeftLink: null,
+            footerLeftLink: null,
             isAccountDropdownOpen: false,
             isMobileMenuOpen: false,
             currentExpandedMenuItem: null,
@@ -201,7 +199,7 @@ export default {
 
         onBeforeMount(() => {
             if (route.query.hasOwnProperty('verified') && route.query.verified) {
-                alertStore.success(trans('global.phrases.email_verified'));
+                toastStore.success(trans('global.phrases.email_verified'));
             }
         });
 
@@ -209,6 +207,10 @@ export default {
             state,
             authStore,
             globalStateStore,
+            isDark,
+            toggleTheme,
+            sidebarCollapsed,
+            toggleSidebar,
             trans,
             onLogout,
             isLoading,
