@@ -1,16 +1,12 @@
 <template>
     <Auth>
-        <h2 class="font-bold text-2xl text-[#002D74]">{{ trans('global.pages.register') }}</h2>
-        <p class="text-sm mt-4 mb-4 text-[#002D74]">
-            {{ trans('global.phrases.register_desc') }}
-        </p>
+        <h2 class="text-xl font-bold text-base-content">{{ trans('global.pages.register') }}</h2>
+        <p class="text-sm text-base-content/50 mt-1 mb-6">{{ trans('global.phrases.register_desc') }}</p>
         <RegisterForm/>
-        <div class="mt-5 text-sm flex justify-between items-center text-[#002D74] border-t border-[#002D74] pt-3">
-            <p>{{ trans('global.phrases.login_ask') }}</p>
-            <router-link to="/login" class="py-2 px-5 bg-white border rounded-xl hover:scale-110 duration-300">
-                {{ trans('global.buttons.login') }}
-            </router-link>
-        </div>
+        <div class="divider text-xs text-base-content/30 my-4">or</div>
+        <router-link to="/login" class="btn btn-outline btn-block btn-sm">
+            {{ trans('global.phrases.login_ask') }} {{ trans('global.buttons.login') }}
+        </router-link>
     </Auth>
 </template>
 
@@ -21,14 +17,9 @@ import Auth from "@/views/layouts/Auth";
 
 export default {
     name: "RegisterView",
-    components: {
-        Auth,
-        RegisterForm,
-    },
+    components: { Auth, RegisterForm },
     setup() {
-        return {
-            trans
-        }
+        return { trans }
     }
 };
 </script>
