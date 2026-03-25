@@ -9,7 +9,7 @@
 
 <script>
 import {reactive, defineComponent} from "vue";
-import {useAlertStore, useAuthStore} from "@/stores";
+import {useAuthStore} from "@/stores/auth";
 import {trans} from "@/helpers/i18n";
 import Button from "@/views/components/input/Button";
 import FileInput from "@/views/components/input/FileInput";
@@ -24,14 +24,12 @@ export default defineComponent({
     },
     setup(props, {emit}) {
 
-        const alertStore = useAlertStore();
         const authStore = useAuthStore();
         const form = reactive({
             file: null,
         })
 
         function onChange(event) {
-            alertStore.clear();
             form.file = event.target.files[0];
         }
 

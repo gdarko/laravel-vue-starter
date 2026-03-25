@@ -16,7 +16,7 @@ import {trans} from "@/helpers/i18n";
 import {defineComponent, reactive, onMounted} from "vue";
 import {getResponseError} from "@/helpers/api";
 import {useAuthStore} from "@/stores/auth";
-import {useAlertStore} from "@/stores";
+import {useToastStore} from "@/stores/toast";
 import Button from "@/views/components/input/Button";
 import TextInput from "@/views/components/input/TextInput";
 import Panel from "@/views/components/Panel";
@@ -31,7 +31,7 @@ export default defineComponent({
     setup: function () {
 
         const authService = new AuthService();
-        const alertStore = useAlertStore();
+        const toastStore = useToastStore();
         const authStore = useAuthStore();
         const form = reactive({
             first_name: null,
@@ -53,8 +53,8 @@ export default defineComponent({
         function onFormSubmit() {
             authService.updateUser(form)
                 .then(() => authStore.getCurrentUser())
-                .then((response) => (alertStore.success(trans('global.phrases.profile_updated'))))
-                .catch((error) => (alertStore.error(getResponseError(error))));
+                .then((response) => (toastStore.success(trans('global.phrases.profile_updated'))))
+                .catch((error) => (toastStore.error(getResponseError(error))));
         }
 
         return {
