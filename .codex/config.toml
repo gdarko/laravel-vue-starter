@@ -1,0 +1,4 @@
+[mcp_servers.laravel-boost]
+command = "php"
+args = ["artisan", "boost:mcp"]
+cwd = "/home/darko/Projects/laravel-vue-starter"

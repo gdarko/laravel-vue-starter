@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "laravel-boost": {
+            "command": "/home/darko/.config/herd-lite/bin/php",
+            "args": [
+                "/home/darko/Projects/laravel-vue-starter/artisan",
+                "boost:mcp"
+            ]
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "agents": [
+        "claude_code",
+        "junie",
+        "codex",
+        "opencode",
+        "gemini",
+        "cursor",
+        "copilot"
+    ],
+    "guidelines": true,
+    "mcp": true,
+    "nightwatch_mcp": false,
+    "packages": [
+        "spatie/laravel-medialibrary",
+        "laravel/fortify"
+    ],
+    "sail": false,
+    "skills": [
+        "laravel-best-practices",
+        "fortify-development",
+        "medialibrary-development"
+    ]
+}
