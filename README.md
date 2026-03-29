@@ -1,157 +1,164 @@
-<p align="center">
-<a href="https://laravel.com" target="_blank"><img src="https://user-images.githubusercontent.com/5760249/132945127-a7d3a4bb-1ffc-4658-8096-c9cfc2f5c3dd.png" width="400"></a>
-</p>
-
 # Laravel Vue Starter
 
-The project was created to save myself time for redoing the same things all over again when starting a new Laravel/Vue project.
+An opinionated Laravel 13 + Vue 3 starter template for building modern admin panels and SPA applications. Ships with authentication, authorization, user management, and a polished UI — so you can skip the boilerplate and start building.
 
-The main goal of this project is to reduce code and make everything simpler for bootstrapping new projects. 
+## Stack
 
-The project is built with the following components:
+| Layer | Technology |
+|-------|-----------|
+| **Backend** | Laravel 13, PHP 8.3+ |
+| **Frontend** | Vue 3 (Composition API), Pinia 3, Vue Router 5 |
+| **UI** | DaisyUI 5, Tailwind CSS 4, Heroicons |
+| **Auth** | Laravel Sanctum (cookie-based SPA), Laravel Fortify |
+| **Authorization** | Bouncer (roles & abilities) |
+| **Media** | Spatie Media Library (avatar uploads with conversions) |
+| **Build** | Vite 8 |
 
-- Vue 3 / Pinia / VueRouter
-- Vue 3 Composition API
-- Vite 3
-- Laravel Framework
-- Laravel Sanctum
-- Laravel Fortify
-- Tailwind
-- ForkAwesome
-- Media Library (by Spatie)
-- Bouncer (by JosephSilber)
+## Features
 
-## ⚡️ How to install
+- **Authentication** — Login, register, forgot/reset password, email verification
+- **Authorization** — Role-based access control with Bouncer (admin/regular roles)
+- **User Management** — Full CRUD with sidebar drawer, filters, sorting, pagination
+- **Dark Mode** — Light/dark theme toggle, persisted in localStorage
+- **Collapsible Sidebar** — With tooltips when collapsed, persisted state
+- **Toast Notifications** — System-wide success/error/info/warning toasts
+- **Localization** — i18n support (English + Macedonian included)
+- **Profile Page** — Tabbed settings (general, password, avatar) with cover header
+- **Component Library** — Buttons, inputs, tables, modals, badges, spinners, file upload, dropdowns
+- **Components Showcase** — Built-in page at `/panel/components` demonstrating all UI components
 
-Installation is simple. Just like your ordinary Laravel app.
+## Quick Start
 
-1. `git clone`
-2. `cd laravel-vue-starter`
-3. `composer install`
-4. `cp .env.example .env`
-5. `php artisan key:generate`   
-6. `npm install`
-7. `npm run watch` (or if production `npm run build`)
-
-## ⚡️ How it works
-
-### ➡️ Theming
-
-The project supports theming, you can set a global color for the application theme, it can be done in `tailwind.config.js`.
-
-```js
-module.exports = {
-    // ...
-    theme: {
-        extend: {
-            colors: {
-                theme: colors.teal,
-                danger: colors.red
-            }
-        }
-    },
-    //...
-};
+```bash
+git clone https://github.com/gdarko/laravel-vue-starter.git
+cd laravel-vue-starter
+composer install
+cp .env.example .env
+php artisan key:generate
+npm install
+php artisan migrate --seed
 ```
 
-### ➡️ Authentication
+Start the development servers:
 
-The project ships with complete authentication boilerplate including:
-- Login
-- Register
-- Forget Password
-- Reset Password
+```bash
+# Terminal 1
+php artisan serve
 
-### ➡️ Authorization
-
-The project is configured to use [Bouncer](https://github.com/JosephSilber/bouncer) package for managing authorization across your routes. Authorization is important security subject, so please consult bouncer's package documentation.
-
-### ➡️ Localization / i18n
-
-The project supports localization / i18n, to translate the front-end use `lang/{code}/frontend.php` file.
-
-### ➡️ Users CRUD 
-
-For your convenience the project comes with complete `users` crud that includes examples of:
-
-- List page with filters and pagination
-- Edit/create pages with form for editing user that includes ajax based role search field
-
-### ➡️ Structure
-
-The front-end code is located in `resources/app`. The code is organized in different directories to make things more readable.
-
-| Directory    | Description                           |
-|--------------|---------------------------------------|
-| views        | The home of views                     |
-| + pages      | The home of the pages                 |
-| + icons      | The home of the icons                 |
-| + layouts    | The home of the global layouts        |
-| + components | The home of the reusable components   |
-| helpers      | The home of the helper utilites       |
-| plugins      | The home of the plugins configuration |
-| router       | The home of the router configuration  |
-| services     | The home of the HTTP services         |
-| stores       | The home of the Pinia stores          |
-| stub         | The home of the static constants      |
-
-### ➡️ Components
-
-The project ships with the most useful components that are required for one application (no bullshit), including:
-
-| Name      | Description                                                | Parameters                                                                                                                                                     | Events                                   | Location               |
-|-----------|------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------------------|------------------------|
-| Page      | The main page wrapper                                      | title, breadcrumbs (array), actions (array of actions on top), is-loading                                                                                      | n/a                                      | views/layouts          |
-| Panel     | Panel wrapper for displaying panels into the pages         | title, is-loading, body-padding                                                                                                                                | n/a                                      | views/components       |
-| Modal     | Modal wrapper for creating modals                          | is-showing, is-loading, show-close                                                                                                                             | @close                                   | views/components       |
-| Form      | Form wrapper                                               | title, is-loading                                                                                                                                              | n/a                                      | views/components       |
-| Table     | A custom table with sorting and pagination support         | headers (array), records (array), actions (array of row actions), sorting (object of keys with true/false), pagination: (object of Laravel pagination data)    | @page-changed, @action, $sort            | views/components       |
-| Alert     | Alert component that pulls alrts from AlertStore           | n/a                                                                                                                                                            | n/a                                      | views/components       |
-| Badge     | Component that displays highlighted text with background   | theme (success, info, warning, danger, error)                                                                                                                  | n/a                                      | views/components       |
-| TextInput | Custom text field with type={text,..., textarea} support   | name, label, v-model, type (text,...,textarea, etc), show-label, required, disabled, placeholder                                                               | default                                  | views/components/input |
-| FileInput | File input with custom button and multiple choices support | name, label, v-model, show-label, required, disabled, placeholder, multiple, accept                                                                            | default + @click, @error, @input, @clear | views/components/input |
-| Dropdown  | Dropdown field with server side support                    | name, label, v-model, show-label, required, disabled, placeholder, multiple, server (endpoint), server-per-page (items per page), server-search-min-characters | default                                  | views/components/input |
-| Button    | Button/Router link component                               | label, icon, theme (success, info, warning, danger, error), disabled, to (:to is router url, when specified the button is rendered as router-link)             | default                                  | views/components/input |
-| Spinner   | Spinner icon used mostly for loading                       | text, text-new-line (whether to break the text under the spinner)                                                                                              | n/a                                      | views/components/icons |
-| Icon      | Icon wrapper, currently uses fork awesome                  | name (the icon name without the fa- part)                                                                                                                      | n/a                                      | views/components/icons |
-| Avatar    | Default Avatar icon                                        | n/a                                                                                                                                                            | n/a                                      | views/components/icons |
-
-Note: Please always look in the components, this table does not show everything.
-
-From here, you are on your own. Develop new pages, models, components, use professional IDE for development to improve your efficiency.
-
-<p><img width="100%" src="https://user-images.githubusercontent.com/5760249/210167222-e04312ac-46ef-4dcd-a4d5-00c3a207bf32.gif"/></p>
-
-### ➡️ CORS
-
-Please make sure you have APP_URL, SANCTUM_STATEFUL_DOMAINS and SESSION_DOMAIN set correctly in [.env](https://github.com/gdarko/laravel-vue-starter/blob/master/.env.example) file as follows:
-
-#### Normal domain
-
-```
-APP_URL=http://mywebsite.com
-
-SANCTUM_STATEFUL_DOMAINS=mywebsite.com
-SESSION_DOMAIN=mywebsite.com
+# Terminal 2
+npm run dev
 ```
 
-#### Localhost with port
+Open `http://localhost:8000` and login with:
+- **Email:** luke@jedi.com
+- **Password:** 123123
 
-```
+## CORS / Domain Setup
+
+For Sanctum SPA auth to work, update `.env`:
+
+```env
+# Local development
 APP_URL=http://localhost:8000
-
 SANCTUM_STATEFUL_DOMAINS=localhost:8000
 SESSION_DOMAIN=localhost
+
+# Production
+APP_URL=https://myapp.com
+SANCTUM_STATEFUL_DOMAINS=myapp.com
+SESSION_DOMAIN=myapp.com
 ```
 
-## ⚡️ Contributions
-
-Pull requests are welcome, feel free to contribute to this project.
-
-## ⚡️ License
+## Project Structure
 
 ```
-Copyright (C) 2022 Darko Gjorgjijoski (https://darkog.com)
+resources/app/
+├── views/
+│   ├── layouts/         # Page, Menu, Auth layouts
+│   ├── components/      # Reusable UI (Button, Table, Modal, Panel, etc.)
+│   │   ├── icons/       # Icon, Avatar, Spinner
+│   │   ├── input/       # Button, TextInput, FileInput, Dropdown
+│   │   └── filters/     # Filters, FiltersRow, FiltersCol
+│   └── pages/
+│       ├── auth/        # Login, Register, Forgot/Reset Password
+│       ├── private/     # Dashboard, Profile, Users, Components
+│       └── shared/      # 404
+├── stores/              # Pinia (auth, toast, alert, global)
+├── services/            # API services (AuthService, UserService, etc.)
+├── router/              # Vue Router with auth guards
+├── helpers/             # Utilities (api, i18n, data, routing, alert)
+├── plugins/             # Axios, i18n config
+└── stub/                # Static constants (abilities)
+```
+
+## Components
+
+All components are in `resources/app/views/components/`. Visit `/panel/components` in the app for a live showcase.
+
+| Component | Description | Key Props |
+|-----------|-------------|-----------|
+| **Button** | Button / router-link | `label`, `icon`, `theme`, `to`, `disabled` |
+| **TextInput** | Text, email, password, textarea | `name`, `label`, `type`, `v-model`, `required` |
+| **FileInput** | Drag & drop file upload | `name`, `v-model`, `accept`, `multiple` |
+| **Dropdown** | Select with server-side search | `name`, `v-model`, `server`, `multiple` |
+| **Table** | Sortable table with skeleton loading | `headers`, `records`, `actions`, `sorting`, `pagination` |
+| **Modal** | Dialog with backdrop | `title`, `is-showing`, `is-loading` |
+| **Panel** | Card container | `title`, `is-loading`, `body-padding` |
+| **Badge** | Status label | `theme` (success, info, warning, error) |
+| **Alert** | Inline alert (from alert store) | — |
+| **Toast** | System-wide notifications (auto) | — |
+| **Icon** | [Heroicons](https://heroicons.com) wrapper | `name`, `class` |
+| **Spinner** | Loading indicator | `text`, `text-new-line` |
+| **Avatar** | Default user avatar SVG | — |
+
+### Adding Icons
+
+The `Icon` component wraps [Heroicons](https://heroicons.com). To add a new icon:
+
+1. Browse icons at [heroicons.com](https://heroicons.com)
+2. Import it in `resources/app/views/components/icons/Icon.vue`
+3. Add a short name to the `iconMap`
+
+```vue
+<Icon name="users" class="h-5 w-5" />
+```
+
+### Theming
+
+Theme colors are defined in `resources/styles/main.css` using DaisyUI's CSS variable system with oklch colors. Both light and dark themes use a teal primary palette.
+
+To customize, edit the `[data-theme="light"]` and `[data-theme="dark"]` blocks in `main.css`.
+
+## AI Agent Skills
+
+This project includes [Claude Code](https://claude.ai/code) skills in `.claude/skills/` for AI-assisted development:
+
+| Skill | Purpose |
+|-------|---------|
+| `vue-component-development` | Vue 3 component patterns, DaisyUI usage, icon system, drawer CRUD, toast notifications |
+| `spa-auth-development` | Sanctum SPA auth flow, router guards, CORS config, auth store lifecycle |
+| `laravel-best-practices` | Laravel PHP patterns (from Laravel Boost) |
+| `fortify-development` | Authentication features — login, register, 2FA, password reset |
+| `medialibrary-development` | Spatie Media Library — file uploads, collections, conversions |
+
+Skills are activated automatically by AI agents when working in relevant areas. They provide domain-specific conventions and patterns to ensure consistent, high-quality code.
+
+## NPM Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Vite dev server with HMR |
+| `npm run build` | Production build |
+| `npm run watch` | Dev build with file watching |
+
+## Contributing
+
+Pull requests are welcome. Please follow existing code conventions and run `./vendor/bin/pint` before submitting PHP changes.
+
+## License
+
+```
+Copyright (C) 2022-2026 Darko Gjorgjijoski (https://darkog.com)
 
 This file is part of Laravel Vue Starter
 
@@ -162,7 +169,7 @@ the Free Software Foundation, either version 2 of the License, or
 
 Laravel Vue Starter is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
