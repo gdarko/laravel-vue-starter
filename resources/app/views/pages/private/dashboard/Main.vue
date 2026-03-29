@@ -52,6 +52,21 @@
                 </div>
             </router-link>
         </div>
+
+        <!-- Starter info -->
+        <div class="card bg-base-100 shadow-sm border border-base-300/50 border-dashed">
+            <div class="card-body p-5 flex-row items-center gap-4">
+                <div class="w-10 h-10 rounded-lg bg-base-200 flex items-center justify-center shrink-0">
+                    <Icon name="tachometer" class="h-5 w-5 text-base-content/40"/>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm text-base-content/60">
+                        This is a sample admin panel. View all available UI components on the
+                        <router-link to="/panel/components" class="link link-primary font-medium">Components</router-link> page.
+                    </p>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 

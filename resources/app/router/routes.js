@@ -8,6 +8,7 @@ import {default as PageDashboard} from "@/views/pages/private/dashboard/Main";
 import {default as PageProfile} from "@/views/pages/private/profile/Main";
 
 import {default as PageUsers} from "@/views/pages/private/users/Index";
+import {default as PageComponents} from "@/views/pages/private/components/Main";
 
 import abilities from "@/stub/abilities";
 
@@ -33,6 +34,12 @@ const routes = [
                 path: "profile",
                 meta: {requiresAuth: true, isOwner: true},
                 component: PageProfile,
+            },
+            {
+                name: "components",
+                path: "components",
+                meta: {requiresAuth: true},
+                component: PageComponents,
             },
             {
                 path: "users",
